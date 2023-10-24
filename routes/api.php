@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function (){
                 Route::post('new',[\App\Http\Controllers\BookingController::class,'new']);
                 Route::post('update',[\App\Http\Controllers\BookingController::class,'update']);
                 Route::post('extend',[\App\Http\Controllers\BookingController::class,'extend']);
+                Route::post('delete',[\App\Http\Controllers\BookingController::class,'delete']);
             });
         });
         Route::prefix('/admin')->middleware('admin')->group(function (){

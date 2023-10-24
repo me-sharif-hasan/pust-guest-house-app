@@ -122,4 +122,29 @@ class BookingController extends Controller
             ];
         }
     }
+
+
+    public function delete(Request $r){
+        try {
+            $data=$r->json()->all();
+            $alloc=AllocationRequest::filter(AllocationRequest::find($data['id']));
+            if($alloc->user->id!=Auth::user()->id) throw new SafeException("You can not modify this allocation");
+            $alloc->delete();
+            return [
+                'status'=>'success',
+                'message'=>'Allocation has been deleted!',
+            ];
+        }catch (SafeException $e){
+            return [
+                'status'=>'error',
+                'message'=>$e->getMessage()
+            ];
+        }catch (\Throwable $e){
+            return [
+                'status'=>'error',
+                'message'=>"Something went wrong."
+            ];
+        }
+    }
+
 }
