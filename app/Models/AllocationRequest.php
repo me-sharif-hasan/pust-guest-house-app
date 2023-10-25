@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,8 +32,12 @@ class AllocationRequest extends Model
         'status'
     ];
 
-    public static function filter(AllocationRequest $allocationRequest){
-        if(is_array($allocationRequest)){
+    /**
+     * @param AllocationRequest[]|AllocationRequest|Collection $allocationRequest
+     * @return AllocationRequest
+     */
+    public static function filter($allocationRequest){
+        if(is_array($allocationRequest)||$allocationRequest instanceof Collection){
             foreach ($allocationRequest as &$a){
                 $expire_date=$a->departure_date;
                 if($expire_date<Carbon::now()){
@@ -50,4 +55,5 @@ class AllocationRequest extends Model
 
         return $allocationRequest;
     }
+
 }
