@@ -62,4 +62,5 @@ class User extends Authenticatable
     public function current_allocation():HasMany{
         return $this->approved_allocation_requests()->where('departure_date','>=',today());
     }
+
 }

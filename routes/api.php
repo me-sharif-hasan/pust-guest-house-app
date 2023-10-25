@@ -33,21 +33,27 @@ Route::prefix('v1')->group(function (){
                 Route::post('update',[\App\Http\Controllers\BookingController::class,'update']);
                 Route::post('extend',[\App\Http\Controllers\BookingController::class,'extend']);
                 Route::post('delete',[\App\Http\Controllers\BookingController::class,'delete']);
+
+                Route::get("cancel-extension",[\App\Http\Controllers\BookingController::class,'cancelExtend']);
             });
         });
 
         Route::prefix('/admin')->middleware('admin')->group(function (){
             Route::prefix('allocation')->group(function (){
+                /**
+                 * Fetching allocations
+                 */
                 Route::get('all',[\App\Http\Controllers\Admin\AdminBookingController::class,'all']);
                 Route::get('pending',[\App\Http\Controllers\Admin\AdminBookingController::class,'pending']);
                 Route::get('rejected',[\App\Http\Controllers\BookingController::class,'rejected']);
                 Route::get('approved',[\App\Http\Controllers\BookingController::class,'approved']);
                 Route::get('current',[\App\Http\Controllers\BookingController::class,'current']);
+                Route::get('extension-requests',[\App\Http\Controllers\Admin\AdminBookingController::class,'extensionRequests']);
 
-                Route::post('new',[\App\Http\Controllers\BookingController::class,'new']);
-                Route::post('update',[\App\Http\Controllers\BookingController::class,'update']);
-                Route::post('extend',[\App\Http\Controllers\BookingController::class,'extend']);
-                Route::post('delete',[\App\Http\Controllers\BookingController::class,'delete']);
+                Route::post('update',[\App\Http\Controllers\Admin\AdminBookingController::class,'update']);
+                Route::post('delete',[\App\Http\Controllers\Admin\AdminBookingController::class,'delete']);
+
+//                Route::post('new',[\App\Http\Controllers\BookingController::class,'new']);
             });
         });
     });

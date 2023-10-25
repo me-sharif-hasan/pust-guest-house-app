@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
-
+//error group 4
 class BookingController extends Controller
 {
 
@@ -27,7 +27,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.'.$e->getMessage(),
-                'code' => 0x07//fetch error
+                'code' => 0x401//fetch error
             ];
         }
     }
@@ -45,7 +45,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.',
-                'code' => 0x07
+                'code' => 0x402
             ];
         }
     }
@@ -63,7 +63,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.',
-                'code' => 0x07
+                'code' => 0x403
             ];
         }
     }
@@ -81,7 +81,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.',
-                'code' => 0x07
+                'code' => 0x404
             ];
         }
     }
@@ -99,7 +99,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.',
-                'code' => 0x07
+                'code' => 0x405
             ];
         }
     }
@@ -124,7 +124,7 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Something went wrong.',
-                'code' => 0x07
+                'code' => 0x406
             ];
         }
     }
@@ -156,13 +156,13 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => $e->getMessage(),
-                'code' => 0x04
+                'code' => 0x407
             ];
         } catch (\Throwable $e) {
             return [
                 'status' => 'error',
                 'message' => "Something went wrong.",
-                'code' => 0x04
+                'code' => 0x408
             ];
         }
     }
@@ -196,13 +196,13 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => $e->getMessage(),
-                'code' => 0x05
+                'code' => 0x409
             ];
         } catch (\Throwable $e) {
             return [
                 'status' => 'error',
                 'message' => "Something went wrong.",
-                'code' => 0x05
+                'code' => 0x410
             ];
         }
     }
@@ -223,13 +223,42 @@ class BookingController extends Controller
             return [
                 'status' => 'error',
                 'message' => $e->getMessage(),
-                'code' => 0x06
+                'code' => 0x411
             ];
         } catch (\Throwable $e) {
             return [
                 'status' => 'error',
                 'message' => "Something went wrong.",
-                'code' => 0x06
+                'code' => 0x412
+            ];
+        }
+    }
+
+    public function cancelExtend(Request $r){
+        try {
+            $data = $r->json()->all();
+            $alloc = AllocationRequest::filter(AllocationRequest::find($data['id']));
+            if ($alloc->user->id != Auth::user()->id) throw new SafeException("You can not modify this allocation");
+
+            if($alloc->extension_request_date==null) throw new SafeException("Invalid request");
+            $alloc->extension_request_date=null;
+            $alloc->save();
+            return [
+                'status' => 'success',
+                'message' => 'Extension request has been cancelled',
+                'data'=>['allocation'=>$alloc]
+            ];
+        } catch (SafeException $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'code' => 0x413
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'status' => 'error',
+                'message' => "Something went wrong.",
+                'code' => 0x414
             ];
         }
     }
