@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (){
     Route::any('/login',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'login'])->name('login');
+    Route::any('/registration',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'registration'])->name('registration');
     Route::middleware('auth:sanctum')->prefix('')->group(function (){
         Route::prefix("user")->group(function (){
             Route::get('details', function (Request $request) { return $request->user();});
