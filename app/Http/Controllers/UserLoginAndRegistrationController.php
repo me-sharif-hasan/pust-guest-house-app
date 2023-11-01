@@ -64,7 +64,7 @@ class UserLoginAndRegistrationController extends Controller
         }catch (\Throwable $e){
             return [
                 'status'=>'error',
-                'message'=>"Registration failed. Something went wrong".$e->getMessage(),
+                'message'=>"Registration failed. Something went wrong",
                 'code'=>0x503,
             ];
         }
