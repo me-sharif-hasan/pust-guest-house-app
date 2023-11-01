@@ -53,8 +53,6 @@ Route::prefix('v1')->group(function (){
 
                 Route::post('update',[\App\Http\Controllers\Admin\AdminBookingController::class,'update']);
                 Route::post('delete',[\App\Http\Controllers\Admin\AdminBookingController::class,'delete']);
-
-//                Route::post('new',[\App\Http\Controllers\BookingController::class,'new']);
             });
         });
     });
