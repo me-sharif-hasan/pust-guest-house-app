@@ -3,6 +3,7 @@ import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/variables.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -61,7 +62,7 @@ class _RegistrationState extends State<Registration> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('PUST Guest House'),
+        title: Text(appTitle),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -283,19 +284,16 @@ class _RegistrationState extends State<Registration> {
                                 print('Email : ${_emailController.text}');
                                 print('Password : ${_passwordController.text}');
                                 print('isdept : ${_isDepartmentChose}');
-                                
 
                                 if (_form_key.currentState!.validate()) {
-
                                   if (_isDepartmentChose) {
-                                    registerUser(User(  
-                                      name: _nameController.text,
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
-                                      department: _department,
-                                      phone: _phoneController.text,
-                                      title: "title is now set"
-                                    ));
+                                    registerUser(context, User(
+                                        name: _nameController.text,
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        department: _department,
+                                        phone: _phoneController.text,
+                                        title: "title is now set"));
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -332,9 +330,26 @@ class _RegistrationState extends State<Registration> {
       )),
     );
   }
-  
-  void registerUser(User user) {
+
+  void registerUser(BuildContext context, User user) {
     Network network = Network(url: "/api/v1/registration");
-    network.registerUser(user);
+    Future data = network.registerUser(user);
+    data.then((value) {
+      print("data is : $value");
+      if (value['status'] == 'error') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(value['message']),
+          backgroundColor: danger,
+        ));
+      } else {
+        myUser = User.fromJson(value['data']['user']);
+        print(myUser.name);
+        // Navigator.pop(context);
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Login()),
+        // );
+      }
+    });
   }
 }

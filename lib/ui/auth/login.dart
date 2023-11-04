@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/userModel.dart';
+import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/auth/registration.dart';
+import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/variables.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -19,7 +23,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('PUST Guest House'),
+        title: Text(appTitle),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -50,6 +54,7 @@ class _LoginState extends State<Login> {
           child: Stack(
         children: [
           Container(
+            // height: MediaQuery.of(context).size.height*0.5,
             alignment: Alignment.bottomCenter,
             // Background
             child: Opacity(
@@ -58,122 +63,164 @@ class _LoginState extends State<Login> {
             ),
             // Lgin UI
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.07,
-              ),
-              Text(
-                'Login',
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
-              ),
-              Center(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                ),
+                Text(
+                  'Login',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                ),
+                Center(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 16),
                     child: Form(
                       key: _form_key,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          TextFormField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'User Email',
-                                hintText: 'Enter your Email'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'User Email required.';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            controller: _passwordController,
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Password',
-                                hintText: 'Enter Password'),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Password required.';
-                              } else if (value.length < 4) {
-                                return 'Password at least 4 character';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  print('Forget Password clicked.');
-                                },
-                                child: Text(
-                                  'Forget Password?',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryDeep),
-                            onPressed: () {
-                              print('Login clicked.');
-                              print('Email : ${_emailController.text}');
-                              print('Password : ${_passwordController.text}');
-
-                              if (_form_key.currentState!.validate()) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text('Login successful'),
-                                  backgroundColor: Colors.green,
-                                ));
-
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => RegistrationPage()));
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text('Login'),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'User Email',
+                                  hintText: 'Enter your Email'),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'User Email required.';
+                                }
+                                return null;
+                              },
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              controller: _passwordController,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Password',
+                                  hintText: 'Enter Password'),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Password required.';
+                                } else if (value.length < 6) {
+                                  return 'Password at least 6 character';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    print('Forget Password clicked.');
+                                  },
+                                  child: Text(
+                                    'Forget Password?',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryDeep),
+                              onPressed: () {
+                                print('Login clicked.');
+                                print('Email : ${_emailController.text}');
+                                print('Password : ${_passwordController.text}');
+
+                                if (_form_key.currentState!.validate()) {
+                                  userLogin(context, _emailController.text,
+                                      _passwordController.text);
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text('Login successful'),
+                                    backgroundColor: Colors.green,
+                                  ));
+
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => RegistrationPage()));
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text('Login'),
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.25,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       )),
     );
+  }
+
+  void userLogin(BuildContext context, String email, String password) {
+    Network network = Network(url: "/api/v1/login");
+    Future data = network.loginUser(email, password);
+    data.then((value) {
+      print("data is : $value");
+      if (value['status'] == 'error') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(value['message']),
+          backgroundColor: danger,
+        ));
+      } else {
+        myUser = User.fromJson(value['data']['user']);
+        print(myUser.name);
+        if (value['data']['user']['user_type'] != null &&
+            value['data']['user']['user_type'] == 'admin') {
+          // Parse to admin Page
+        } else {
+          // Parse to User Page
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const UserHome()),
+          );
+        }
+
+        // Navigator.pop(context);
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Login()),
+        // );
+      }
+    });
   }
 }

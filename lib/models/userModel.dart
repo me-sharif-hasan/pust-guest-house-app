@@ -19,6 +19,7 @@ class User {
       this.title});
 
   factory User.fromJson(Map<String, dynamic> json) {
+    // print("parse json is : $json");
     return User(
         id: json['id'],
         name: json['name'],

@@ -4,11 +4,11 @@ import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:http/http.dart';
 
-class Network {
+class ClientNetwork {
   final String? url;
-  final String baseUrl = "$hostUrl";
+  final String baseUrl = "$hostUrl/api/v1/public";
 
-  Network({this.url});
+  ClientNetwork({this.url});
 
   Future fetchData() async {
     print("$url");
