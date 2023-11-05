@@ -10,12 +10,14 @@ class Network {
 
   Network({this.url});
 
-  Future fetchData() async {
-    print("$url");
+  Future fetchUser() async {
+    // print("$url");
 
-    // var ur = Uri.encodeFull(url);
+    // // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(baseUrl, url!);
-    final response = await get(urlg);
+    final response = await get(urlg, headers: {
+      'Authorization' : 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -31,7 +33,7 @@ class Network {
     // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(baseUrl, url!);
     
-    final response = await post(urlg, body: user.getUser());
+    final response = await post(urlg, body: json.encode(user.getUser()));
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -50,7 +52,7 @@ class Network {
       'password' : password
     };
     
-    final response = await post(urlg, body: credintial);
+    final response = await post(urlg, body: json.encode(credintial));
 
     if (response.statusCode == 200) {
       print(response.body);

@@ -35,6 +35,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  
+  # storing locally small data
+  shared_preferences: ^2.2.2
+
+  # http request api calling
   http: ^1.1.0
 
 dev_dependencies:

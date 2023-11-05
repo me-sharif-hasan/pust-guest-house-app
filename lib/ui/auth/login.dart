@@ -5,6 +5,7 @@ import 'package:guest_house_pust/ui/auth/registration.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -190,10 +191,10 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void userLogin(BuildContext context, String email, String password) {
+  void userLogin(BuildContext context, String email, String password) async {
     Network network = Network(url: "/api/v1/login");
     Future data = network.loginUser(email, password);
-    data.then((value) {
+    data.then((value) async {
       print("data is : $value");
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -202,7 +203,14 @@ class _LoginState extends State<Login> {
         ));
       } else {
         myUser = User.fromJson(value['data']['user']);
-        print(myUser.name);
+        token = value['data']['token'];
+        
+        // store the token to the shared preferences
+        final props = await SharedPreferences.getInstance();
+        props.setString(tokenText, token!);
+
+        print('Token is : ${token!}');
+        print(myUser!.name);
         if (value['data']['user']['user_type'] != null &&
             value['data']['user']['user_type'] == 'admin') {
           // Parse to admin Page

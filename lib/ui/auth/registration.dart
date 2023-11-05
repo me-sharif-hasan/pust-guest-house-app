@@ -343,7 +343,7 @@ class _RegistrationState extends State<Registration> {
         ));
       } else {
         myUser = User.fromJson(value['data']['user']);
-        print(myUser.name);
+        print(myUser!.name);
         // Navigator.pop(context);
         // Navigator.push(
         //   context,
