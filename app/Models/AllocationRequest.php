@@ -19,6 +19,14 @@ class AllocationRequest extends Model
     public function guest_house():BelongsTo{
         return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
+    public function fee(){
+        $c = Charges::where('room_type','=',$this->room_type)->where('booking_type','=',$this->booking_type)->where('guest_house_id','=',$this->guest_house_id)->get();
+        return count($c)>0?$c[0]:[
+            'status'=>'error',
+            'message'=>'This specific room combination not exists!',
+            'code'=>0x901
+        ];
+    }
 
     public function room():HasOne{
         return $this->hasOne(Room::class,'id','room_id');
@@ -29,6 +37,10 @@ class AllocationRequest extends Model
         'guest_house_id',
         'boarding_date',
         'departure_date',
+        'room_type',
+        'booking_type',
+        'bed_number',
+        'guest_count',
         'status'
     ];
 
@@ -53,6 +65,7 @@ class AllocationRequest extends Model
             }
         }
 
+        $allocationRequest->fee=$allocationRequest->fee();
         return $allocationRequest;
     }
 

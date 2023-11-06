@@ -16,10 +16,16 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('guest_house_id');
             $table->unsignedBigInteger('room_id')->nullable();
+            $table->string('bed_number')->nullable();
+            $table->integer('guest_count')->default(1);
+            $table->string('room_type');/*AC/NON-AC&*/
+            $table->string('booking_type'); /*OFFICIAL/ PERSONAL*/
             $table->string('status')->nullable();
             $table->dateTime("boarding_date");
             $table->dateTime("departure_date");
             $table->dateTime('extension_request_date')->nullable();
+            $table->boolean('is_admin_seen')->default(false);
+            $table->boolean('is_user_seen')->default(false);
             $table->timestamps();
         });
     }

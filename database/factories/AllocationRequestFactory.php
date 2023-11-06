@@ -33,6 +33,9 @@ class AllocationRequestFactory extends Factory
             'guest_house_id'=>random_int(1,2),
             'room_id'=>random_int(1,10),
             'status'=>(['approved','rejected','pending','cancelled','expired'])[random_int(0,4)],
+            'room_type'=>(['AC','NON-AC'])[random_int(0,1)],
+            'booking_type'=>(['PERSONAL','OFFICIAL'])[random_int(0,1)],
+            'guest_count'=>random_int(1,5),
             'boarding_date'=>fake()->dateTime(),
             'departure_date'=>fake()->dateTime,
         ];

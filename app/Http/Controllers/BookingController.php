@@ -117,13 +117,13 @@ class BookingController extends Controller
                 'status' => 'success',
                 'message' => 'New request added.',
                 'data' => [
-                    'allocation' => $allocation
+                    'allocation' => AllocationRequest::filter($allocation)
                 ]
             ];
         } catch (\Throwable $e) {
             return [
                 'status' => 'error',
-                'message' => 'Something went wrong.',
+                'message' => 'Something went wrong.'.$e->getMessage(),
                 'code' => 0x406
             ];
         }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\AllocationRequest;
+use App\Models\Charges;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GuestHouseSeeder::class);
         $this->call(RoomSeeder::class);
         $this->call(AllocationRequestSeeder::class);
+        $this->call(ChargeSeeder::class);
     }
 }
