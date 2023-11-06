@@ -22,8 +22,18 @@ class _RegistrationState extends State<Registration> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _officeController = TextEditingController();
 
   bool _isDepartmentChose = false;
+  bool _isOther = false;
+
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   List<String> departmentList = [
     "Chose a department",
@@ -47,7 +57,8 @@ class _RegistrationState extends State<Registration> {
     "18 Eng",
     "19 Pub. Add.",
     "20 HBS",
-    "21 Thm"
+    "21 Thm",
+    "Others"
   ];
   @override
   void initState() {
@@ -55,6 +66,7 @@ class _RegistrationState extends State<Registration> {
     super.initState();
     _department = departmentList.first;
     _isDepartmentChose = false;
+    _isOther = false;
   }
 
   @override
@@ -180,9 +192,15 @@ class _RegistrationState extends State<Registration> {
                             TextFormField(
                               controller: _passwordController,
                               keyboardType: TextInputType.visiblePassword,
-                              obscureText: true,
+                              obscureText: _obscureText,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: _togglePasswordVisibility,
+                                  ),
                                   labelText: 'Password',
                                   hintText: 'Enter Password'),
                               validator: (value) {
@@ -201,9 +219,15 @@ class _RegistrationState extends State<Registration> {
                             TextFormField(
                               controller: _confirmPasswordController,
                               keyboardType: TextInputType.visiblePassword,
-                              obscureText: true,
+                              obscureText: _obscureText,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: _togglePasswordVisibility,
+                                  ),
                                   labelText: 'Confirm Password',
                                   hintText: 'Enter confirm Password'),
                               validator: (value) {
@@ -249,12 +273,35 @@ class _RegistrationState extends State<Registration> {
                                     _department = value!;
                                     if (value == departmentList.first) {
                                       _isDepartmentChose = false;
+                                      _isOther = false;
+                                    } else if (value == departmentList.last) {
+                                      _isDepartmentChose = true;
+                                      _isOther = true;
                                     } else {
                                       _isDepartmentChose = true;
+                                      _isOther = false;
                                     }
                                   });
                                 },
                               ),
+                            ),
+                            _isOther
+                                ? TextFormField(
+                                    controller: _officeController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Office',
+                                        hintText: 'Enter your office Position'),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Office Position Requrired.';
+                                      }
+                                      return null;
+                                    },
+                                  )
+                                : Container(),
+                            SizedBox(
+                              height: 10,
                             ),
                             SizedBox(
                               height: 5,
@@ -287,13 +334,18 @@ class _RegistrationState extends State<Registration> {
 
                                 if (_form_key.currentState!.validate()) {
                                   if (_isDepartmentChose) {
-                                    registerUser(context, User(
-                                        name: _nameController.text,
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                        department: _department,
-                                        phone: _phoneController.text,
-                                        title: "title is now set"));
+                                    if (_isOther) {
+                                      _department = _officeController.text;
+                                    }
+                                    registerUser(
+                                        context,
+                                        User(
+                                            name: _nameController.text,
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                            department: _department,
+                                            phone: _phoneController.text,
+                                            title: "title is now set"));
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -315,7 +367,7 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.1,
+                              height: MediaQuery.of(context).size.height * 0.3,
                             )
                           ],
                         ),

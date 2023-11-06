@@ -19,6 +19,14 @@ class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,16 +62,16 @@ class _LoginState extends State<Login> {
           // decoration: BoxDecoration(color: Colors.white),
           child: Stack(
         children: [
+          // Background
           Container(
             // height: MediaQuery.of(context).size.height*0.5,
             alignment: Alignment.bottomCenter,
-            // Background
             child: Opacity(
               opacity: 0.3,
               child: Image.asset('images/home_illustrator.png'),
             ),
-            // Lgin UI
           ),
+          // Lgin UI
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -111,9 +119,15 @@ class _LoginState extends State<Login> {
                             TextFormField(
                               controller: _passwordController,
                               keyboardType: TextInputType.visiblePassword,
-                              obscureText: true,
+                              obscureText: _obscureText,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: _togglePasswordVisibility,
+                                  ),
                                   labelText: 'Password',
                                   hintText: 'Enter Password'),
                               validator: (value) {
@@ -204,7 +218,7 @@ class _LoginState extends State<Login> {
       } else {
         myUser = User.fromJson(value['data']['user']);
         token = value['data']['token'];
-        
+
         // store the token to the shared preferences
         final props = await SharedPreferences.getInstance();
         props.setString(tokenText, token!);
