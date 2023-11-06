@@ -55,6 +55,10 @@ Route::prefix('v1')->group(function (){
                 Route::post('delete',[\App\Http\Controllers\Admin\AdminBookingController::class,'delete']);
             });
         });
+
+        Route::prefix('common')->group(function (){
+           Route::get('guest-house-list',[\App\Http\Controllers\common\GuestHouseController::class,'list']);
+        });
     });
 });
 
