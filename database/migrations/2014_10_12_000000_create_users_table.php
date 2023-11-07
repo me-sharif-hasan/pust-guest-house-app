@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('department');
             $table->string('phone')->nullable();
+            $table->text('profile_picture')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('user_type')->nullable();
