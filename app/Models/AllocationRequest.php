@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class AllocationRequest extends Model
 {
     use HasFactory;
+    public $fee;
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
@@ -52,6 +53,7 @@ class AllocationRequest extends Model
         if(is_array($allocationRequest)||$allocationRequest instanceof Collection){
             foreach ($allocationRequest as &$a){
                 $expire_date=$a->departure_date;
+                $a->fee=$a->fee();
                 if($expire_date<Carbon::now()){
                     $a->status="expired";
                     $a->save();
@@ -59,13 +61,12 @@ class AllocationRequest extends Model
             }
         }else{
             $expire_date=$allocationRequest->departure_date;
+            $allocationRequest->fee=$allocationRequest->fee();
             if($expire_date<Carbon::now()){
                 $allocationRequest->status="expired";
                 $allocationRequest->save();
             }
         }
-
-        $allocationRequest->fee=$allocationRequest->fee();
         return $allocationRequest;
     }
 
