@@ -11,33 +11,138 @@ class AllocationRequest extends StatefulWidget {
 
 class _AllocationRequestState extends State<AllocationRequest> {
   final _form_key = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _guestController = TextEditingController();
 
   bool _isFormDateSelected = false;
   bool _isToDateSelected = false;
 
-  DateTime? _selectedDate;
+  int selected_booking_type =
+      0; // Initialize the selected radio to the first option.
+  int selected_room_type =
+      0; // Initialize the selected radio to the first option.
 
-  int selectedRadio = 0; // Initialize the selected radio to the first option.
+  DateTime? _selectedFromDate;
+  DateTime? _selectedToDate;
+  int _dayDifference = 0;
+  int _totalCharge = 0;
 
-  void handleRadioValueChange(int? value) {
+  final List<String> type_of_booking_list = [
+    "",
+    "Personal Use",
+    "Official Use"
+  ];
+  final List<String> type_of_room_list = ["", "AC", "Non AC"];
+  final Map<String, Map<String, int>> price_according_to_roomtype = {
+    "Personal Use": {
+      "": 0,
+      "AC": 300,
+      "Non AC": 200,
+    },
+    "Official Use": {
+      "": 0,
+      "AC": 200,
+      "Non AC": 100,
+    },
+    "": {
+      "": 0,
+      "AC": 0,
+      "Non AC": 0,
+    }
+  };
+
+  void handleBookingTypeValueChange(int? value) {
     setState(() {
-      selectedRadio = value!;
+      selected_booking_type = value!;
+      print("radio : $selected_booking_type");
     });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  void handleRoomTypeValueChange(int? value) {
+    setState(() {
+      selected_room_type = value!;
+      print("radio : $selected_room_type");
+    });
+  }
+
+  Future<void> _selectFormDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: _selectedFromDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
+    int dayDiff = 0;
 
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != _selectedFromDate) {
+      if (_selectedToDate == null) {
+        // do nothing
+      } else {
+        // set diffrence and
+        print("cmp : ${picked.compareTo(_selectedToDate!)}");
+        if (picked.compareTo(_selectedToDate!) > 0) {
+          // Date can not select show an error message
+          print('Date is not valid');
+          setState(() {
+            _selectedFromDate = null;
+            _isFormDateSelected = false;
+            _dayDifference = 0;
+          });
+          return;
+        } else {
+          dayDiff = _selectedToDate!.difference(picked).inDays + 1;
+          print('diffrence is : $dayDiff');
+        }
+      }
+      try {
+        _totalCharge = dayDiff *
+            price_according_to_roomtype[type_of_booking_list[selected_booking_type]]![type_of_room_list[selected_room_type]]!;
+        print('totl charge : $_totalCharge');
+      } catch (e) {
+        _totalCharge = 0;
+        print('totl ee charge : $e');
+
+      }
       setState(() {
-        _selectedDate = picked;
+        _selectedFromDate = picked;
+        _isFormDateSelected = true;
+        _dayDifference = dayDiff;
+      });
+    }
+  }
+
+  Future<void> _selectToDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedToDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    int dayDiff = 0;
+
+    if (picked != null && picked != _selectedToDate) {
+      if (_selectedFromDate == null) {
+        // do nothing
+      } else {
+        // set diffrence and
+        print("cmp : ${picked.compareTo(_selectedFromDate!)}");
+        if (picked.compareTo(_selectedFromDate!) < 0) {
+          // Date can not select show an error message
+          print('Date is not valid');
+          setState(() {
+            _selectedToDate = null;
+            _isToDateSelected = false;
+            _dayDifference = dayDiff;
+          });
+          return;
+        } else {
+          dayDiff = picked.difference(_selectedFromDate!).inDays + 1;
+          print('diffrence is : $dayDiff');
+        }
+      }
+      setState(() {
+        _selectedToDate = picked;
+        _isToDateSelected = true;
+        _dayDifference = dayDiff;
       });
     }
   }
@@ -99,8 +204,9 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                       children: [
                                         Radio(
                                           value: 1,
-                                          groupValue: selectedRadio,
-                                          onChanged: handleRadioValueChange,
+                                          groupValue: selected_booking_type,
+                                          onChanged:
+                                              handleBookingTypeValueChange,
                                         ),
                                         Text('For Personal Use.'),
                                         SizedBox(
@@ -108,8 +214,9 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         ),
                                         Radio(
                                           value: 2,
-                                          groupValue: selectedRadio,
-                                          onChanged: handleRadioValueChange,
+                                          groupValue: selected_booking_type,
+                                          onChanged:
+                                              handleBookingTypeValueChange,
                                         ),
                                         Text('For Official Use.'),
                                       ],
@@ -129,8 +236,8 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                       children: [
                                         Radio(
                                           value: 1,
-                                          groupValue: selectedRadio,
-                                          onChanged: handleRadioValueChange,
+                                          groupValue: selected_room_type,
+                                          onChanged: handleRoomTypeValueChange,
                                         ),
                                         Text('AC.'),
                                         SizedBox(
@@ -138,8 +245,8 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         ),
                                         Radio(
                                           value: 2,
-                                          groupValue: selectedRadio,
-                                          onChanged: handleRadioValueChange,
+                                          groupValue: selected_room_type,
+                                          onChanged: handleRoomTypeValueChange,
                                         ),
                                         Text('Non AC.'),
                                       ],
@@ -165,13 +272,13 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     borderRadius: BorderRadius.circular(5)),
                                 child: ListTile(
                                   title: Text(
-                                    _selectedDate != null
-                                        ? 'From: ${_selectedDate!.toLocal()}'
+                                    _selectedFromDate != null
+                                        ? 'From: ${_selectedFromDate!.toLocal()}'
                                         : 'From ?',
                                   ),
                                   trailing: Icon(Icons.calendar_today),
                                   onTap: () {
-                                    _selectDate(context);
+                                    _selectFormDate(context);
                                   },
                                 ),
                               ),
@@ -181,7 +288,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               Container(
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: _isFormDateSelected
+                                      color: _isToDateSelected
                                           ? Colors.grey
                                           : Colors.red,
                                       width: 1,
@@ -189,21 +296,41 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     borderRadius: BorderRadius.circular(5)),
                                 child: ListTile(
                                   title: Text(
-                                    _selectedDate != null
-                                        ? 'To: ${_selectedDate!.toLocal()}'
+                                    _selectedToDate != null
+                                        ? 'To: ${_selectedToDate!.toLocal()}'
                                         : 'To ?',
                                   ),
                                   trailing: Icon(Icons.calendar_today),
                                   onTap: () {
-                                    _selectDate(context);
+                                    _selectToDate(context);
                                   },
                                 ),
                               ),
                               SizedBox(
                                 height: 15,
                               ),
+                              Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 16, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Total days of stay : "),
+                                      Text("$_dayDifference days"),
+                                    ],
+                                  )),
+                              SizedBox(
+                                height: 15,
+                              ),
                               TextFormField(
-                                controller: _emailController,
+                                controller: _guestController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Number of Guest',
@@ -243,19 +370,37 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     backgroundColor: primaryDeep),
                                 onPressed: () {
                                   print('Login clicked.');
-                                  print('Email : ${_emailController.text}');
-                                  print(
-                                      'Password : ${_passwordController.text}');
+                                  if (selected_booking_type == 0) {
+                                    showMessage(
+                                        context,
+                                        "Booking type is not selected yet.",
+                                        dangerColor);
+                                  } else if (selected_room_type == 0) {
+                                    showMessage(
+                                        context,
+                                        "Room type is not selected yet.",
+                                        dangerColor);
+                                  } else if (!_isFormDateSelected) {
+                                    showMessage(
+                                        context,
+                                        "From date is not selected yet.",
+                                        dangerColor);
+                                  } else if (!_isToDateSelected) {
+                                    showMessage(
+                                        context,
+                                        "To date is not selected yet.",
+                                        dangerColor);
+                                  }
 
                                   if (_form_key.currentState!.validate()) {
-                                    // userLogin(context, _emailController.text,
-                                    //     _passwordController.text);
-
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text('Login successful'),
-                                      backgroundColor: Colors.green,
-                                    ));
+                                    print(
+                                        'type of booking : $selected_booking_type');
+                                    print('type of room : $selected_room_type');
+                                    print('From date : $_selectedFromDate');
+                                    print('To date : $_selectedToDate');
+                                    print('day count : $_dayDifference');
+                                    print(
+                                        'number of guest : $_guestController');
 
                                     // Navigator.push(
                                     //     context,
@@ -299,5 +444,12 @@ class _AllocationRequestState extends State<AllocationRequest> {
         ),
       ],
     );
+  }
+
+  void showMessage(BuildContext context, String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    ));
   }
 }

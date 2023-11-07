@@ -17,6 +17,7 @@ class _RegistrationState extends State<Registration> {
 
   final _form_key = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _titleController = TextEditingController();
   final _emailController = TextEditingController();
   String _department = "Chose your department";
   final _phoneController = TextEditingController();
@@ -35,31 +36,6 @@ class _RegistrationState extends State<Registration> {
     });
   }
 
-  List<String> departmentList = [
-    "Chose a department",
-    "01 CSE",
-    "02 EEE",
-    "03 MATH",
-    "04 BBA",
-    "05 EECE",
-    "06 ICE",
-    "07 Physics",
-    "08 Economics",
-    "09 GE",
-    "10 Bangla",
-    "11 Civil",
-    "12 Architecture",
-    "13 Pharmacy",
-    "14 Chemistry",
-    "15 SW",
-    "16 STAT",
-    "17 URP",
-    "18 Eng",
-    "19 Pub. Add.",
-    "20 HBS",
-    "21 Thm",
-    "Others"
-  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -150,6 +126,22 @@ class _RegistrationState extends State<Registration> {
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'User name required.';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'User title',
+                                  hintText: 'Write your title'),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'User title required.';
                                 }
                                 return null;
                               },
@@ -250,7 +242,7 @@ class _RegistrationState extends State<Registration> {
                                   border: Border.all(
                                     color: _isDepartmentChose
                                         ? Colors.grey
-                                        : Colors.red,
+                                        : dangerColor,
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(2)),
@@ -345,13 +337,19 @@ class _RegistrationState extends State<Registration> {
                                             password: _passwordController.text,
                                             department: _department,
                                             phone: _phoneController.text,
-                                            title: "title is now set"));
+                                            title: _titleController.text));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(
+                                          'Registration data send success.'),
+                                      backgroundColor: acceptColor,
+                                    ));
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: Text(
                                           'Department is not selected yeat.'),
-                                      backgroundColor: danger,
+                                      backgroundColor: dangerColor,
                                     ));
                                   }
 
@@ -391,11 +389,16 @@ class _RegistrationState extends State<Registration> {
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value['message']),
-          backgroundColor: danger,
+          backgroundColor: dangerColor,
         ));
       } else {
         myUser = User.fromJson(value['data']['user']);
         print(myUser!.name);
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Login()),
+        );
         // Navigator.pop(context);
         // Navigator.push(
         //   context,

@@ -173,8 +173,8 @@ class _LoginState extends State<Login> {
 
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
-                                    content: Text('Login successful'),
-                                    backgroundColor: Colors.green,
+                                    content: Text('Login data send success'),
+                                    backgroundColor: acceptColor,
                                   ));
 
                                   // Navigator.push(
@@ -213,7 +213,7 @@ class _LoginState extends State<Login> {
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value['message']),
-          backgroundColor: danger,
+          backgroundColor: dangerColor,
         ));
       } else {
         myUser = User.fromJson(value['data']['user']);

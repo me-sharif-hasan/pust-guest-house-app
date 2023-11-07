@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> {
           if (value['status'] == 'error') {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(value['message']),
-              backgroundColor: danger,
+              backgroundColor: dangerColor,
             ));
           } else {
             myUser = User.fromJson(value);

@@ -25,7 +25,8 @@ class _UserProfileState extends State<UserProfile> {
               onPressed: () async {
                 final props = await SharedPreferences.getInstance();
                 props.remove(tokenText);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Navigator.popUntil(context, (route) => false);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const Login()),
