@@ -68,6 +68,13 @@ Route::prefix('v1')->group(function (){
                 Route::post('update',[\App\Http\Controllers\Admin\RoomController::class,'update']);
                 Route::post('delete',[\App\Http\Controllers\Admin\RoomController::class,'delete']);
             });
+
+            Route::prefix('users')->group(function (){
+               Route::get('',[\App\Http\Controllers\Admin\UserController::class,'list']);
+               Route::post('details',[\App\Http\Controllers\Admin\UserController::class,'details']);
+               Route::post('update',[\App\Http\Controllers\Admin\UserController::class,'update']);
+               Route::post('delete',[\App\Http\Controllers\Admin\UserController::class,'delete']);
+            });
         });
 
         Route::prefix('common')->group(function (){

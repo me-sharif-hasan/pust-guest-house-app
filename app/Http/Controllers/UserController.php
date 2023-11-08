@@ -41,7 +41,7 @@ class UserController extends Controller
             }else{
                 return [
                     'status'=>'error',
-                    'message'=>'User profile update failed!'.$e->getMessage(),
+                    'message'=>'User profile update failed!',
                     'code'=>0x02
                 ];
             }
