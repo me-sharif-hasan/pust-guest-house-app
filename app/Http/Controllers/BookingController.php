@@ -15,6 +15,7 @@ class BookingController extends Controller
 
     public function all()
     {
+        $a=AllocationRequest::find(4);
         try {
             return [
                 'status' => 'success',

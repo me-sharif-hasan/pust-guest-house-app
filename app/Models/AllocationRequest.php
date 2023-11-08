@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['fee'];
+    protected $appends=['fee','room','guest_house'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
@@ -27,6 +27,13 @@ class AllocationRequest extends Model
             'message'=>'This specific room combination not exists!',
             'code'=>0x901
         ];
+    }
+
+    public function getRoomAttribute(){
+        return $this->room()->get();
+    }
+    public function getGuestHouseAttribute(){
+        return $this->guest_house()->get();
     }
 
     public function room():HasOne{
