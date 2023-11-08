@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/allocationModel.dart';
+import 'package:guest_house_pust/network/bookingApiHandel.dart';
+import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 
@@ -51,16 +54,40 @@ class _AllocationRequestState extends State<AllocationRequest> {
   };
 
   void handleBookingTypeValueChange(int? value) {
+    int totalCharge = 0;
+    try {
+      totalCharge = _dayDifference *
+          price_according_to_roomtype[type_of_booking_list[value!]]![
+              type_of_room_list[selected_room_type]]! *
+          int.parse(_guestController.text);
+      print('totl charge : $totalCharge');
+    } catch (e) {
+      totalCharge = 0;
+      print('totl ee charge : $e');
+    }
     setState(() {
       selected_booking_type = value!;
       print("radio : $selected_booking_type");
+      _totalCharge = totalCharge;
     });
   }
 
   void handleRoomTypeValueChange(int? value) {
+    int totalCharge = 0;
+    try {
+      totalCharge = _dayDifference *
+          price_according_to_roomtype[type_of_booking_list[
+              selected_booking_type]]![type_of_room_list[value!]]! *
+          int.parse(_guestController.text);
+      print('totl charge : $totalCharge');
+    } catch (e) {
+      totalCharge = 0;
+      print('totl ee charge : $e');
+    }
     setState(() {
       selected_room_type = value!;
       print("radio : $selected_room_type");
+      _totalCharge = totalCharge;
     });
   }
 
@@ -72,6 +99,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
       lastDate: DateTime(2101),
     );
     int dayDiff = 0;
+    int totalCharge = 0;
 
     if (picked != null && picked != _selectedFromDate) {
       if (_selectedToDate == null) {
@@ -86,6 +114,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
             _selectedFromDate = null;
             _isFormDateSelected = false;
             _dayDifference = 0;
+            _totalCharge = 0;
           });
           return;
         } else {
@@ -94,18 +123,21 @@ class _AllocationRequestState extends State<AllocationRequest> {
         }
       }
       try {
-        _totalCharge = dayDiff *
-            price_according_to_roomtype[type_of_booking_list[selected_booking_type]]![type_of_room_list[selected_room_type]]!;
-        print('totl charge : $_totalCharge');
+        totalCharge = dayDiff *
+            price_according_to_roomtype[
+                    type_of_booking_list[selected_booking_type]]![
+                type_of_room_list[selected_room_type]]! *
+            int.parse(_guestController.text);
+        print('totl charge : $totalCharge');
       } catch (e) {
-        _totalCharge = 0;
+        totalCharge = 0;
         print('totl ee charge : $e');
-
       }
       setState(() {
         _selectedFromDate = picked;
         _isFormDateSelected = true;
         _dayDifference = dayDiff;
+        _totalCharge = totalCharge;
       });
     }
   }
@@ -118,6 +150,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
       lastDate: DateTime(2101),
     );
     int dayDiff = 0;
+    int totalCharge = 0;
 
     if (picked != null && picked != _selectedToDate) {
       if (_selectedFromDate == null) {
@@ -132,6 +165,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
             _selectedToDate = null;
             _isToDateSelected = false;
             _dayDifference = dayDiff;
+            _totalCharge = totalCharge;
           });
           return;
         } else {
@@ -139,10 +173,22 @@ class _AllocationRequestState extends State<AllocationRequest> {
           print('diffrence is : $dayDiff');
         }
       }
+      try {
+        totalCharge = dayDiff *
+            price_according_to_roomtype[
+                    type_of_booking_list[selected_booking_type]]![
+                type_of_room_list[selected_room_type]]! *
+            int.parse(_guestController.text);
+        print('totl charge : $totalCharge');
+      } catch (e) {
+        totalCharge = 0;
+        print('totl ee charge : $e');
+      }
       setState(() {
         _selectedToDate = picked;
         _isToDateSelected = true;
         _dayDifference = dayDiff;
+        _totalCharge = totalCharge;
       });
     }
   }
@@ -331,6 +377,25 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               ),
                               TextFormField(
                                 controller: _guestController,
+                                onChanged: (value) {
+                                  int totalCharge = 0;
+                                  try {
+                                    totalCharge = _dayDifference *
+                                        price_according_to_roomtype[
+                                                type_of_booking_list[
+                                                    selected_booking_type]]![
+                                            type_of_room_list[
+                                                selected_room_type]]! *
+                                        int.parse(_guestController.text);
+                                    print('totl charge : $totalCharge');
+                                  } catch (e) {
+                                    totalCharge = 0;
+                                    print('totl ee charge : $e');
+                                  }
+                                  setState(() {
+                                    _totalCharge = totalCharge;
+                                  });
+                                },
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Number of Guest',
@@ -359,7 +424,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       headingText("Total Charge : "),
-                                      headingText("1000 TK"),
+                                      headingText("$_totalCharge TK"),
                                     ],
                                   )),
                               SizedBox(
@@ -401,7 +466,21 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     print('day count : $_dayDifference');
                                     print(
                                         'number of guest : $_guestController');
-
+                                    bookingRequest(
+                                        context,
+                                        Allocation(
+                                            user_id: myUser!.id,
+                                            guest_house_id: 1,
+                                            boarding_date:
+                                                _selectedFromDate.toString(),
+                                            departure_date:
+                                                _selectedToDate.toString(),
+                                            room_type: type_of_room_list[
+                                                selected_room_type],
+                                            booking_type: type_of_booking_list[
+                                                selected_booking_type],
+                                            guest_count: int.parse(
+                                                _guestController.text)));
                                     // Navigator.push(
                                     //     context,
                                     //     MaterialPageRoute(
@@ -451,5 +530,30 @@ class _AllocationRequestState extends State<AllocationRequest> {
       content: Text(message),
       backgroundColor: color,
     ));
+  }
+
+  void bookingRequest(BuildContext context, Allocation booking) {
+    BookingNetwork network =
+        BookingNetwork(url: "/api/v1/public/allocation/new");
+    Future data = network.sendBookingRequest(booking);
+    data.then((value) {
+      print("data is : $value");
+      if (value['status'] == 'error') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(value['message']),
+          backgroundColor: dangerColor,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(value['message']),
+          backgroundColor: acceptColor,
+        ));
+        Navigator.popUntil(context, (route) => false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UserHome()),
+        );
+      }
+    });
   }
 }
