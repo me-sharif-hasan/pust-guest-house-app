@@ -1,3 +1,29 @@
+class AllocationListCatagory {
+  final AllocationList? allocationList;
+  AllocationListCatagory({this.allocationList});
+
+  Map<String, List<Allocation>> build() {
+    Map<String, List<Allocation>> catagory = {
+      'pending': [],
+      'approved': [],
+      'current': [],
+      'rejected': [],
+      'expired': []
+    };
+    print("bild method ...............${allocationList!.allocations!.length}");
+    for (int i = 0; i < allocationList!.allocations!.length; i += 1) {
+      print("looping $i");
+      catagory[allocationList!.allocations![i].status]!
+          .add(allocationList!.allocations![i]);
+      print(
+          "update length is : ${catagory[allocationList!.allocations![i].status]!.length}");
+    }
+    // catagory['pending']!.add(Allocation());
+
+    return catagory;
+  }
+}
+
 class AllocationList {
   final List<Allocation>? allocations;
   AllocationList({this.allocations});

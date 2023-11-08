@@ -24,6 +24,12 @@ class _UserHomeState extends State<UserHome> {
     ClientNetwork clientNetwork =
         ClientNetwork(url: '/api/v1/public/allocation');
     allocationData = clientNetwork.loadAllocations('/all');
+    allocationData!.then((value) async {
+      print("DATA get success...");
+      AllocationListCatagory allocationListCatagory =
+          await AllocationListCatagory(allocationList: value);
+      catagory_wise_allocations = await allocationListCatagory.build();
+    });
   }
 
   @override
@@ -79,30 +85,37 @@ class _UserHomeState extends State<UserHome> {
             ),
           ),
           body: TabBarView(
-            children: userTapPotions
-                .map((e) => Container(
-                      child: FutureBuilder(
-                        future: allocationData,
-                        builder:
-                            (context, AsyncSnapshot<AllocationList?> snapshot) {
-                          if (snapshot.hasData) {
-                            return createAllocationPage(
-                                snapshot.data!.allocations, context);
-                          } else {
-                            return Container(
-                                child:
-                                    Center(child: CircularProgressIndicator()));
-                          }
-                        },
-                      ),
-                    ))
-                .toList(),
+            children: userTapPotions.map((e) {
+              if (e == 'All') {
+                return Container(
+                  child: FutureBuilder(
+                    future: allocationData,
+                    builder:
+                        (context, AsyncSnapshot<AllocationList?> snapshot) {
+                      if (snapshot.hasData) {
+                        return createAllocationPage(
+                            snapshot.data!.allocations, context);
+                      } else {
+                        return Container(
+                            child: Center(child: CircularProgressIndicator()));
+                      }
+                    },
+                  ),
+                );
+              }
+
+              return Container(
+                child: createAllocationPage(
+                    catagory_wise_allocations![e.toLowerCase()], context),
+              );
+            }).toList(),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AllocationRequest()),
+                MaterialPageRoute(
+                    builder: (context) => const AllocationRequest()),
               );
             },
             child: Icon(Icons.add),
@@ -126,4 +139,6 @@ class _UserHomeState extends State<UserHome> {
       ).toList()),
     );
   }
+
+  
 }

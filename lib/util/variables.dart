@@ -1,3 +1,4 @@
+import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 
 User? myUser;
@@ -12,7 +13,8 @@ final List<String> userTapPotions = [
   "Pending",
   "Approved",
   "Current",
-  "Rejected"
+  "Rejected",
+  "Expired"
 ];
 
 final String hostUrl = "10.0.2.2:8000";
@@ -42,3 +44,5 @@ final List<String> departmentList = [
   "21 Thm",
   "Others"
 ];
+
+Map<String, List<Allocation>>? catagory_wise_allocations;
