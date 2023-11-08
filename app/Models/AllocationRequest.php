@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class AllocationRequest extends Model
 {
     use HasFactory;
-    public $fee;
+    protected $appends=['fee'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
@@ -20,7 +20,7 @@ class AllocationRequest extends Model
     public function guest_house():BelongsTo{
         return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
-    public function fee(){
+    public function getFeeAttribute(){
         $c = Charges::where('room_type','=',$this->room_type)->where('booking_type','=',$this->booking_type)->where('guest_house_id','=',$this->guest_house_id)->get();
         return count($c)>0?$c[0]:[
             'status'=>'error',
@@ -53,7 +53,6 @@ class AllocationRequest extends Model
         if(is_array($allocationRequest)||$allocationRequest instanceof Collection){
             foreach ($allocationRequest as &$a){
                 $expire_date=$a->departure_date;
-                $a->fee=$a->fee();
                 if($expire_date<Carbon::now()){
                     $a->status="expired";
                     $a->save();
