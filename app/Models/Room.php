@@ -12,6 +12,11 @@ use Ramsey\Collection\Collection;
 class Room extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'number',
+        'guest_house_id',
+        'room_type',
+    ];
     public function guest_house():BelongsTo{
         return $this->belongsTo(GuestHouse::class,'id','guest_house_id');
     }

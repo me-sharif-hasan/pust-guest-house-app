@@ -54,10 +54,23 @@ Route::prefix('v1')->group(function (){
                 Route::post('update',[\App\Http\Controllers\Admin\AdminBookingController::class,'update']);
                 Route::post('delete',[\App\Http\Controllers\Admin\AdminBookingController::class,'delete']);
             });
+
+            Route::prefix('guest-house')->group(function (){
+               Route::post('create',[\App\Http\Controllers\Admin\GuestHouseController::class,'create']);
+               Route::post('update',[\App\Http\Controllers\Admin\GuestHouseController::class,'update']);
+               Route::post('delete',[\App\Http\Controllers\Admin\GuestHouseController::class,'delete']);
+            });
+
+            Route::prefix('room')->group(function (){
+                Route::post('create',[\App\Http\Controllers\Admin\RoomController::class,'create']);
+                Route::post('update',[\App\Http\Controllers\Admin\RoomController::class,'update']);
+                Route::post('delete',[\App\Http\Controllers\Admin\RoomController::class,'delete']);
+            });
         });
 
         Route::prefix('common')->group(function (){
            Route::get('guest-house-list',[\App\Http\Controllers\common\GuestHouseController::class,'list']);
+           Route::get('room-list',[\App\Http\Controllers\common\RoomController::class,'list']);
         });
     });
 });

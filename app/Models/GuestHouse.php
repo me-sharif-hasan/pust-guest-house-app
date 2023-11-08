@@ -9,6 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class GuestHouse extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'title',
+        'gps_location',
+        'address',
+    ];
+    protected $appends=[
+        'rooms'
+    ];
+    public function getRoomsAttribute(){
+        return $this->rooms()->get();
+    }
     public function rooms():HasMany{
         return $this->hasMany(Room::class,'guest_house_id','id');
     }
