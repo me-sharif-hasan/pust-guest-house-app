@@ -55,13 +55,15 @@ Route::prefix('v1')->group(function (){
                 Route::post('delete',[\App\Http\Controllers\Admin\AdminBookingController::class,'delete']);
             });
 
-            Route::prefix('guest-house')->group(function (){
+            Route::prefix('guest-houses')->group(function (){
+               Route::get('',[\App\Http\Controllers\common\GuestHouseController::class,'list']);
                Route::post('create',[\App\Http\Controllers\Admin\GuestHouseController::class,'create']);
                Route::post('update',[\App\Http\Controllers\Admin\GuestHouseController::class,'update']);
                Route::post('delete',[\App\Http\Controllers\Admin\GuestHouseController::class,'delete']);
             });
 
-            Route::prefix('room')->group(function (){
+            Route::prefix('rooms')->group(function (){
+                Route::get('',[\App\Http\Controllers\common\RoomController::class,'list']);
                 Route::post('create',[\App\Http\Controllers\Admin\RoomController::class,'create']);
                 Route::post('update',[\App\Http\Controllers\Admin\RoomController::class,'update']);
                 Route::post('delete',[\App\Http\Controllers\Admin\RoomController::class,'delete']);
