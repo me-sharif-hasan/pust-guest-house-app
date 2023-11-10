@@ -18,7 +18,11 @@ class UserController extends Controller
                 $bin=$data['profile_picture'];
                 $image=\Intervention\Image\ImageManagerStatic::make(base64_decode($bin));
                 $ext=explode("/",$image->mime)[1];
-                $path='/profile-pictures'.uniqid("_dp").'_'.Auth::user()->id.'.'.$ext;
+                $storage_dir='/profile-pictures/';
+                if(!is_dir(public_path($storage_dir))){
+                    mkdir(public_path($storage_dir));
+                }
+                $path=$storage_dir.uniqid("_dp").'_'.Auth::user()->id.'.'.$ext;
                 $image->save(public_path($path));
                 $user->profile_picture=$path;
             }
