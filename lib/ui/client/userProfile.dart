@@ -20,34 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(appTitle),
-          actions: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: primary),
-                onPressed: () async {
-                  final props = await SharedPreferences.getInstance();
-                  props.remove(tokenText);
-                  // Navigator.pop(context);
-                  Navigator.popUntil(context, (route) => false);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login()),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text("Sign Out"),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Icon(Icons.logout)
-                  ],
-                ),
-              ),
-            ),
-          ],
+          title: appTitle,
         ),
         body: Stack(
           children: [
@@ -165,6 +138,35 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     rowBuilder("All : ",
                         "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['current']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: primary),
+                        onPressed: () async {
+                          final props = await SharedPreferences.getInstance();
+                          props.remove(tokenText);
+                          // Navigator.pop(context);
+                          Navigator.popUntil(context, (route) => false);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text("Sign Out"),
+                          ],
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.2,
                     ),

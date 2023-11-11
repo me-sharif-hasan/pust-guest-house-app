@@ -181,7 +181,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(appTitle),
+        title: appTitle,
       ),
       body: Container(
         child: Stack(

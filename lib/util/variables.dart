@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 
@@ -6,7 +7,14 @@ User? myUser;
 String? token;
 final String tokenText = '${appTitle}tokenSharedPreferencesText';
 
-final String appTitle = 'PUST Guest House';
+final Widget appTitle = SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: Row(children: [
+    Container(
+        height: 40, width: 40, child: Image.asset('images/pust_logo.png')),
+    Text('PUST Guest House'),
+  ]),
+);
 
 final List<String> userTapPotions = [
   "All",
@@ -72,3 +80,5 @@ final Map<String, Map<String, int>> price_according_to_roomtype = {
     "Non AC": 0,
   }
 };
+
+

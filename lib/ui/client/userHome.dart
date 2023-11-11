@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
+import 'package:guest_house_pust/network/bookingApiHandel.dart';
 import 'package:guest_house_pust/network/clientApiHandel.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
@@ -23,9 +24,9 @@ class _UserHomeState extends State<UserHome> {
   @override
   void initState() {
     super.initState();
-    ClientNetwork clientNetwork =
-        ClientNetwork(url: '/api/v1/public/allocation');
-    allocationData = clientNetwork.loadAllocations('/all');
+    BookingNetwork bookingNetwork =
+        BookingNetwork(url: '/api/v1/public/allocation');
+    allocationData = bookingNetwork.loadAllocations('/all');
     allocationData!.then((value) async {
       print("DATA get success...");
       AllocationListCatagory allocationListCatagory =
@@ -43,7 +44,7 @@ class _UserHomeState extends State<UserHome> {
       length: userTapPotions.length,
       child: Scaffold(
           appBar: AppBar(
-            title: Text(appTitle),
+            title: appTitle,
             actions: [
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -158,16 +159,24 @@ class _UserHomeState extends State<UserHome> {
     return GestureDetector(
       onTap: () {
         print('${allocation.id} id clicked.');
+        if (allocation.is_user_seen == 0) {
+          updateSeenStatus(allocation.id ?? -1);
+          setState(() {
+            allocation.is_user_seen = 1;
+          });
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RequestDetails(allocation: allocation)),
+              builder: (context) =>
+                  RequestDetails(user: myUser, allocation: allocation)),
         );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
         decoration: BoxDecoration(
-          color: primaryExtraLight,
+          color:
+              (allocation.is_user_seen == 0) ? primaryLight : primaryExtraLight,
           border: Border.all(width: 1.0, color: primaryDeep),
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -183,5 +192,11 @@ class _UserHomeState extends State<UserHome> {
         ),
       ),
     );
+  }
+
+  updateSeenStatus(int id) {
+    BookingNetwork bookingNetwork =
+        BookingNetwork(url: '/api/v1/public/allocation/update');
+    bookingNetwork.update(id, 'is_user_seen', '1');
   }
 }

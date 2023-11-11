@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class AllocationListCatagory {
   final AllocationList? allocationList;
   AllocationListCatagory({this.allocationList});
@@ -56,6 +58,7 @@ class Allocation {
   int? is_user_seen;
   String? created_at;
   String? updated_at;
+  int? room_charge;
 
   Allocation({
     this.id,
@@ -74,27 +77,34 @@ class Allocation {
     this.is_user_seen,
     this.created_at,
     this.updated_at,
+    this.room_charge,
   });
 
-  factory Allocation.fromJson(Map<String, dynamic> json) {
+  factory Allocation.fromJson(Map<String, dynamic> response) {
     // print("parse json is : $json");
+    int _charge = 0;
+    if (response['fee']['charge'] != null) {
+      _charge = response['fee']['charge'];
+    }
+
     return Allocation(
-      id: json['id'],
-      user_id: json['user_id'],
-      guest_house_id: json['guest_house_id'],
-      room_id: json['room_id'],
-      bed_number: json['bed_number'],
-      guest_count: json['guest_count'],
-      room_type: json['room_type'],
-      booking_type: json['booking_type'],
-      status: json['status'],
-      boarding_date: json['boarding_date'],
-      departure_date: json['departure_date'],
-      extension_request_date: json['extension_request_date'],
-      is_admin_seen: json['is_admin_seen'],
-      is_user_seen: json['is_user_seen'],
-      created_at: json['created_at'],
-      updated_at: json['updated_at'],
+      id: response['id'],
+      user_id: response['user_id'],
+      guest_house_id: response['guest_house_id'],
+      room_id: response['room_id'],
+      bed_number: response['bed_number'],
+      guest_count: response['guest_count'],
+      room_type: response['room_type'],
+      booking_type: response['booking_type'],
+      status: response['status'],
+      boarding_date: response['boarding_date'],
+      departure_date: response['departure_date'],
+      extension_request_date: response['extension_request_date'],
+      is_admin_seen: response['is_admin_seen'],
+      is_user_seen: response['is_user_seen'],
+      created_at: response['created_at'],
+      updated_at: response['updated_at'],
+      room_charge: _charge,
     );
   }
 

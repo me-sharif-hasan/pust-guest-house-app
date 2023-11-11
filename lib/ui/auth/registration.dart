@@ -50,7 +50,7 @@ class _RegistrationState extends State<Registration> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(appTitle),
+        title: appTitle,
         actions: [
           ElevatedButton(
             onPressed: () {

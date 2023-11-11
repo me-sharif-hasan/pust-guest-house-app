@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
+import 'package:guest_house_pust/ui/admin/adminHome.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
@@ -27,32 +28,62 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(color: primaryLight),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          colors: [Colors.green, Colors.white, primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        )),
         child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              color: primaryExtraDeep,
-            ),
-            Text("Splash Screen"),
-            Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: primaryDeep, borderRadius: BorderRadius.circular(10)),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login()),
-                  );
-                },
-                child: Icon(Icons.login),
+            child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Image.asset('images/pust_logo.png'),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 40,
+              ),
+              Text("PUST Guest House"),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Pabna University of Science and Technology"),
+              SizedBox(
+                height: 20,
+              ),
+              CircularProgressIndicator(
+                color: primaryExtraDeep,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: primaryDeep,
+                    borderRadius: BorderRadius.circular(10)),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                  child: Icon(Icons.login),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Text('@Sharif Hassan'),
+              Text('@Bayazid Hossain')
+            ],
+          ),
         )),
       ),
     );
@@ -93,6 +124,11 @@ class _SplashScreenState extends State<SplashScreen> {
             print(myUser!.name);
             if (value['user_type'] != null && value['user_type'] == 'admin') {
               // Parse to admin Page
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminHome()),
+              );
             } else {
               // Parse to User Page
               Navigator.pop(context);
