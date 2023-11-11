@@ -19,6 +19,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
   bool _isFormDateSelected = false;
   bool _isToDateSelected = false;
 
+  int selected_guest_house = 0;
   int selected_booking_type =
       0; // Initialize the selected radio to the first option.
   int selected_room_type =
@@ -29,29 +30,11 @@ class _AllocationRequestState extends State<AllocationRequest> {
   int _dayDifference = 0;
   int _totalCharge = 0;
 
-  final List<String> type_of_booking_list = [
-    "",
-    "Personal Use",
-    "Official Use"
-  ];
-  final List<String> type_of_room_list = ["", "AC", "Non AC"];
-  final Map<String, Map<String, int>> price_according_to_roomtype = {
-    "Personal Use": {
-      "": 0,
-      "AC": 300,
-      "Non AC": 200,
-    },
-    "Official Use": {
-      "": 0,
-      "AC": 200,
-      "Non AC": 100,
-    },
-    "": {
-      "": 0,
-      "AC": 0,
-      "Non AC": 0,
-    }
-  };
+  void handleGuestHouseTypeValueChange(int? value) {
+    setState(() {
+      selected_guest_house = value!;
+    });
+  }
 
   void handleBookingTypeValueChange(int? value) {
     int totalCharge = 0;
@@ -241,6 +224,30 @@ class _AllocationRequestState extends State<AllocationRequest> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              headingText("For?"),
+                              Row(
+                                children: [
+                                  Radio(
+                                    value: 1,
+                                    groupValue: selected_guest_house,
+                                    onChanged: handleGuestHouseTypeValueChange,
+                                  ),
+                                  Text(type_of_guest_house_list[1]),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Radio(
+                                    value: 2,
+                                    groupValue: selected_guest_house,
+                                    onChanged: handleGuestHouseTypeValueChange,
+                                  ),
+                                  Text(type_of_guest_house_list[2]),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
                               headingText("Type of booking"),
                               Row(
                                 children: [
@@ -435,26 +442,36 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     backgroundColor: primaryDeep),
                                 onPressed: () {
                                   print('Login clicked.');
-                                  if (selected_booking_type == 0) {
+                                  if (selected_guest_house == 0) {
+                                    showMessage(
+                                        context,
+                                        "Guest House is not selected yet.",
+                                        dangerColor);
+                                    return;
+                                  } else if (selected_booking_type == 0) {
                                     showMessage(
                                         context,
                                         "Booking type is not selected yet.",
                                         dangerColor);
+                                    return;
                                   } else if (selected_room_type == 0) {
                                     showMessage(
                                         context,
                                         "Room type is not selected yet.",
                                         dangerColor);
+                                    return;
                                   } else if (!_isFormDateSelected) {
                                     showMessage(
                                         context,
                                         "From date is not selected yet.",
                                         dangerColor);
+                                    return;
                                   } else if (!_isToDateSelected) {
                                     showMessage(
                                         context,
                                         "To date is not selected yet.",
                                         dangerColor);
+                                    return;
                                   }
 
                                   if (_form_key.currentState!.validate()) {
@@ -470,7 +487,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         context,
                                         Allocation(
                                             user_id: myUser!.id,
-                                            guest_house_id: 1,
+                                            guest_house_id: selected_guest_house,
                                             boarding_date:
                                                 _selectedFromDate.toString(),
                                             departure_date:

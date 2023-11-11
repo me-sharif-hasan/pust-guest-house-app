@@ -8,6 +8,7 @@ class User {
   String? department;
   String? phone;
   String? title;
+  String? profile_picture;
 
   User(
       {this.id,
@@ -16,7 +17,8 @@ class User {
       this.password,
       this.department,
       this.phone,
-      this.title});
+      this.title,
+      this.profile_picture});
 
   factory User.fromJson(Map<String, dynamic> json) {
     // print("parse json is : $json");
@@ -26,7 +28,8 @@ class User {
         email: json['email'],
         department: json['department'],
         phone: json['phone'],
-        title: json['title']);
+        title: json['title'],
+        profile_picture: json['profile_picture']);
   }
 
   Map<String, dynamic> getUser() {

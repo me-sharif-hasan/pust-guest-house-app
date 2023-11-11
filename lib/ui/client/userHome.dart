@@ -5,6 +5,7 @@ import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/network/clientApiHandel.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
+import 'package:guest_house_pust/ui/common/requestDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 
@@ -17,6 +18,7 @@ class UserHome extends StatefulWidget {
 
 class _UserHomeState extends State<UserHome> {
   Future<AllocationList?>? allocationData;
+  bool isDataLoaded = false;
 
   @override
   void initState() {
@@ -29,6 +31,9 @@ class _UserHomeState extends State<UserHome> {
       AllocationListCatagory allocationListCatagory =
           await AllocationListCatagory(allocationList: value);
       catagory_wise_allocations = await allocationListCatagory.build();
+      setState(() {
+        isDataLoaded = true;
+      });
     });
   }
 
@@ -51,15 +56,9 @@ class _UserHomeState extends State<UserHome> {
                           builder: (context) => const UserProfile()),
                     );
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: primary,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.person),
-                    ),
+                  child: CircleAvatar(
+                    backgroundImage:
+                        getBackgroundImage(myUser!.profile_picture),
                   ),
                 ),
               )
@@ -93,11 +92,13 @@ class _UserHomeState extends State<UserHome> {
                     builder:
                         (context, AsyncSnapshot<AllocationList?> snapshot) {
                       if (snapshot.hasData) {
+                        // return Container();
                         return createAllocationPage(
                             snapshot.data!.allocations, context);
                       } else {
                         return Container(
-                            child: Center(child: CircularProgressIndicator()));
+                          child: Center(child: CircularProgressIndicator()),
+                        );
                       }
                     },
                   ),
@@ -105,8 +106,12 @@ class _UserHomeState extends State<UserHome> {
               }
 
               return Container(
-                child: createAllocationPage(
-                    catagory_wise_allocations![e.toLowerCase()], context),
+                child: isDataLoaded
+                    ? createAllocationPage(
+                        catagory_wise_allocations![e.toLowerCase()], context)
+                    : Container(
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
               );
             }).toList(),
           ),
@@ -123,22 +128,60 @@ class _UserHomeState extends State<UserHome> {
     );
   }
 
+  getBackgroundImage(String? profile_picture) {
+    if (profile_picture == null) {
+      return AssetImage('images/man.png');
+    } else {
+      return NetworkImage('http://$hostUrl${myUser!.profile_picture}');
+    }
+  }
+
   Widget createAllocationPage(
       List<Allocation>? allocations, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(10),
+    if (allocations!.length == 0) {
+      return Center(
+        child: Text("Empty"),
+      );
+    }
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Column(
           children: allocations!.map(
         (e) {
-          return Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: primary),
-            child: Text("Text ${e.id}  ${e.room_id}  ${e.guest_house_id}"),
-          );
+          return allocationItemBuilder(e);
         },
       ).toList()),
     );
   }
 
-  
+  Widget allocationItemBuilder(Allocation allocation) {
+    return GestureDetector(
+      onTap: () {
+        print('${allocation.id} id clicked.');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => RequestDetails(allocation: allocation)),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+        decoration: BoxDecoration(
+          color: primaryExtraLight,
+          border: Border.all(width: 1.0, color: primaryDeep),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: ListTile(
+          leading: CircleAvatar(
+            child: Text('${allocation.id}'),
+          ),
+          title: Text(
+              "${type_of_guest_house_list[allocation.guest_house_id ?? 0]}"),
+          subtitle: Text(
+              "${allocation.boarding_date!.substring(0, 10)} to ${allocation.departure_date!.substring(0, 10)}"),
+          trailing: Text('${allocation.status}'),
+        ),
+      ),
+    );
+  }
 }
