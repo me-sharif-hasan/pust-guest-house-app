@@ -49,7 +49,9 @@ class AllocationRequest extends Model
         'booking_type',
         'bed_number',
         'guest_count',
-        'status'
+        'status',
+        'is_user-seen',
+        'is_admin_seen'
     ];
 
     /**
