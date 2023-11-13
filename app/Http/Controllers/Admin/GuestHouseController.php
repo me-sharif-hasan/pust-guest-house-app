@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllocationRequest;
 use App\Models\GuestHouse;
+use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -105,6 +108,45 @@ class GuestHouseController extends Controller
                 'status'=>'error',
                 'message'=>'Can not delete guest house. Something went wrong!',
                 'code'=>0x1106
+            ];
+        }
+    }
+
+    public function getAvailableRoomList(){
+        try{
+            $data=\request()->json()->all();
+            $guestHouseId=$data['guest_house_id'];
+            $guestHouse=GuestHouse::find($guestHouseId);
+            $rooms=$guestHouse->rooms;
+
+            $allocations=AllocationRequest::where('status','=','approved')->where('departure_date','>=',Carbon::now())->get();
+            $counter=[];
+            foreach ($allocations as $allocation){
+                $counter[$allocation->room_id]=isset($counter[$allocation->room_id])?$counter[$allocation->room_id]+1:1;
+            }
+
+            foreach ($rooms as &$room){
+                $room->border_count= $counter[$room->id] ?? 0;
+            }
+            return [
+                'status'=>'success',
+                'message'=>'Room list fetched',
+                'data'=>[
+                    'rooms'=>$rooms
+                ]
+            ];
+
+        }catch (\LogicException $e){
+            return [
+                'status'=>'error',
+                'message'=>$e->getMessage(),
+                'code'=>0x1107
+            ];
+        }catch (\Throwable $e){
+            return [
+                'status'=>'error',
+                'message'=>'Something went wrong when requesting room list!'.$e->getMessage(),
+                'code'=>0x1108
             ];
         }
     }
