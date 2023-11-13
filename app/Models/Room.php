@@ -20,13 +20,18 @@ class Room extends Model
     ];
     protected $appends=['current_borders'];
     public function guest_house():BelongsTo{
-        return $this->belongsTo(GuestHouse::class,'id','guest_house_id');
+        return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
     public function getCurrentBordersAttribute(){
-        $allocations=AllocationRequest::where('status','=','approved')->where('departure_date','>=',Carbon::now())->get();
+        $allocations=AllocationRequest::where('status','=','approved')->where('room_id','=',$this->id)->where('guest_house_id','=',$this->guest_house()->first()->id)->where('departure_date','>=',Carbon::now())->get();
+        $users=[];
         foreach ($allocations as &$allocation){
             $allocation->user;
+            if($allocation->room){
+                $users[]=$allocation->user;
+            }
         }
-
+        return $users;
     }
+
 }
