@@ -96,7 +96,7 @@ class UserLoginAndRegistrationController extends Controller
     public function verify(){
         try {
             $code=\request()->json()->all()['code'];
-            if(Auth::user()->verification_code==$code){
+            if(Auth::user()->verification_try<6&&Auth::user()->verification_code==$code){
                 Auth::user()->verification_code=null;
                 Auth::user()->email_verified_at=now();
                 Auth::user()->save();
@@ -105,6 +105,11 @@ class UserLoginAndRegistrationController extends Controller
                     'message'=>'Account verified!'
                 ];
             }else{
+                Auth::user()->verification_try++;
+                Auth::user()->save();
+                if(Auth::user()->verification_try>=6){
+                    throw new SafeException("You have reached the limit of retry. Request resend verification code again.");
+                }
                 throw new SafeException("Wrong verification code");
             }
         }catch (SafeException $e){
@@ -149,9 +154,10 @@ class UserLoginAndRegistrationController extends Controller
     public function sendVerificationCode($user=null){
         try{
             $user=$user??Auth::user();
-            $vcode=strtoupper(uniqid());
+            $vcode=random_int(100000,999999);
             $email=$user->email;
             $user->verification_code=$vcode;
+            $user->verification_try=0;
             $user->save();
             Mail::to($email)->send(new MailCover(
                 [
