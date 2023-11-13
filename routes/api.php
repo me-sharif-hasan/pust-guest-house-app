@@ -62,7 +62,7 @@ Route::prefix('v1')->group(function (){
                     Route::post('create',[\App\Http\Controllers\Admin\GuestHouseController::class,'create']);
                     Route::post('update',[\App\Http\Controllers\Admin\GuestHouseController::class,'update']);
                     Route::post('delete',[\App\Http\Controllers\Admin\GuestHouseController::class,'delete']);
-                    Route::get('rooms',[\App\Http\Controllers\Admin\GuestHouseController::class,'getAvailableRoomList']);
+                    Route::post('rooms',[\App\Http\Controllers\Admin\GuestHouseController::class,'getAvailableRoomList']);
                 });
 
                 Route::prefix('rooms')->group(function (){
@@ -70,6 +70,7 @@ Route::prefix('v1')->group(function (){
                     Route::post('create',[\App\Http\Controllers\Admin\RoomController::class,'create']);
                     Route::post('update',[\App\Http\Controllers\Admin\RoomController::class,'update']);
                     Route::post('delete',[\App\Http\Controllers\Admin\RoomController::class,'delete']);
+                    Route::post('status',[\App\Http\Controllers\Admin\RoomController::class,'status']);
                 });
 
                 Route::prefix('users')->group(function (){

@@ -110,4 +110,35 @@ class RoomController extends Controller
             ];
         }
     }
+
+
+    public function status(){
+        try {
+            $data=\request()->json()->all();
+            $v=Validator::make($data,[
+                'id'=>'required'
+            ]);
+            if($v->fails()){
+                return throw new \LogicException($v->errors()->first());
+            }
+            $room=Room::find($data['id']);
+            $room->delete();
+            return [
+                'status'=>'success',
+                'message'=>'Room deleted'
+            ];
+        }catch (\LogicException $e){
+            return [
+                'status'=>'error',
+                'message'=>$e->getMessage(),
+                'code'=>0x1307
+            ];
+        }catch (\Throwable $e){
+            return [
+                'status'=>'error',
+                'message'=>'Can not delete room. Something went wrong!',
+                'code'=>0x1308
+            ];
+        }
+    }
 }
