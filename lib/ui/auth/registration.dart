@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
+import 'package:guest_house_pust/ui/auth/emailVerification.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -381,10 +383,10 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  void registerUser(BuildContext context, User user) {
+  void registerUser(BuildContext context, User user) async {
     Network network = Network(url: "/api/v1/registration");
     Future data = network.registerUser(user);
-    data.then((value) {
+    data.then((value) async {
       print("data is : $value");
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -392,12 +394,16 @@ class _RegistrationState extends State<Registration> {
           backgroundColor: dangerColor,
         ));
       } else {
-        myUser = User.fromJson(value['data']['user']);
-        print(myUser!.name);
+        token = value['data']['token'];
+        print('new token is : $token');
+        // store the token to the shared preferences
+        final props = await SharedPreferences.getInstance();
+        props.setString(tokenText, token!);
+        
         Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Login()),
+          MaterialPageRoute(builder: (context) => const Varification()),
         );
         // Navigator.pop(context);
         // Navigator.push(

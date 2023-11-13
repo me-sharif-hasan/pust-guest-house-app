@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/admin/adminHome.dart';
-import 'package:guest_house_pust/ui/auth/emailVerification.dart';
+import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/ui/auth/registration.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
@@ -10,25 +10,16 @@ import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Varification extends StatefulWidget {
+  const Varification({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Varification> createState() => _VarificationState();
 }
 
-class _LoginState extends State<Login> {
+class _VarificationState extends State<Varification> {
   final _form_key = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool _obscureText = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
+  final _codeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +33,7 @@ class _LoginState extends State<Login> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Registration()),
+                MaterialPageRoute(builder: (context) => const Login()),
               );
             },
             child: Container(
@@ -53,7 +44,7 @@ class _LoginState extends State<Login> {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "Sign up",
+                  "Sign in",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                 ),
               )),
@@ -84,14 +75,14 @@ class _LoginState extends State<Login> {
                   height: MediaQuery.of(context).size.height * 0.15,
                 ),
                 Text(
-                  'Login',
+                  'Varify Your Email',
                   style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w500,
                       color: Colors.black),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.08,
+                  height: MediaQuery.of(context).size.height * 0.15,
                 ),
                 Center(
                   child: Container(
@@ -104,14 +95,14 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextFormField(
-                              controller: _emailController,
+                              controller: _codeController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'User Email',
-                                  hintText: 'Enter your Email'),
+                                  labelText: 'Varification Code',
+                                  hintText: 'Write your varification code.'),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'User Email required.';
+                                  return 'Varification code is required';
                                 }
                                 return null;
                               },
@@ -119,41 +110,15 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 10,
                             ),
-                            TextFormField(
-                              controller: _passwordController,
-                              keyboardType: TextInputType.visiblePassword,
-                              obscureText: _obscureText,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(_obscureText
-                                        ? Icons.visibility
-                                        : Icons.visibility_off),
-                                    onPressed: _togglePasswordVisibility,
-                                  ),
-                                  labelText: 'Password',
-                                  hintText: 'Enter Password'),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Password required.';
-                                } else if (value.length < 6) {
-                                  return 'Password at least 6 character';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    print('Forget Password clicked.');
+                                    print('Resend varification code.');
                                   },
                                   child: Text(
-                                    'Forget Password?',
+                                    'Resend varification code.',
                                     style: TextStyle(color: Colors.blue),
                                   ),
                                 )
@@ -166,29 +131,20 @@ class _LoginState extends State<Login> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: primaryDeep),
                               onPressed: () {
-                                print('Login clicked.');
-                                print('Email : ${_emailController.text}');
-                                print('Password : ${_passwordController.text}');
+                                print('varification clicked.');
 
                                 if (_form_key.currentState!.validate()) {
-                                  userLogin(context, _emailController.text,
-                                      _passwordController.text);
-
+                                  varifyEmail(context, _codeController.text);
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
-                                    content: Text('Login data send success'),
+                                    content: Text('Code send success'),
                                     backgroundColor: acceptColor,
                                   ));
-
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => RegistrationPage()));
                                 }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text('Login'),
+                                child: Text('Varify'),
                               ),
                             ),
                             SizedBox(
@@ -208,44 +164,22 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void userLogin(BuildContext context, String email, String password) async {
-    Network network = Network(url: "/api/v1/login");
-    Future data = network.loginUser(email, password);
+  void varifyEmail(BuildContext context, String code) async {
+    Network network = Network(url: "/api/v1/verify");
+    Future data = network.varifyUser(code);
     data.then((value) async {
       print("data is : $value");
-      if (value['status'] == 'not-verified') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(value['message']),
-          backgroundColor: dangerColor,
-        ));
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Varification()),
-        );
-      } else if (value['status'] == 'error') {
+      if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(value['message']),
           backgroundColor: dangerColor,
         ));
       } else {
-        token = value['data']['token'];
-
-        // store the token to the shared preferences
-        final props = await SharedPreferences.getInstance();
-        props.setString(tokenText, token!);
-        // Parse to User Page
         Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SplashScreen()),
         );
-
-        // Navigator.pop(context);
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const Login()),
-        // );
       }
     });
   }

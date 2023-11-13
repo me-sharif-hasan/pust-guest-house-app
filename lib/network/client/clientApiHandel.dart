@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'package:guest_house_pust/models/allocationModel.dart';
-import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:http/http.dart';
 

@@ -15,9 +15,8 @@ class Network {
 
     // // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(baseUrl, url!);
-    final response = await get(urlg, headers: {
-      'Authorization' : 'Bearer $token'
-    });
+    final response =
+        await get(urlg, headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -32,7 +31,7 @@ class Network {
 
     // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(baseUrl, url!);
-    
+
     final response = await post(urlg, body: json.encode(user.getUser()));
 
     if (response.statusCode == 200) {
@@ -43,16 +42,31 @@ class Network {
     }
   }
 
-  Future loginUser(String email, String password) async{
+  Future loginUser(String email, String password) async {
     print("$url");
     // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(baseUrl, url!);
-    Map<String, dynamic> credintial = {
-      'email' : email,
-      'password' : password
-    };
-    
+    Map<String, dynamic> credintial = {'email': email, 'password': password};
+
     final response = await post(urlg, body: json.encode(credintial));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future varifyUser(String code) async {
+    print("$url");
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.http(baseUrl, url!);
+    Map<String, dynamic> credintial = {'code': code};
+
+    final response = await post(urlg,
+        body: json.encode(credintial),
+        headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print(response.body);

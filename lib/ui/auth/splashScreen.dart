@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/admin/adminHome.dart';
+import 'package:guest_house_pust/ui/auth/emailVerification.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
@@ -113,9 +114,19 @@ class _SplashScreenState extends State<SplashScreen> {
         Future data = network.fetchUser();
         data.then((value) async {
           print("data is : $value");
-          if (value['status'] == 'error') {
+          if (value['status'] == 'not-verified') {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(value['message']),
+              backgroundColor: dangerColor,
+            ));
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Varification()),
+            );
+          } else if (value['status'] == 'error') {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('${value['message']} Varify your email first'),
               backgroundColor: dangerColor,
             ));
           } else {

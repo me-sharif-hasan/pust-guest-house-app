@@ -1,19 +1,17 @@
 import 'dart:convert';
 
 import 'package:guest_house_pust/models/allocationModel.dart';
-import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:http/http.dart';
 
 class BookingNetwork {
   final String? url;
-  final String baseUrl = "$hostUrl";
 
   BookingNetwork({this.url});
 
   Future<AllocationList?> loadAllocations(String param) async {
     print("$url");
-    var urlg = Uri.http(baseUrl, url! + param);
+    var urlg = Uri.http(hostUrl, url! + param);
 
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});
@@ -31,7 +29,7 @@ class BookingNetwork {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
 
     final response = await post(urlg,
         body: json.encode(booking.get()),
@@ -49,7 +47,7 @@ class BookingNetwork {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
 
     final response = await post(urlg,
         body: json.encode({'id': id, key: value}),

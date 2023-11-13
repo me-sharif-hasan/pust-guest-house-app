@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class AllocationListCatagory {
   final AllocationList? allocationList;
   AllocationListCatagory({this.allocationList});
@@ -32,11 +30,15 @@ class AllocationList {
 
   factory AllocationList.fromJson(List<dynamic> parsedJson) {
     List<Allocation> allocations = [];
-    allocations = parsedJson.map(
-      (e) {
-        return Allocation.fromJson(e);
-      },
-    ).toList();
+    allocations = parsedJson
+        .map(
+          (e) {
+            return Allocation.fromJson(e);
+          },
+        )
+        .toList()
+        .reversed
+        .toList();
     return AllocationList(allocations: allocations);
   }
 }

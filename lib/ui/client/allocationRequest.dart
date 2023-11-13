@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
-import 'package:guest_house_pust/network/bookingApiHandel.dart';
+import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';

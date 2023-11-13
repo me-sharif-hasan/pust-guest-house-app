@@ -1,4 +1,21 @@
-import 'package:flutter/material.dart';
+class UserList {
+  final List<User>? users;
+  UserList({this.users});
+
+  factory UserList.fromJson(List<dynamic> parsedJson) {
+    List<User> users = [];
+    users = parsedJson
+        .map(
+          (e) {
+            return User.fromJson(e);
+          },
+        )
+        .toList()
+        .reversed
+        .toList();
+    return UserList(users: users);
+  }
+}
 
 class User {
   int? id;

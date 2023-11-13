@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
-import 'package:guest_house_pust/network/bookingApiHandel.dart';
-import 'package:guest_house_pust/network/clientApiHandel.dart';
+import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
 import 'package:guest_house_pust/ui/common/requestDetails.dart';
@@ -12,7 +9,6 @@ import 'package:guest_house_pust/util/variables.dart';
 
 class UserHome extends StatefulWidget {
   const UserHome({super.key});
-
   @override
   State<UserHome> createState() => _UserHomeState();
 }
@@ -133,7 +129,7 @@ class _UserHomeState extends State<UserHome> {
     if (profile_picture == null) {
       return AssetImage('images/man.png');
     } else {
-      return NetworkImage('http://$hostUrl${myUser!.profile_picture}');
+      return NetworkImage('$hostImageUrl${myUser!.profile_picture}');
     }
   }
 
@@ -147,7 +143,7 @@ class _UserHomeState extends State<UserHome> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
-          children: allocations!.map(
+          children: allocations.map(
         (e) {
           return allocationItemBuilder(e);
         },

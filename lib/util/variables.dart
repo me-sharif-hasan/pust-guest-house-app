@@ -26,6 +26,7 @@ final List<String> userTapPotions = [
 ];
 
 final String hostUrl = "10.0.2.2:8000";
+final String hostImageUrl = "http://10.0.2.2:8000";
 
 final List<String> departmentList = [
   "Chose a department",
