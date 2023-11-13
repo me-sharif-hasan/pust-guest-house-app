@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
- g
 Route::prefix('v1')->group(function (){
     Route::any('/login',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'login'])->name('login');
     Route::any('/registration',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'registration'])->name('registration');
