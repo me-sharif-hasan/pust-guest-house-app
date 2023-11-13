@@ -23,10 +23,9 @@ class Room extends Model
         return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
     public function getCurrentBordersAttribute(){
-        $allocations=AllocationRequest::where('status','=','approved')->where('room_id','=',$this->id)->where('guest_house_id','=',$this->guest_house()->first()->id)->where('departure_date','>=',Carbon::now())->get();
+        $allocations=AllocationRequest::where('status','=','approved')->where('room_id','=',$this->id)->where('guest_house_id','=',$this->guest_house()->first()->id)->where('departure_date','>=',Carbon::now())->where('boarding_date','<=',Carbon::now())->get();
         $users=[];
         foreach ($allocations as &$allocation){
-            $allocation->user;
             if($allocation->room){
                 $users[]=$allocation->user;
             }

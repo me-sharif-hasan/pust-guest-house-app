@@ -119,7 +119,13 @@ class GuestHouseController extends Controller
             $guestHouse=GuestHouse::find($guestHouseId);
             $rooms=$guestHouse->rooms;
 
-            $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$guestHouseId)->where('departure_date','>=',Carbon::now())->get();
+            if(isset($data['allocation_id'])){
+                $allocation=AllocationRequest::find($data['allocation_id']);
+                $boarding_date=$allocation->boarding_date;
+                $departure_date=$allocation->departure_date;
+            }
+
+            $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$guestHouseId)->where('departure_date','>=',$departure_date)->where('boarding_date','<=',$boarding_date)->get();
             $counter=[];
             foreach ($allocations as $allocation){
                 $counter[$allocation->room_id]=isset($counter[$allocation->room_id])?$counter[$allocation->room_id]+1:1;
