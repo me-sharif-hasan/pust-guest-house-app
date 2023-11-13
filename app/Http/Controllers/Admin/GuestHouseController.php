@@ -119,6 +119,8 @@ class GuestHouseController extends Controller
             $guestHouse=GuestHouse::find($guestHouseId);
             $rooms=$guestHouse->rooms;
 
+            $boarding_date=Carbon::now();
+            $departure_date=Carbon::now();g
             if(isset($data['allocation_id'])){
                 $allocation=AllocationRequest::find($data['allocation_id']);
                 $boarding_date=$allocation->boarding_date;
