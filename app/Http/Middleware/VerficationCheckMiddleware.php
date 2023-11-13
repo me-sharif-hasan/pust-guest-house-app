@@ -20,7 +20,7 @@ class VerficationCheckMiddleware
             return $next($request);
         }else{
             return \response()->json([
-                'status'=>'error',
+                'status'=>'not-verified',
                 'message'=>"Email is not verified!",
                 'code'=>0x2001
             ]);
