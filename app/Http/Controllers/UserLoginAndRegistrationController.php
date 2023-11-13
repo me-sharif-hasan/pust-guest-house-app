@@ -63,11 +63,13 @@ class UserLoginAndRegistrationController extends Controller
             $user=new User();
             $user->fill($data);
             $user->save();
-            if($this->sendVerificationCode($user)){
+            if(Auth::attempt(['email'=>$data['email'],'password'=>$data['password']])&&$this->sendVerificationCode()){
+                $token=$request->user()->createToken($request->user()->email);
                 return [
                     'status'=>'success',
                     'message'=>'Registration successful. Check your email for the verification code',
                     'data'=>[
+                        'token'=>$token->plainTextToken,
                         'user'=>$user
                     ]
                 ];
