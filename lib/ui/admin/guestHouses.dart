@@ -5,6 +5,7 @@ import 'package:guest_house_pust/ui/admin/house/createHouse.dart';
 import 'package:guest_house_pust/ui/admin/house/roomsPage.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Houses extends StatefulWidget {
   const Houses({super.key});
@@ -45,6 +46,7 @@ class _HousesState extends State<Houses> {
                 return createHousesPage(snapshot.data!.houses, context);
               } else {
                 return Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
@@ -79,6 +81,14 @@ class _HousesState extends State<Houses> {
           borderRadius: BorderRadius.circular(6),
           color: primaryExtraLight),
       child: ListTile(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RoomsPage(
+                        guestHouseModel: house,
+                      )));
+        },
         leading: CircleAvatar(child: Text('${house.id}')),
         title: Text('${house.title}'),
         subtitle:
@@ -86,17 +96,22 @@ class _HousesState extends State<Houses> {
           Text('address : ${house.address}'),
           Text('Number of rooms : ${house.roomList!.rooms!.length}')
         ]),
-        trailing: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RoomsPage(
-                            guestHouseModel: house,
-                          )));
+        trailing: GestureDetector(
+            onTap: () {
+              _launchInBrowserView(house.lat!, house.log!);
             },
-            child: Text('Details')),
+            child: CircleAvatar(
+              child: Icon(Icons.location_pin),
+            )),
       ),
     );
+  }
+
+  Future<void> _launchInBrowserView(double lat, double long) async {
+    Uri url = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=${lat},${long}');
+    if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

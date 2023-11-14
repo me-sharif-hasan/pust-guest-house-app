@@ -3,6 +3,7 @@ import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/admin/userApi.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Users extends StatefulWidget {
   const Users({super.key});
@@ -81,6 +82,7 @@ class _UsersState extends State<Users> {
           GestureDetector(
             onTap: () {
               print('Calling');
+              _makePhoneCall('+88${e.phone!}');
             },
             child: Container(
                 padding: EdgeInsets.all(2.0),
@@ -106,5 +108,13 @@ class _UsersState extends State<Users> {
     } else {
       return NetworkImage('$hostImageUrl${profile_picture}');
     }
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }

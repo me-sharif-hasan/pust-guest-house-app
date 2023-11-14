@@ -54,18 +54,20 @@ class _RegistrationState extends State<Registration> {
       appBar: AppBar(
         title: appTitle,
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Login()),
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 12.0),
-              decoration: BoxDecoration(
-                  color: primary, borderRadius: BorderRadius.circular(4)),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
+            decoration: BoxDecoration(
+                color: primary, borderRadius: BorderRadius.circular(4)),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(primary)),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Login()),
+                );
+              },
               child: Center(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -399,7 +401,7 @@ class _RegistrationState extends State<Registration> {
         // store the token to the shared preferences
         final props = await SharedPreferences.getInstance();
         props.setString(tokenText, token!);
-        
+
         Navigator.pop(context);
         Navigator.push(
           context,

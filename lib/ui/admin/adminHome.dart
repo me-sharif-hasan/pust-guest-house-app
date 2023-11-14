@@ -29,7 +29,10 @@ class _AdminHomeState extends State<AdminHome> {
       appBar: AppBar(
         title: appTitle,
         actions: [
-          ElevatedButton(
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+            child: ElevatedButton(
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(primary)),
               onPressed: () async {
                 final props = await SharedPreferences.getInstance();
                 props.remove(tokenText);
@@ -40,17 +43,17 @@ class _AdminHomeState extends State<AdminHome> {
                   MaterialPageRoute(builder: (context) => const Login()),
                 );
               },
-              child: Container(
-                child: Row(
-                  children: [
-                    Text("Sign Out"),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Icon(Icons.logout),
-                  ],
-                ),
-              ))
+              child: Row(
+                children: [
+                  Text("Sign Out"),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Icon(Icons.logout),
+                ],
+              ),
+            ),
+          )
         ],
       ),
       body: navPages[pageIndex],

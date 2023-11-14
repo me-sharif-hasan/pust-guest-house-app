@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
+import 'package:guest_house_pust/ui/admin/request/adminRequestDetails.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
 import 'package:guest_house_pust/ui/common/requestDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
@@ -135,7 +136,7 @@ class _RequestsState extends State<Requests> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  RequestDetails(user: myUser, allocation: allocation)),
+                  AdminRequestDetails(user: myUser, allocation: allocation)),
         );
       },
       child: Container(
