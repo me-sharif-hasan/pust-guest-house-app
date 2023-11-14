@@ -69,7 +69,6 @@ class AllocationRequest extends Model
             }
         }else{
             $expire_date=$allocationRequest->departure_date;
-            $allocationRequest->fee=$allocationRequest->fee();
             if($expire_date<Carbon::now()){
                 $allocationRequest->status="expired";
                 $allocationRequest->save();
