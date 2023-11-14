@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['fee','room','guest_house'];
+    protected $appends=['fee','assigned_rooms','guest_house'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
@@ -29,15 +30,15 @@ class AllocationRequest extends Model
         ];
     }
 
-    public function getRoomAttribute(){
+    public function getAssignedRoomsAttribute(){
         return $this->room()->get();
     }
     public function getGuestHouseAttribute(){
         return $this->guest_house()->get();
     }
 
-    public function room():HasOne{
-        return $this->hasOne(Room::class,'id','room_id');
+    public function room():BelongsToMany{
+        return $this->belongsToMany(Room::class);
     }
 
     protected $fillable=[

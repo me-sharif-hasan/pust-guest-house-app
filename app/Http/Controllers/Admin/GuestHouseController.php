@@ -129,10 +129,15 @@ class GuestHouseController extends Controller
 
             $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$guestHouseId)->where('departure_date','>=',$departure_date)->where('boarding_date','<=',$boarding_date)->get();
             $counter=[];
-            foreach ($allocations as $allocation){
-                $counter[$allocation->room_id]=isset($counter[$allocation->room_id])?$counter[$allocation->room_id]+1:1;
+            if($allocations!=null){
+                foreach ($allocations as $allocation){
+                    $assigned_rooms = $allocation->assigned_rooms;
+                    if($assigned_rooms==null) continue;
+                    foreach ($assigned_rooms as $room){
+                        $counter[$room->id]=isset($counter[$room->id])?$counter[$room->id]+1:1;
+                    }
+                }
             }
-
             foreach ($rooms as &$room){
                 $room->border_count= $counter[$room->id] ?? 0;
             }

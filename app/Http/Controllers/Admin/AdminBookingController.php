@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\SafeException;
 use App\Http\Controllers\Controller;
 use App\Models\AllocationRequest;
 use Carbon\Carbon;
@@ -42,7 +43,13 @@ class AdminBookingController extends Controller
             $item->fill($data);
 
             if (isset($data['guest_house_id'])) $item->guest_house_id = $data['guest_house_id'];
-            $item->room_id = $data['room_id'] ?? null;
+
+            if(isset($data['room_id'])){
+                if(!is_array($data['room_id'])) throw new SafeException("Assigned room id must be an list");
+                $data['room_id']=array_unique($data['room_id']);
+                $item->room()->detach();
+                $item->room()->attach($data['room_id']);
+            }
             $item->extension_request_date = $data['extension_request_date'] ?? null;
             if (isset($data['status'])) $item->status = $data['status'];
 
@@ -57,7 +64,7 @@ class AdminBookingController extends Controller
         } catch (Throwable $e) {
             return [
                 'status' => 'error',
-                'message' => 'Something went wrong.',
+                'message' => 'Something went wrong.'.$e->getMessage(),
                 'code' => 0x203
             ];
         }
