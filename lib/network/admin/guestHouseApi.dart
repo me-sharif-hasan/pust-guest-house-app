@@ -26,6 +26,29 @@ class GuestHouseApi {
     }
   }
 
+  Future<RoomList?> loadAvailebaleRoom(
+      int guest_house_id, int allocation_id) async {
+    print("$url");
+    var urlg = Uri.http(hostUrl, url!);
+    Map<String, dynamic> data = {
+      'guest_house_id': guest_house_id,
+      'allocation_id': allocation_id,
+    };
+    final response = await post(
+      urlg,
+      body: json.encode(data),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return RoomList.fromJson(json.decode(response.body)['data']['rooms']);
+    } else {
+      print(response.statusCode);
+      return null;
+    }
+  }
+
   Future createHouse(GuestHouseModel model) async {
     print("$url");
 
@@ -35,6 +58,31 @@ class GuestHouseApi {
     final response = await post(urlg,
         body: json.encode(model.get()),
         headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future updateToApproved(int id, List<int> list) async {
+    print("$url");
+
+    Map<String, dynamic> data = {
+      'id': id,
+      'room_id': list,
+      'status': 'approved',
+      'is_admin_seen': 0,
+      'is_user_seen': 0,
+    };
+
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.http(hostUrl, url!);
+
+    final response = await post(urlg,
+        body: json.encode(data), headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print(response.body);

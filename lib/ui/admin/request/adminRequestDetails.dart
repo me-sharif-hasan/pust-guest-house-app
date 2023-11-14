@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/admin/roomModel.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
+import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 
@@ -14,13 +16,27 @@ class AdminRequestDetails extends StatefulWidget {
 }
 
 class _AdminRequestDetailsState extends State<AdminRequestDetails> {
+  Future<RoomList?>? room_list;
+  List<int> selectedRoomId = [];
+  List<String> selectedRoomNumber = [];
+  bool is_room_list_show = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.allocation!.status == 'pending') {
+      _getAvaileableRooms(
+          widget.allocation!.guest_house_id, widget.allocation!.id);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: appTitle,
       ),
-      
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -71,8 +87,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
               SizedBox(
                 height: 10,
               ),
-              rowBuilder(
-                  "ID : ", "${widget.allocation!.id}"),
+              rowBuilder("ID : ", "${widget.allocation!.id}"),
               SizedBox(
                 height: 10,
               ),
@@ -114,6 +129,62 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                       widget.allocation!.departure_date!,
                       widget.allocation!.room_charge!,
                       widget.allocation!.guest_count!)),
+              (widget.allocation!.status == 'pending')
+                  ? Container(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 30,
+                          ),
+                          is_room_list_show
+                              ? FutureBuilder(
+                                  future: room_list,
+                                  builder: (context,
+                                      AsyncSnapshot<RoomList?> snapshot) {
+                                    if (snapshot.hasData) {
+                                      // return Container();
+                                      return createRoomsPage(
+                                          snapshot.data!.rooms, context);
+                                    } else {
+                                      return Container(
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    }
+                                  },
+                                )
+                              : Container(),
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color?>(
+                                          primary)),
+                              onPressed: () {
+                                setState(() {
+                                  is_room_list_show = !is_room_list_show;
+                                });
+                              },
+                              child: Text(is_room_list_show
+                                  ? 'Hide Room List'
+                                  : 'Show Available Rooms')),
+                          rowBuilder(
+                              'Selected Rooms : ', '${selectedRoomId.length}'),
+                          rowBuilder("Rooms are : ",
+                              '${selectedRoomNumber.toString()}'),
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color?>(
+                                          acceptColor)),
+                              onPressed: () {
+                                approvedRequest(
+                                    widget.allocation!.id!, selectedRoomId);
+                              },
+                              child: Text('Approve')),
+                        ],
+                      ),
+                    )
+                  : Container(),
               SizedBox(
                 height: 50,
               ),
@@ -204,5 +275,56 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
     int total = day * charge * guest;
 
     return '$total taka';
+  }
+
+  void _getAvaileableRooms(int? guest_house_id, int? id) async {
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/guest-houses/rooms');
+    room_list = api.loadAvailebaleRoom(guest_house_id ?? 0, id ?? 0);
+    room_list!.then((value) {
+      print('data get with size : ${value!.rooms!.length}');
+    });
+  }
+
+  Widget createRoomsPage(List<RoomModel>? rooms, BuildContext context) {
+    return Column(
+      children: rooms!.map((e) => roomItemBuilder(e)).toList(),
+    );
+  }
+
+  Widget roomItemBuilder(RoomModel e) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(width: 1, color: primary)),
+      child: ListTile(
+        onTap: () {
+          if (selectedRoomId.contains(e.id)) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  '${e.id} ${e.number} room is rmoved from the selected list.'),
+              backgroundColor: dangerColor,
+            ));
+            setState(() {
+              selectedRoomId.remove(e.id);
+              selectedRoomNumber.remove(e.number);
+            });
+          } else {
+            setState(() {
+              selectedRoomId.add(e.id ?? 0);
+              selectedRoomNumber.add('${e.number}');
+            });
+          }
+        },
+        tileColor: primaryExtraLight,
+        title: Text('Room Number : ${e.number}'),
+        trailing: Text('Room Type : ${e.room_type}'),
+      ),
+    );
+  }
+
+  approvedRequest(int id, List<int> list) {
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/guest-houses/update');
+    api.updateToApproved(id, list);
   }
 }

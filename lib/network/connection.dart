@@ -6,7 +6,6 @@ import 'package:http/http.dart';
 
 class Network {
   final String? url;
-  final String baseUrl = "$hostUrl";
 
   Network({this.url});
 
@@ -14,7 +13,7 @@ class Network {
     // print("$url");
 
     // // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});
 
@@ -30,7 +29,7 @@ class Network {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
 
     final response = await post(urlg, body: json.encode(user.getUser()));
 
@@ -45,7 +44,7 @@ class Network {
   Future loginUser(String email, String password) async {
     print("$url");
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
     Map<String, dynamic> credintial = {'email': email, 'password': password};
 
     final response = await post(urlg, body: json.encode(credintial));
@@ -61,7 +60,7 @@ class Network {
   Future varifyUser(String code) async {
     print("$url");
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(baseUrl, url!);
+    var urlg = Uri.http(hostUrl, url!);
     Map<String, dynamic> credintial = {'code': code};
 
     final response = await post(urlg,
@@ -71,6 +70,20 @@ class Network {
     if (response.statusCode == 200) {
       print(response.body);
       return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  loadGuestHouses() async {
+    var urlg = Uri.http(hostUrl, url!);
+    final response =
+        await get(urlg, headers: {'Authorization': 'Bearer $token'});
+
+    print('Guest House data : ${response.body}');
+    if (response.statusCode == 200) {
+      print(response.body);
+      // return json.decode(response.body);
     } else {
       print(response.statusCode);
     }

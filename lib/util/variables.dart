@@ -57,11 +57,7 @@ final List<String> departmentList = [
 
 Map<String, List<Allocation>>? catagory_wise_allocations;
 
-final List<String> type_of_guest_house_list = [
-  "",
-  "Dhaka Guest House",
-  "Pabna Guest House"
-];
+List<String> type_of_guest_house_list = [];
 
 final List<String> type_of_booking_list = ["", "Personal Use", "Official Use"];
 final List<String> type_of_room_list = ["", "AC", "Non AC"];

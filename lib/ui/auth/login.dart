@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/connection.dart';
-import 'package:guest_house_pust/ui/admin/adminHome.dart';
 import 'package:guest_house_pust/ui/auth/emailVerification.dart';
 import 'package:guest_house_pust/ui/auth/registration.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
-import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';

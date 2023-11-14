@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/admin/GuestHouseModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
+import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
 import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/admin/adminHome.dart';
 import 'package:guest_house_pust/ui/auth/emailVerification.dart';
@@ -107,6 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       print('saved token is : $_token');
       token = _token;
+      await loadConstant();
       Future.delayed(const Duration(seconds: 1), () {
         print('one second has passed.');
         // Prints after 1 second.
@@ -148,20 +151,26 @@ class _SplashScreenState extends State<SplashScreen> {
                 MaterialPageRoute(builder: (context) => const UserHome()),
               );
             }
-
-            // Navigator.pop(context);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const Login()),
-            // );
           }
         });
-        // Navigator.pop(context);
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const Login()),
-        // );
       });
     }
+  }
+
+  loadConstant() async {
+    type_of_guest_house_list.add('');
+    // type_of_guest_house_list.add('Pabna');
+    // type_of_guest_house_list.add('Dhaka');
+
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/common/guest-house-list');
+
+    Future<GuestHouseList?> list = api.loadHouses();
+    list.then((value) async {
+      // print('DAta get -------${value!.houses!.length}');
+      for (int i = 0; i < value!.houses!.length; i++) {
+        print('-----id ${value.houses![i].title}');
+        type_of_guest_house_list.add('${value.houses![i].title}');
+      }
+    });
   }
 }
