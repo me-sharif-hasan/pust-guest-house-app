@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\SafeException;
 use App\Http\Controllers\Controller;
 use App\Models\GuestHouse;
 use App\Models\Room;
@@ -57,6 +58,9 @@ class RoomController extends Controller
                 return throw new \LogicException($v->errors()->first());
             }
             $room=Room::find($data['id']);
+            if(isset($room['parent_id'])&&$room['parent_id']==$room->id){
+                throw new SafeException("You can not set same room as bed");
+            }
             $room->fill($data);
             $room->save();
             return [
@@ -122,7 +126,7 @@ class RoomController extends Controller
                 return throw new \LogicException($v->errors()->first());
             }
             $room=Room::find($data['id']);
-            $room->delete();
+//            $room->delete();
             return [
                 'status'=>'success',
                 'message'=>'Room deleted'
@@ -138,6 +142,37 @@ class RoomController extends Controller
                 'status'=>'error',
                 'message'=>'Can not delete room. Something went wrong!',
                 'code'=>0x1308
+            ];
+        }
+    }
+
+    public function getParentRooms(){
+        try {
+            $data=\request()->json()->all();
+            $v=Validator::make($data,[
+                'guest_house_id'=>'required'
+            ]);
+            if($v->fails()){
+                return throw new \LogicException($v->errors()->first());
+            }
+            $rooms=GuestHouse::find($data['guest_house_id'])->rooms->where('parent_id','=',null)->sortBy('id');
+
+            return [
+                'status'=>'success',
+                'message'=>'Fetch successful',
+                'data'=>$rooms
+            ];
+        }catch (\LogicException $e){
+            return [
+                'status'=>'error',
+                'message'=>$e->getMessage(),
+                'code'=>0x1309
+            ];
+        }catch (\Throwable $e){
+            return [
+                'status'=>'error',
+                'message'=>'Can not delete room. Something went wrong!',
+                'code'=>0x1310
             ];
         }
     }

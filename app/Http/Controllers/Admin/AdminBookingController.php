@@ -38,6 +38,7 @@ class AdminBookingController extends Controller
     {
         try {
             $data = $r->json()->all();
+
             $item = AllocationRequest::filter(AllocationRequest::find($data['id']));
             unset($data['id']);
             $item->fill($data);

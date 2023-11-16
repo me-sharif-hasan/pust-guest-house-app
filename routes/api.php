@@ -63,6 +63,7 @@ Route::prefix('v1')->group(function (){
                     Route::post('update',[\App\Http\Controllers\Admin\GuestHouseController::class,'update']);
                     Route::post('delete',[\App\Http\Controllers\Admin\GuestHouseController::class,'delete']);
                     Route::post('rooms',[\App\Http\Controllers\Admin\GuestHouseController::class,'getAvailableRoomList']);
+                    Route::post('base-rooms',[\App\Http\Controllers\Admin\RoomController::class,'getParentRooms']);
                 });
 
                 Route::prefix('rooms')->group(function (){
