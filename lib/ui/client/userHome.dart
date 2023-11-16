@@ -180,8 +180,9 @@ class _UserHomeState extends State<UserHome> {
           leading: CircleAvatar(
             child: Text('${allocation.id}'),
           ),
-          title: Text(
-              "${type_of_guest_house_list[allocation.guest_house_id ?? 0]}"),
+          title: Text("${type_of_guest_house_list[allocation.guest_house_id]}"),
+          // title: Text(
+          //     "${type_of_guest_house_list[allocation.guest_house_id ?? 0].title}"),
           subtitle: Text(
               "${allocation.boarding_date!.substring(0, 10)} to ${allocation.departure_date!.substring(0, 10)}"),
           trailing: Text('${allocation.status}'),

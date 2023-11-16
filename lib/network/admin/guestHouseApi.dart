@@ -26,29 +26,6 @@ class GuestHouseApi {
     }
   }
 
-  Future<RoomList?> loadAvailebaleRoom(
-      int guest_house_id, int allocation_id) async {
-    print("$url");
-    var urlg = Uri.http(hostUrl, url!);
-    Map<String, dynamic> data = {
-      'guest_house_id': guest_house_id,
-      'allocation_id': allocation_id,
-    };
-    final response = await post(
-      urlg,
-      body: json.encode(data),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      return RoomList.fromJson(json.decode(response.body)['data']['rooms']);
-    } else {
-      print(response.statusCode);
-      return null;
-    }
-  }
-
   Future createHouse(GuestHouseModel model) async {
     print("$url");
 
@@ -92,15 +69,59 @@ class GuestHouseApi {
     }
   }
 
-  Future createRoom(RoomModel model) async {
+  Future<RoomList?> loadAvailebaleRoom(
+      int guest_house_id, int allocation_id) async {
+    print("$url");
+    var urlg = Uri.http(hostUrl, url!);
+    Map<String, dynamic> data = {
+      'guest_house_id': guest_house_id,
+      'allocation_id': allocation_id,
+    };
+    final response = await post(
+      urlg,
+      body: json.encode(data),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return RoomList.fromJson(json.decode(response.body)['data']['rooms']);
+    } else {
+      print(response.statusCode);
+      return null;
+    }
+  }
+
+  Future<RoomList?> loadParentRoom(int guest_house_id) async {
+    print("$url");
+    var urlg = Uri.http(hostUrl, url!);
+    Map<String, dynamic> data = {'guest_house_id': guest_house_id};
+    final response = await post(
+      urlg,
+      body: json.encode(data),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return RoomList.fromJson(json.decode(response.body)['data']);
+    } else {
+      print(response.statusCode);
+      return null;
+    }
+  }
+
+  Future createRoom(RoomModel model, int? parent_id) async {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
     var urlg = Uri.http(hostUrl, url!);
 
+    Map<String, dynamic> data = model.get();
+    data.putIfAbsent('parent_id', () => parent_id);
+
     final response = await post(urlg,
-        body: json.encode(model.get()),
-        headers: {'Authorization': 'Bearer $token'});
+        body: json.encode(data), headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print(response.body);

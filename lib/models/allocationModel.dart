@@ -6,7 +6,7 @@ class AllocationListCatagory {
     Map<String, List<Allocation>> catagory = {
       'pending': [],
       'approved': [],
-      'current': [],
+      'canceled': [],
       'rejected': [],
       'expired': []
     };

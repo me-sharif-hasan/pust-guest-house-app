@@ -158,7 +158,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   loadConstant() async {
-    type_of_guest_house_list.add('');
     // type_of_guest_house_list.add('Pabna');
     // type_of_guest_house_list.add('Dhaka');
 
@@ -169,7 +168,8 @@ class _SplashScreenState extends State<SplashScreen> {
       // print('DAta get -------${value!.houses!.length}');
       for (int i = 0; i < value!.houses!.length; i++) {
         print('-----id ${value.houses![i].title}');
-        type_of_guest_house_list.add('${value.houses![i].title}');
+        type_of_guest_house_list[value.houses![i].id ?? 0] =
+            '${value.houses![i].title}';
       }
     });
   }

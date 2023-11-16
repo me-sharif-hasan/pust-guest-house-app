@@ -20,7 +20,7 @@ final List<String> userTapPotions = [
   "All",
   "Pending",
   "Approved",
-  "Current",
+  "Canceled",
   "Rejected",
   "Expired"
 ];
@@ -57,26 +57,26 @@ final List<String> departmentList = [
 
 Map<String, List<Allocation>>? catagory_wise_allocations;
 
-List<String> type_of_guest_house_list = [];
+Map<int, String> type_of_guest_house_list ={};
 
 final List<String> type_of_booking_list = ["", "Personal Use", "Official Use"];
 final List<String> type_of_room_list = ["", "AC", "Non AC"];
-final Map<String, Map<String, int>> price_according_to_roomtype = {
-  "Personal Use": {
-    "": 0,
-    "AC": 300,
-    "Non AC": 200,
-  },
-  "Official Use": {
-    "": 0,
-    "AC": 200,
-    "Non AC": 100,
-  },
-  "": {
-    "": 0,
-    "AC": 0,
-    "Non AC": 0,
-  }
-};
+// final Map<String, Map<String, int>> price_according_to_roomtype = {
+//   "Personal Use": {
+//     "": 0,
+//     "AC": 300,
+//     "Non AC": 200,
+//   },
+//   "Official Use": {
+//     "": 0,
+//     "AC": 200,
+//     "Non AC": 100,
+//   },
+//   "": {
+//     "": 0,
+//     "AC": 0,
+//     "Non AC": 0,
+//   }
+// };
 
 

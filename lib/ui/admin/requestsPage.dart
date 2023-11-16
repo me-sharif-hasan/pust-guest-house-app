@@ -151,7 +151,7 @@ class _RequestsState extends State<Requests> {
             child: Text('${allocation.id}'),
           ),
           title: Text(
-              "${type_of_guest_house_list[allocation.guest_house_id ?? 0]}"),
+              "${type_of_guest_house_list[allocation.guest_house_id]}"),
           subtitle: Text(
               "${allocation.boarding_date!.substring(0, 10)} to ${allocation.departure_date!.substring(0, 10)}"),
           trailing: Text('${allocation.status}'),

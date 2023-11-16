@@ -17,10 +17,21 @@ class CreateRoom extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoom> {
   final _form_key = GlobalKey<FormState>();
   final _numberController = TextEditingController();
-  final _houseIdController = TextEditingController();
-  final _roomTypeController = TextEditingController();
 
   int selected_room_type = 0;
+
+  Future<RoomList?>? room_list;
+  bool is_room_list_show = false;
+  int? selected_room_id;
+  String? selected_room_number;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    loadAllParentRoom(widget.guestHouseId ?? 0);
+  }
 
   void handleRoomTypeValueChange(int? value) {
     setState(() {
@@ -128,8 +139,56 @@ class _CreateRoomState extends State<CreateRoom> {
                                 ),
                               ],
                             ),
+                            is_room_list_show
+                                ? FutureBuilder(
+                                    future: room_list,
+                                    builder: (context,
+                                        AsyncSnapshot<RoomList?> snapshot) {
+                                      if (snapshot.hasData) {
+                                        // return Container();
+                                        return createRoomsPage(
+                                            snapshot.data!.rooms, context);
+                                      } else {
+                                        return Container(
+                                          child: Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                        );
+                                      }
+                                    },
+                                  )
+                                : Container(),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color?>(
+                                            primary)),
+                                onPressed: () {
+                                  setState(() {
+                                    is_room_list_show = !is_room_list_show;
+                                  });
+                                },
+                                child: Text(is_room_list_show
+                                    ? 'Hide Room List'
+                                    : 'Show Rooms')),
+                            (selected_room_number == null)
+                                ? Container()
+                                : Container(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Selected Room Number : ',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text('$selected_room_number'),
+                                      ],
+                                    ),
+                                  ),
                             SizedBox(
-                              height: 60,
+                              height: 50,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -201,7 +260,8 @@ class _CreateRoomState extends State<CreateRoom> {
 
   void sendRoomDate(BuildContext context, RoomModel roomModel) async {
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/rooms/create');
-    Map<String, dynamic> data = await api.createRoom(roomModel);
+    Map<String, dynamic> data =
+        await api.createRoom(roomModel, selected_room_id);
 
     if (data['status'] == 'error') {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -219,5 +279,49 @@ class _CreateRoomState extends State<CreateRoom> {
         MaterialPageRoute(builder: (context) => AdminHome()),
       );
     }
+  }
+
+  Widget createRoomsPage(List<RoomModel>? rooms, BuildContext context) {
+    return Column(
+      children: rooms!.map((e) => roomItemBuilder(e)).toList(),
+    );
+  }
+
+  Widget roomItemBuilder(RoomModel e) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(width: 1, color: primary)),
+      child: ListTile(
+        onTap: () {
+          if (selected_room_id == e.id) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  '${e.id} ${e.number} room is rmoved from the selection.'),
+              backgroundColor: dangerColor,
+            ));
+            setState(() {
+              selected_room_id = null;
+              selected_room_number = null;
+            });
+          } else {
+            setState(() {
+              selected_room_id = e.id;
+              selected_room_number = e.number;
+            });
+          }
+        },
+        tileColor: primaryExtraLight,
+        title: Text('Room Number : ${e.number}'),
+        trailing: Text('Room Type : ${e.room_type}'),
+      ),
+    );
+  }
+
+  void loadAllParentRoom(int id) {
+    GuestHouseApi api =
+        GuestHouseApi(url: '/api/v1/admin/guest-houses/base-rooms');
+    room_list = api.loadParentRoom(id);
   }
 }

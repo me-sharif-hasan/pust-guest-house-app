@@ -324,7 +324,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
   }
 
   approvedRequest(int id, List<int> list) {
-    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/guest-houses/update');
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
     api.updateToApproved(id, list);
   }
 }

@@ -27,8 +27,9 @@ class _AllocationRequestState extends State<AllocationRequest> {
 
   DateTime? _selectedFromDate;
   DateTime? _selectedToDate;
-  int _dayDifference = 0;
-  int _totalCharge = 0;
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  // int _dayDifference = 0;
+  // int _totalCharge = 0;
 
   void handleGuestHouseTypeValueChange(int? value) {
     setState(() {
@@ -37,40 +38,40 @@ class _AllocationRequestState extends State<AllocationRequest> {
   }
 
   void handleBookingTypeValueChange(int? value) {
-    int totalCharge = 0;
-    try {
-      totalCharge = _dayDifference *
-          price_according_to_roomtype[type_of_booking_list[value!]]![
-              type_of_room_list[selected_room_type]]! *
-          int.parse(_guestController.text);
-      print('totl charge : $totalCharge');
-    } catch (e) {
-      totalCharge = 0;
-      print('totl ee charge : $e');
-    }
+    // int totalCharge = 0;
+    // try {
+    //   totalCharge = _dayDifference *
+    //       price_according_to_roomtype[type_of_booking_list[value!]]![
+    //           type_of_room_list[selected_room_type]]! *
+    //       int.parse(_guestController.text);
+    //   print('totl charge : $totalCharge');
+    // } catch (e) {
+    //   totalCharge = 0;
+    //   print('totl ee charge : $e');
+    // }
     setState(() {
       selected_booking_type = value!;
-      print("radio : $selected_booking_type");
-      _totalCharge = totalCharge;
+      // print("radio : $selected_booking_type");
+      // _totalCharge = totalCharge;
     });
   }
 
   void handleRoomTypeValueChange(int? value) {
-    int totalCharge = 0;
-    try {
-      totalCharge = _dayDifference *
-          price_according_to_roomtype[type_of_booking_list[
-              selected_booking_type]]![type_of_room_list[value!]]! *
-          int.parse(_guestController.text);
-      print('totl charge : $totalCharge');
-    } catch (e) {
-      totalCharge = 0;
-      print('totl ee charge : $e');
-    }
+    // int totalCharge = 0;
+    // try {
+    //   totalCharge = _dayDifference *
+    //       price_according_to_roomtype[type_of_booking_list[
+    //           selected_booking_type]]![type_of_room_list[value!]]! *
+    //       int.parse(_guestController.text);
+    //   print('totl charge : $totalCharge');
+    // } catch (e) {
+    //   totalCharge = 0;
+    //   print('totl ee charge : $e');
+    // }
     setState(() {
       selected_room_type = value!;
-      print("radio : $selected_room_type");
-      _totalCharge = totalCharge;
+      // print("radio : $selected_room_type");
+      // _totalCharge = totalCharge;
     });
   }
 
@@ -81,8 +82,8 @@ class _AllocationRequestState extends State<AllocationRequest> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    int dayDiff = 0;
-    int totalCharge = 0;
+    // int dayDiff = 0;
+    // int totalCharge = 0;
 
     if (picked != null && picked != _selectedFromDate) {
       if (_selectedToDate == null) {
@@ -96,33 +97,42 @@ class _AllocationRequestState extends State<AllocationRequest> {
           setState(() {
             _selectedFromDate = null;
             _isFormDateSelected = false;
-            _dayDifference = 0;
-            _totalCharge = 0;
+            // _dayDifference = 0;
+            // _totalCharge = 0;
           });
           return;
         } else {
-          dayDiff = _selectedToDate!.difference(picked).inDays + 1;
-          print('diffrence is : $dayDiff');
+          // dayDiff = _selectedToDate!.difference(picked).inDays + 1;
+          // print('diffrence is : $dayDiff');
         }
       }
-      try {
-        totalCharge = dayDiff *
-            price_according_to_roomtype[
-                    type_of_booking_list[selected_booking_type]]![
-                type_of_room_list[selected_room_type]]! *
-            int.parse(_guestController.text);
-        print('totl charge : $totalCharge');
-      } catch (e) {
-        totalCharge = 0;
-        print('totl ee charge : $e');
-      }
+      // try {
+      //   totalCharge = dayDiff *
+      //       price_according_to_roomtype[
+      //               type_of_booking_list[selected_booking_type]]![
+      //           type_of_room_list[selected_room_type]]! *
+      //       int.parse(_guestController.text);
+      //   print('totl charge : $totalCharge');
+      // } catch (e) {
+      //   totalCharge = 0;
+      //   print('totl ee charge : $e');
+      // }
+
+      final TimeOfDay? pickedTime = await _selectTime(context);
       setState(() {
         _selectedFromDate = picked;
         _isFormDateSelected = true;
-        _dayDifference = dayDiff;
-        _totalCharge = totalCharge;
+        // _dayDifference = dayDiff;
+        // _totalCharge = totalCharge;
       });
     }
+  }
+
+  Future<TimeOfDay?> _selectTime(BuildContext context) async {
+    return await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
   }
 
   Future<void> _selectToDate(BuildContext context) async {
@@ -132,8 +142,8 @@ class _AllocationRequestState extends State<AllocationRequest> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    int dayDiff = 0;
-    int totalCharge = 0;
+    // int dayDiff = 0;
+    // int totalCharge = 0;
 
     if (picked != null && picked != _selectedToDate) {
       if (_selectedFromDate == null) {
@@ -147,31 +157,31 @@ class _AllocationRequestState extends State<AllocationRequest> {
           setState(() {
             _selectedToDate = null;
             _isToDateSelected = false;
-            _dayDifference = dayDiff;
-            _totalCharge = totalCharge;
+            // _dayDifference = dayDiff;
+            // _totalCharge = totalCharge;
           });
           return;
         } else {
-          dayDiff = picked.difference(_selectedFromDate!).inDays + 1;
-          print('diffrence is : $dayDiff');
+          // dayDiff = picked.difference(_selectedFromDate!).inDays + 1;
+          // print('diffrence is : $dayDiff');
         }
       }
-      try {
-        totalCharge = dayDiff *
-            price_according_to_roomtype[
-                    type_of_booking_list[selected_booking_type]]![
-                type_of_room_list[selected_room_type]]! *
-            int.parse(_guestController.text);
-        print('totl charge : $totalCharge');
-      } catch (e) {
-        totalCharge = 0;
-        print('totl ee charge : $e');
-      }
+      // try {
+      //   totalCharge = dayDiff *
+      //       price_according_to_roomtype[
+      //               type_of_booking_list[selected_booking_type]]![
+      //           type_of_room_list[selected_room_type]]! *
+      //       int.parse(_guestController.text);
+      //   print('totl charge : $totalCharge');
+      // } catch (e) {
+      //   totalCharge = 0;
+      //   print('totl ee charge : $e');
+      // }
       setState(() {
         _selectedToDate = picked;
         _isToDateSelected = true;
-        _dayDifference = dayDiff;
-        _totalCharge = totalCharge;
+        // _dayDifference = dayDiff;
+        // _totalCharge = totalCharge;
       });
     }
   }
@@ -225,26 +235,41 @@ class _AllocationRequestState extends State<AllocationRequest> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               headingText("For?"),
-                              Row(
-                                children: [
-                                  Radio(
-                                    value: 1,
-                                    groupValue: selected_guest_house,
-                                    onChanged: handleGuestHouseTypeValueChange,
-                                  ),
-                                  Text(type_of_guest_house_list[1]),
-                                ],
+                              Column(
+                                children: type_of_guest_house_list.entries
+                                    .map((e) => Row(
+                                          children: [
+                                            Radio(
+                                              value: e.key,
+                                              groupValue: selected_guest_house,
+                                              onChanged:
+                                                  handleGuestHouseTypeValueChange,
+                                            ),
+                                            Text('${e.value}'),
+                                          ],
+                                        ))
+                                    .toList(),
                               ),
-                              Row(
-                                children: [
-                                  Radio(
-                                    value: 2,
-                                    groupValue: selected_guest_house,
-                                    onChanged: handleGuestHouseTypeValueChange,
-                                  ),
-                                  Text(type_of_guest_house_list[2]),
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Radio(
+                              //       value: 1,
+                              //       groupValue: selected_guest_house,
+                              //       onChanged: handleGuestHouseTypeValueChange,
+                              //     ),
+                              //     Text(type_of_guest_house_list[1]),
+                              //   ],
+                              // ),
+                              // Row(
+                              //   children: [
+                              //     Radio(
+                              //       value: 2,
+                              //       groupValue: selected_guest_house,
+                              //       onChanged: handleGuestHouseTypeValueChange,
+                              //     ),
+                              //     Text(type_of_guest_house_list[2]),
+                              //   ],
+                              // ),
                               SizedBox(
                                 height: 15,
                               ),
@@ -359,81 +384,81 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Total days of stay : "),
-                                      Text("$_dayDifference days"),
-                                    ],
-                                  )),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              TextFormField(
-                                controller: _guestController,
-                                onChanged: (value) {
-                                  int totalCharge = 0;
-                                  try {
-                                    totalCharge = _dayDifference *
-                                        price_according_to_roomtype[
-                                                type_of_booking_list[
-                                                    selected_booking_type]]![
-                                            type_of_room_list[
-                                                selected_room_type]]! *
-                                        int.parse(_guestController.text);
-                                    print('totl charge : $totalCharge');
-                                  } catch (e) {
-                                    totalCharge = 0;
-                                    print('totl ee charge : $e');
-                                  }
-                                  setState(() {
-                                    _totalCharge = totalCharge;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Number of Guest',
-                                    hintText: 'Write number of guest'),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Number of guest required.';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 4),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      headingText("Total Charge : "),
-                                      headingText("$_totalCharge TK"),
-                                    ],
-                                  )),
+                              // SizedBox(
+                              //   height: 15,
+                              // ),
+                              // Container(
+                              //     padding: EdgeInsets.symmetric(
+                              //         vertical: 16, horizontal: 10),
+                              //     decoration: BoxDecoration(
+                              //         border: Border.all(
+                              //           color: Colors.grey,
+                              //           width: 1,
+                              //         ),
+                              //         borderRadius: BorderRadius.circular(5)),
+                              //     child: Row(
+                              //       mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Text("Total days of stay : "),
+                              //         Text("$_dayDifference days"),
+                              //       ],
+                              //     )),
+                              // SizedBox(
+                              //   height: 15,
+                              // ),
+                              // TextFormField(
+                              //   controller: _guestController,
+                              //   onChanged: (value) {
+                              //     int totalCharge = 0;
+                              //     try {
+                              //       totalCharge = _dayDifference *
+                              //           price_according_to_roomtype[
+                              //                   type_of_booking_list[
+                              //                       selected_booking_type]]![
+                              //               type_of_room_list[
+                              //                   selected_room_type]]! *
+                              //           int.parse(_guestController.text);
+                              //       print('totl charge : $totalCharge');
+                              //     } catch (e) {
+                              //       totalCharge = 0;
+                              //       print('totl ee charge : $e');
+                              //     }
+                              //     setState(() {
+                              //       _totalCharge = totalCharge;
+                              //     });
+                              //   },
+                              //   decoration: InputDecoration(
+                              //       border: OutlineInputBorder(),
+                              //       labelText: 'Number of Guest',
+                              //       hintText: 'Write number of guest'),
+                              //   validator: (value) {
+                              //     if (value!.isEmpty) {
+                              //       return 'Number of guest required.';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
+                              // SizedBox(
+                              //   height: 15,
+                              // ),
+                              // Container(
+                              //     padding: EdgeInsets.symmetric(
+                              //         vertical: 16, horizontal: 4),
+                              //     decoration: BoxDecoration(
+                              //         border: Border.all(
+                              //           color: Colors.grey,
+                              //           width: 1,
+                              //         ),
+                              //         borderRadius: BorderRadius.circular(5)),
+                              //     child: Row(
+                              //       mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         headingText("Total Charge : "),
+                              //         headingText("$_totalCharge TK"),
+                              //       ],
+                              //     )),
                               SizedBox(
                                 height: 30,
                               ),
@@ -480,14 +505,15 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     print('type of room : $selected_room_type');
                                     print('From date : $_selectedFromDate');
                                     print('To date : $_selectedToDate');
-                                    print('day count : $_dayDifference');
+                                    // print('day count : $_dayDifference');
                                     print(
                                         'number of guest : $_guestController');
                                     bookingRequest(
                                         context,
                                         Allocation(
                                             user_id: myUser!.id,
-                                            guest_house_id: selected_guest_house,
+                                            guest_house_id:
+                                                selected_guest_house,
                                             boarding_date:
                                                 _selectedFromDate.toString(),
                                             departure_date:

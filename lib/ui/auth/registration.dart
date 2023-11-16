@@ -107,7 +107,7 @@ class _RegistrationState extends State<Registration> {
                     color: Colors.black),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
+                height: MediaQuery.of(context).size.height * 0.02,
               ),
               Expanded(
                 child: Center(
@@ -121,6 +121,9 @@ class _RegistrationState extends State<Registration> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            SizedBox(
+                              height: 10,
+                            ),
                             TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
@@ -141,11 +144,11 @@ class _RegistrationState extends State<Registration> {
                               controller: _titleController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'User title',
-                                  hintText: 'Write your title'),
+                                  labelText: 'User Designation',
+                                  hintText: 'Write your designation.'),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'User title required.';
+                                  return 'User designation required.';
                                 }
                                 return null;
                               },
@@ -157,11 +160,11 @@ class _RegistrationState extends State<Registration> {
                               controller: _emailController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'User Email',
-                                  hintText: 'Enter your Email'),
+                                  labelText: 'Official Email',
+                                  hintText: 'Write your official Email'),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'User Email required.';
+                                  return 'Email is being required.';
                                 }
                                 return null;
                               },
@@ -297,27 +300,7 @@ class _RegistrationState extends State<Registration> {
                                   )
                                 : Container(),
                             SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    print('Forget Password clicked.');
-                                  },
-                                  child: Text(
-                                    'Forget Password?',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
+                              height: 50,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(

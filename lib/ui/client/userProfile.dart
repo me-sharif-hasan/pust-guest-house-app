@@ -115,8 +115,8 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Current : ",
-                        "${catagory_wise_allocations!['current']!.length}"),
+                    rowBuilder("Canceled : ",
+                        "${catagory_wise_allocations!['canceled']!.length}"),
                     SizedBox(
                       height: 10,
                     ),
@@ -136,7 +136,7 @@ class _UserProfileState extends State<UserProfile> {
                       height: 10,
                     ),
                     rowBuilder("All : ",
-                        "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['current']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
+                        "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['canceled']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
                     SizedBox(
                       height: 40,
                     ),
