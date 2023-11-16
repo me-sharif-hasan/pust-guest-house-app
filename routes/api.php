@@ -67,7 +67,7 @@ Route::prefix('v1')->group(function (){
                 });
 
                 Route::prefix('rooms')->group(function (){
-                    Route::get('',[\App\Http\Controllers\common\RoomController::class,'list']);
+                    Route::any('',[\App\Http\Controllers\common\RoomController::class,'list']);
                     Route::post('create',[\App\Http\Controllers\Admin\RoomController::class,'create']);
                     Route::post('update',[\App\Http\Controllers\Admin\RoomController::class,'update']);
                     Route::post('delete',[\App\Http\Controllers\Admin\RoomController::class,'delete']);
