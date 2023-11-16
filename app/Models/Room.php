@@ -26,20 +26,27 @@ class Room extends Model
     public function beds():HasMany{
         return $this->hasMany(Room::class,'parent_id','id');
     }
+    public function room():HasOne{
+        return $this->hasOne(Room::class,'id','parent_id');
+    }
     public function getCurrentBordersAttribute(){
         $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$this->guest_house()->first()->id)->where('departure_date','>=',Carbon::now())->where('boarding_date','<=',Carbon::now())->get();
         $users=[];
         foreach ($allocations as &$allocation){
             if($allocation->assigned_rooms){
                 foreach ($allocation->assigned_rooms as $room){
-                    $ok=false;
-                    foreach ($room->beds as $bed){
-                        if($bed->id==$this->id){
-                            $ok=true;
-                            break;
-                        }
-                    }
-                    if($ok){
+//                    $ok=false;
+//                    foreach ($room->beds as $bed){
+//                        if($bed->id==$this->id){
+//                            $ok=true;
+//                            break;
+//                        }
+//                    }
+//                    if($ok){
+//                        $users[]=$allocation->user;
+//                    }
+                    //all room is bed
+                    if($room->id==$this->id){
                         $users[]=$allocation->user;
                     }
                 }

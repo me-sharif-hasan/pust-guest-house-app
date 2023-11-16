@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exceptions\SafeException;
 use App\Http\Controllers\Controller;
 use App\Models\AllocationRequest;
+use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Throwable;
@@ -47,9 +48,20 @@ class AdminBookingController extends Controller
 
             if(isset($data['room_id'])){
                 if(!is_array($data['room_id'])) throw new SafeException("Assigned room id must be an list");
-                $data['room_id']=array_unique($data['room_id']);
+                $rooms=[];
+                foreach ($rooms as $r){
+                    $pr=Room::find($r);
+                    if($pr->beds==null){
+                        $rooms[]=$pr->id;
+                    }else{
+                        foreach ($pr->beds as $bed){
+                            $rooms[]=$bed->id;
+                        }
+                    }
+                }
+                $rooms=array_unique($rooms);
                 $item->room()->detach();
-                $item->room()->attach($data['room_id']);
+                $item->room()->attach($rooms);
             }
             $item->extension_request_date = $data['extension_request_date'] ?? null;
             if (isset($data['status'])) $item->status = $data['status'];

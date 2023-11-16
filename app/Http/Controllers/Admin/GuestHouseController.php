@@ -135,9 +135,7 @@ class GuestHouseController extends Controller
                     if($assigned_rooms==null) continue;
                     foreach ($assigned_rooms as $room){
                         $counter[$room->id]=isset($counter[$room->id])?$counter[$room->id]+1:1;
-                        foreach ($room->beds as $bed){
-                            $counter[$bed->id]=isset($counter[$bed->id])?$counter[$bed->id]+1:1;
-                        }
+                        $counter[$room->room->id]=isset($counter[$room->room->id])?$counter[$room->room->id]+1:1; //also increase base room count
                     }
                 }
             }
