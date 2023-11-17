@@ -142,7 +142,7 @@ class BookingController extends Controller
             unset($data['id']);
             unset($data['user_id']);
             $alloc->fill($data);
-            $alloc->status = "pending";
+            $alloc->status = isset($data['status'])&&$data['status']=='cancelled'?"cancelled":"pending";
             $alloc->save();
             $alloc = AllocationRequest::filter($alloc);
             $alloc->guest_house;
