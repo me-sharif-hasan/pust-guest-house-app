@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('allocation_request', function (Blueprint $table) {
+        Schema::table('allocation_requests', function (Blueprint $table) {
             $table->integer('days_count')->default(0);
         });
     }
