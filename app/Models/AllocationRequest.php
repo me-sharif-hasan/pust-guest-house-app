@@ -52,7 +52,8 @@ class AllocationRequest extends Model
         'guest_count',
         'status',
         'is_user-seen',
-        'is_admin_seen'
+        'is_admin_seen',
+        'days_count'
     ];
 
     /**

@@ -44,6 +44,9 @@ class AdminBookingController extends Controller
             unset($data['id']);
             $item->fill($data);
 
+            $item->is_user_seen=0;
+            $item->is_admin_seen=0;
+
             if (isset($data['guest_house_id'])) $item->guest_house_id = $data['guest_house_id'];
 
             if(isset($data['room_id'])){
