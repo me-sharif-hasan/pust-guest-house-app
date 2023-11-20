@@ -52,7 +52,7 @@ class AdminBookingController extends Controller
             if(isset($data['room_id'])){
                 if(!is_array($data['room_id'])) throw new SafeException("Assigned room id must be an list");
                 $rooms=[];
-                foreach ($rooms as $r){
+                foreach ($data['room_id'] as $r){
                     $pr=Room::find($r);
                     if($pr->beds==null){
                         $rooms[]=$pr->id;
