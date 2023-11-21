@@ -44,8 +44,8 @@ class AdminBookingController extends Controller
             unset($data['id']);
             $item->fill($data);
 
-            $item->is_user_seen=0;
-            $item->is_admin_seen=0;
+//            $item->is_user_seen=0;
+//            $item->is_admin_seen=0;
 
             if (isset($data['guest_house_id'])) $item->guest_house_id = $data['guest_house_id'];
 
@@ -54,7 +54,7 @@ class AdminBookingController extends Controller
                 $rooms=[];
                 foreach ($data['room_id'] as $r){
                     $pr=Room::find($r);
-                    if($pr->beds==null){
+                    if($pr->beds&&count($pr->beds)==0){
                         $rooms[]=$pr->id;
                     }else{
                         foreach ($pr->beds as $bed){
