@@ -51,7 +51,7 @@ class AllocationRequest extends Model
         'bed_number',
         'guest_count',
         'status',
-        'is_user-seen',
+        'is_user_seen',
         'is_admin_seen',
         'days_count'
     ];
