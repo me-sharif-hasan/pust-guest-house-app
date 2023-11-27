@@ -129,13 +129,16 @@ class GuestHouseController extends Controller
 
             $allocations=AllocationRequest::where('status', '=', 'approved')
                 ->where('guest_house_id', '=', $guestHouseId)
-                ->where(function ($query) use ($departure_date, $boarding_date) {
-                    $query->where('departure_date', '>=', $boarding_date)
-                        ->where('boarding_date', '<=', $boarding_date);
-                })->orWhere(function ($query) use ($departure_date, $boarding_date) {
-                    $query->where('departure_date', '>=', $departure_date)
-                        ->where('boarding_date', '<=', $departure_date);
+                ->where(function ($query) use ($departure_date,$boarding_date){
+                    $query->where(function ($query) use ($departure_date, $boarding_date) {
+                        $query->where('departure_date', '>=', $boarding_date)
+                            ->where('boarding_date', '<=', $boarding_date);
+                    })->orWhere(function ($query) use ($departure_date, $boarding_date) {
+                        $query->where('departure_date', '>=', $departure_date)
+                            ->where('boarding_date', '<=', $departure_date);
+                    });
                 });
+
 //                var_dump(json_encode($allocations->get()));
             $counter=[];
             if($allocations!=null){
