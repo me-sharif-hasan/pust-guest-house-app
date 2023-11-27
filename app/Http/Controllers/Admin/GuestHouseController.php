@@ -17,8 +17,8 @@ class GuestHouseController extends Controller
         try {
             $data=\request()->json()->all();
             $v=Validator::make($data,[
-               'title'=>'required',
-               'address'=>'required'
+                'title'=>'required',
+                'address'=>'required'
             ]);
             if($v->fails()){
                 return throw new \LogicException($v->errors()->first());
@@ -127,15 +127,27 @@ class GuestHouseController extends Controller
                 $departure_date=$allocation->departure_date;
             }
 
-            $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$guestHouseId)->where('departure_date','>=',$departure_date)->where('boarding_date','<=',$boarding_date)->get();
+            $allocations=AllocationRequest::where('status', '=', 'approved')
+                ->where('guest_house_id', '=', $guestHouseId)
+                ->where(function ($query) use ($departure_date, $boarding_date) {
+                    $query->where('departure_date', '>=', $boarding_date)
+                        ->where('boarding_date', '<=', $boarding_date);
+                })->orWhere(function ($query) use ($departure_date, $boarding_date) {
+                    $query->where('departure_date', '>=', $departure_date)
+                        ->where('boarding_date', '<=', $departure_date);
+                });
+//                var_dump(json_encode($allocations->get()));
             $counter=[];
             if($allocations!=null){
-                foreach ($allocations as $allocation){
+                foreach ($allocations->get() as $allocation){
                     $assigned_rooms = $allocation->assigned_rooms;
                     if($assigned_rooms==null) continue;
                     foreach ($assigned_rooms as $room){
+                        if($room==null) continue;
                         $counter[$room->id]=isset($counter[$room->id])?$counter[$room->id]+1:1;
-                        $counter[$room->room->id]=isset($counter[$room->room->id])?$counter[$room->room->id]+1:1; //also increase base room count
+                        if($room->room){
+                            $counter[$room->room->id]=isset($counter[$room->room->id])?$counter[$room->room->id]+1:1; //also increase base room count
+                        }
                     }
                 }
             }

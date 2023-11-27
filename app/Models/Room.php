@@ -19,7 +19,7 @@ class Room extends Model
         'room_type',
         'parent_id'
     ];
-    protected $appends=['current_borders'];
+    protected $appends=['current_borders','total_seat','beds'];
     public function guest_house():BelongsTo{
         return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
@@ -28,6 +28,12 @@ class Room extends Model
     }
     public function room():HasOne{
         return $this->hasOne(Room::class,'id','parent_id');
+    }
+    public function getBedsAttribute(){
+        return $this->beds()->get();
+    }
+    public function getTotalSeatAttribute(){
+        return count($this->beds()->get());
     }
     public function getCurrentBordersAttribute(){
         $allocations=AllocationRequest::where('status','=','approved')->where('guest_house_id','=',$this->guest_house()->first()->id)->where('departure_date','>=',Carbon::now())->where('boarding_date','<=',Carbon::now())->get();
