@@ -136,6 +136,9 @@ class GuestHouseController extends Controller
                     })->orWhere(function ($query) use ($departure_date, $boarding_date) {
                         $query->where('departure_date', '>=', $departure_date)
                             ->where('boarding_date', '<=', $departure_date);
+                    })->orWhere(function ($query) use ($departure_date, $boarding_date) {
+                        $query->where('departure_date', '<=', $departure_date)
+                            ->where('boarding_date', '>=', $boarding_date);
                     });
                 });
 
