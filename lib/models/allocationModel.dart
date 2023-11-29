@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/admin/roomModel.dart';
+
 class AllocationListCatagory {
   final AllocationList? allocationList;
   AllocationListCatagory({this.allocationList});
@@ -61,6 +64,8 @@ class Allocation {
   String? created_at;
   String? updated_at;
   int? room_charge;
+  int? dayCount;
+  RoomList? assigned_room;
 
   Allocation({
     this.id,
@@ -80,6 +85,8 @@ class Allocation {
     this.created_at,
     this.updated_at,
     this.room_charge,
+    this.dayCount,
+    this.assigned_room,
   });
 
   factory Allocation.fromJson(Map<String, dynamic> response) {
@@ -88,29 +95,43 @@ class Allocation {
     if (response['fee']['charge'] != null) {
       _charge = response['fee']['charge'];
     }
+    RoomList? room_list;
+    if (response['assigned_rooms'] != null) {
+      room_list = RoomList.fromJson(response['assigned_rooms']);
+    }
 
     return Allocation(
       id: response['id'],
-      user_id: response['user_id'],
-      guest_house_id: response['guest_house_id'],
+      user_id: int.parse(response['user_id']),
+      guest_house_id: int.parse(response['guest_house_id']),
       room_id: response['room_id'],
       bed_number: response['bed_number'],
-      guest_count: response['guest_count'],
+      guest_count: int.parse(response['guest_count']),
       room_type: response['room_type'],
       booking_type: response['booking_type'],
       status: response['status'],
       boarding_date: response['boarding_date'],
       departure_date: response['departure_date'],
       extension_request_date: response['extension_request_date'],
-      is_admin_seen: response['is_admin_seen'],
-      is_user_seen: response['is_user_seen'],
+      is_admin_seen: int.parse(response['is_admin_seen']),
+      is_user_seen: int.parse(response['is_user_seen']),
       created_at: response['created_at'],
       updated_at: response['updated_at'],
       room_charge: _charge,
+      dayCount: int.parse('${response['days_count']}'),
+      assigned_room: room_list,
     );
   }
 
   Map<String, dynamic> get() {
+    // if (boarding_period == 'pm') {
+    //   int hour = int.parse(boarding_date!.substring(11, 13));
+    //   hour += 12;
+    //   // boarding_date =
+    //   '${boarding_date!.substring(0, 11)}$hour${boarding_date!.substring(13)}';
+    //   print(
+    //       'Formated Bo date : ${boarding_date!.substring(0, 11)}$hour${boarding_date!.substring(13)}');
+    // }
     return {
       'user_id': user_id,
       'guest_house_id': guest_house_id,

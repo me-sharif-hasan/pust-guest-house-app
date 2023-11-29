@@ -80,6 +80,13 @@ class _HousesState extends State<Houses> {
           borderRadius: BorderRadius.circular(6),
           color: primaryExtraLight),
       child: ListTile(
+        onLongPress: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateHouse(guestHouseModel: house)),
+          );
+        },
         onTap: () {
           Navigator.push(
               context,
@@ -93,6 +100,9 @@ class _HousesState extends State<Houses> {
         subtitle:
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('address : ${house.address}'),
+          SizedBox(
+            height: 5,
+          ),
           Text('Number of rooms : ${house.roomList!.rooms!.length}')
         ]),
         trailing: GestureDetector(
@@ -100,7 +110,10 @@ class _HousesState extends State<Houses> {
               _launchInBrowserView(house.lat!, house.log!);
             },
             child: CircleAvatar(
-              child: Icon(Icons.location_pin),
+              child: Icon(
+                Icons.location_pin,
+                color: const Color.fromARGB(255, 240, 8, 8),
+              ),
             )),
       ),
     );

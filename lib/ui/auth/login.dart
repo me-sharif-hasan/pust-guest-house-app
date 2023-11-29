@@ -6,6 +6,7 @@ import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -37,7 +38,7 @@ class _LoginState extends State<Login> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
             decoration: BoxDecoration(
-                color: primary, borderRadius: BorderRadius.circular(4)),
+                 borderRadius: BorderRadius.circular(4)),
             child: ElevatedButton(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(primary)),
               onPressed: () {
@@ -52,7 +53,7 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   "Sign up",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               )),
             ),
@@ -105,11 +106,11 @@ class _LoginState extends State<Login> {
                               controller: _emailController,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'User Email',
-                                  hintText: 'Enter your Email'),
+                                  labelText: 'Official Email',
+                                  hintText: 'Enter your Official Email'),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'User Email required.';
+                                  return 'User official email is required.';
                                 }
                                 return null;
                               },
@@ -172,11 +173,11 @@ class _LoginState extends State<Login> {
                                   userLogin(context, _emailController.text,
                                       _passwordController.text);
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text('Login data send success'),
-                                    backgroundColor: acceptColor,
-                                  ));
+                                  // ScaffoldMessenger.of(context)
+                                  //     .showSnackBar(SnackBar(
+                                  //   content: Text('Login data send success'),
+                                  //   backgroundColor: acceptColor,
+                                  // ));
 
                                   // Navigator.push(
                                   //     context,
@@ -186,7 +187,7 @@ class _LoginState extends State<Login> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text('Login'),
+                                child: Text('Login', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                               ),
                             ),
                             SizedBox(
@@ -207,9 +208,14 @@ class _LoginState extends State<Login> {
   }
 
   void userLogin(BuildContext context, String email, String password) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
+    
     Network network = Network(url: "/api/v1/login");
     Future data = network.loginUser(email, password);
     data.then((value) async {
+      pd.close();
       print("data is : $value");
       if (value['status'] == 'not-verified') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

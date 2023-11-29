@@ -13,7 +13,7 @@ class Network {
     // print("$url");
 
     // // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});
 
@@ -29,7 +29,8 @@ class Network {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
+    print('calling url is : ${urlg.toString()}');
 
     final response = await post(urlg, body: json.encode(user.getUser()));
 
@@ -60,7 +61,7 @@ class Network {
   Future varifyUser(String code) async {
     print("$url");
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
     Map<String, dynamic> credintial = {'code': code};
 
     final response = await post(urlg,
@@ -75,8 +76,25 @@ class Network {
     }
   }
 
+
+    Future resendVarificationCode() async {
+    print("$url");
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.https(hostUrl, url!);
+
+    final response = await get(urlg,
+        headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
   loadGuestHouses() async {
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});
 

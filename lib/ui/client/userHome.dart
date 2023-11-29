@@ -1,10 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
+import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
-import 'package:guest_house_pust/ui/common/requestDetails.dart';
+import 'package:guest_house_pust/ui/client/requestDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
 
 class UserHome extends StatefulWidget {
@@ -43,7 +47,11 @@ class _UserHomeState extends State<UserHome> {
             title: appTitle,
             actions: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin: EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                    color: acceptColor,
+                    borderRadius: BorderRadius.circular(100)),
+                padding: EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: () {
                     print('User clicked');
@@ -58,7 +66,59 @@ class _UserHomeState extends State<UserHome> {
                         getBackgroundImage(myUser!.profile_picture),
                   ),
                 ),
-              )
+              ),
+              PopupMenuButton<String>(
+                itemBuilder: (BuildContext context) {
+                  // Define the items in the menu
+                  return [
+                    PopupMenuItem(
+                      onTap: () {
+                        print('Option one');
+                      },
+                      child: Text('About'),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UserProfile()),
+                        );
+                      },
+                      child: Text('View Profile'),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        Navigator.popUntil(context, (route) => false);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SplashScreen()),
+                        );
+                      },
+                      child: Text('Refresh'),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {},
+                      child: Text('Help'),
+                    ),
+                    PopupMenuItem(
+                      onTap: () async {
+                        logoutConfirmationDialog(context);
+                        // final props = await SharedPreferences.getInstance();
+                        // props.remove(tokenText);
+                        // // Navigator.pop(context);
+                        // Navigator.popUntil(context, (route) => false);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => const Login()),
+                        // );
+                      },
+                      child: Text('Sign Out'),
+                    ),
+                  ];
+                },
+              ),
             ],
             bottom: TabBar(
               isScrollable: true,
@@ -114,11 +174,7 @@ class _UserHomeState extends State<UserHome> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AllocationRequest()),
-              );
+              _showDialog(context);
             },
             child: Icon(Icons.add),
           )),
@@ -168,26 +224,7 @@ class _UserHomeState extends State<UserHome> {
                   RequestDetails(user: myUser, allocation: allocation)),
         );
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-        decoration: BoxDecoration(
-          color:
-              (allocation.is_user_seen == 0) ? primaryLight : primaryExtraLight,
-          border: Border.all(width: 1.0, color: primaryDeep),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: ListTile(
-          leading: CircleAvatar(
-            child: Text('${allocation.id}'),
-          ),
-          title: Text("${type_of_guest_house_list[allocation.guest_house_id]}"),
-          // title: Text(
-          //     "${type_of_guest_house_list[allocation.guest_house_id ?? 0].title}"),
-          subtitle: Text(
-              "${allocation.boarding_date!.substring(0, 10)} to ${allocation.departure_date!.substring(0, 10)}"),
-          trailing: Text('${allocation.status}'),
-        ),
-      ),
+      child: getAllocationItem(allocation, false),
     );
   }
 
@@ -195,5 +232,70 @@ class _UserHomeState extends State<UserHome> {
     BookingNetwork bookingNetwork =
         BookingNetwork(url: '/api/v1/public/allocation/update');
     bookingNetwork.update(id, 'is_user_seen', '1');
+  }
+
+  void _showDialog(BuildContext context) {
+    final _scrollController = ScrollController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Conditions'),
+          content: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                Column(
+                  children: conditions.map((e) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 5.0),
+                      child: ListTile(
+                        title: Text('$e'),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(''),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AllocationRequest()),
+                      );
+                    },
+                    child: Text('Accept')),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Navigator.of(context).pop();
+                _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: Duration(milliseconds: 5000),
+                  curve: Curves.easeInOut,
+                );
+              },
+              child: Text('Please make Scroll'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

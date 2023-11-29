@@ -3,7 +3,9 @@ import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class AllocationRequest extends StatefulWidget {
   const AllocationRequest({super.key});
@@ -16,7 +18,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
   final _form_key = GlobalKey<FormState>();
   final _guestController = TextEditingController();
 
-  bool _isFormDateSelected = false;
+  bool _isFromDateSelected = false;
   bool _isToDateSelected = false;
 
   int selected_guest_house = 0;
@@ -27,7 +29,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
 
   DateTime? _selectedFromDate;
   DateTime? _selectedToDate;
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  // TimeOfDay _selectedTime = TimeOfDay.now();
   // int _dayDifference = 0;
   // int _totalCharge = 0;
 
@@ -85,27 +87,27 @@ class _AllocationRequestState extends State<AllocationRequest> {
     // int dayDiff = 0;
     // int totalCharge = 0;
 
-    if (picked != null && picked != _selectedFromDate) {
-      if (_selectedToDate == null) {
-        // do nothing
-      } else {
-        // set diffrence and
-        print("cmp : ${picked.compareTo(_selectedToDate!)}");
-        if (picked.compareTo(_selectedToDate!) > 0) {
-          // Date can not select show an error message
-          print('Date is not valid');
-          setState(() {
-            _selectedFromDate = null;
-            _isFormDateSelected = false;
-            // _dayDifference = 0;
-            // _totalCharge = 0;
-          });
-          return;
-        } else {
-          // dayDiff = _selectedToDate!.difference(picked).inDays + 1;
-          // print('diffrence is : $dayDiff');
-        }
-      }
+    if (picked != null) {
+      // if (_selectedToDate == null) {
+      //   // do nothing
+      // } else {
+      //   // set diffrence and
+      //   // print("cmp : ${picked.compareTo(_selectedToDate!)}");
+      //   // if (picked.compareTo(_selectedToDate!) >= 0) {
+      //   //   // Date can not select show an error message
+      //   //   print('Date is not valid');
+      //   //   setState(() {
+      //   //     _selectedFromDate = null;
+      //   //     _isFormDateSelected = false;
+      //   //     // _dayDifference = 0;
+      //   //     // _totalCharge = 0;
+      //   //   });
+      //   //   return;
+      //   // } else {
+      //   //   // dayDiff = _selectedToDate!.difference(picked).inDays + 1;
+      //   //   // print('diffrence is : $dayDiff');
+      //   // }
+      // }
       // try {
       //   totalCharge = dayDiff *
       //       price_according_to_roomtype[
@@ -119,20 +121,40 @@ class _AllocationRequestState extends State<AllocationRequest> {
       // }
 
       final TimeOfDay? pickedTime = await _selectTime(context);
+      String sHoure = '00:00';
+      String sMinute = '00:00';
+      if (pickedTime != null) {
+        print(pickedTime.toString());
+        sHoure = pickedTime.hour.toString();
+        sMinute = pickedTime.minute.toString();
+        if (sHoure.length == 1) {
+          sHoure = '0$sHoure';
+        }
+        if (sMinute.length == 1) {
+          sMinute = '0$sMinute';
+        }
+      }
+      print(
+          '${picked.toString().substring(0, 10)} ${pickedTime!.hour}:${pickedTime.minute}:00.000');
+
+      _selectedFromDate = DateTime.parse(
+          '${picked.toString().substring(0, 10)} $sHoure:$sMinute:00.000');
+      if (_selectedToDate != null &&
+          _selectedToDate!.compareTo(_selectedFromDate!) <= 0) {
+        // Date can not select show an error message
+        showToast(context, 'Selected data is not valid.', dangerColor);
+        setState(() {
+          _selectedFromDate = null;
+          _isFromDateSelected = false;
+        });
+        return;
+      }
       setState(() {
-        _selectedFromDate = picked;
-        _isFormDateSelected = true;
+        _isFromDateSelected = true;
         // _dayDifference = dayDiff;
         // _totalCharge = totalCharge;
       });
     }
-  }
-
-  Future<TimeOfDay?> _selectTime(BuildContext context) async {
-    return await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
   }
 
   Future<void> _selectToDate(BuildContext context) async {
@@ -145,27 +167,27 @@ class _AllocationRequestState extends State<AllocationRequest> {
     // int dayDiff = 0;
     // int totalCharge = 0;
 
-    if (picked != null && picked != _selectedToDate) {
-      if (_selectedFromDate == null) {
-        // do nothing
-      } else {
-        // set diffrence and
-        print("cmp : ${picked.compareTo(_selectedFromDate!)}");
-        if (picked.compareTo(_selectedFromDate!) < 0) {
-          // Date can not select show an error message
-          print('Date is not valid');
-          setState(() {
-            _selectedToDate = null;
-            _isToDateSelected = false;
-            // _dayDifference = dayDiff;
-            // _totalCharge = totalCharge;
-          });
-          return;
-        } else {
-          // dayDiff = picked.difference(_selectedFromDate!).inDays + 1;
-          // print('diffrence is : $dayDiff');
-        }
-      }
+    if (picked != null) {
+      // if (_selectedFromDate == null) {
+      //   // do nothing
+      // } else {
+      //   // set diffrence and
+      //   // print("cmp : ${picked.compareTo(_selectedFromDate!)}");
+      //   // if (picked.compareTo(_selectedFromDate!) <= 0) {
+      //   //   // Date can not select show an error message
+      //   //   print('Date is not valid');
+      //   //   setState(() {
+      //   //     _selectedToDate = null;
+      //   //     _isToDateSelected = false;
+      //   //     // _dayDifference = dayDiff;
+      //   //     // _totalCharge = totalCharge;
+      //   //   });
+      //   //   return;
+      //   // } else {
+      //   //   // dayDiff = picked.difference(_selectedFromDate!).inDays + 1;
+      //   //   // print('diffrence is : $dayDiff');
+      //   // }
+      // }
       // try {
       //   totalCharge = dayDiff *
       //       price_according_to_roomtype[
@@ -177,13 +199,57 @@ class _AllocationRequestState extends State<AllocationRequest> {
       //   totalCharge = 0;
       //   print('totl ee charge : $e');
       // }
+      final TimeOfDay? pickedTime = await _selectTime(context);
+      String sHoure = '00:00';
+      String sMinute = '00:00';
+      if (pickedTime != null) {
+        print('To Picked time : ${pickedTime.toString()}');
+        sHoure = pickedTime.hour.toString();
+        sMinute = pickedTime.minute.toString();
+        if (sHoure.length == 1) {
+          sHoure = '0$sHoure';
+        }
+        if (sMinute.length == 1) {
+          sMinute = '0$sMinute';
+        }
+      }
+      // print(
+      //     '${picked.toString().substring(0, 10)} ${pickedTime!.hour}:${pickedTime.minute}:00.000');
+      _selectedToDate = DateTime.parse(
+          '${picked.toString().substring(0, 10)} $sHoure:$sMinute:00.000');
+
+      // print('to : $_selectedToDate From : $_selectedFromDate');
+      // print(
+      //     'Date valid : ${_selectedToDate!.compareTo(_selectedFromDate!)} ::: ${_selectedToDate!.isAtSameMomentAs(_selectedFromDate!)}');
+
+      if (_selectedFromDate != null &&
+          _selectedToDate!.compareTo(_selectedFromDate!) <= 0) {
+        // Date can not select show an error message
+        print('Date is not valid : ${picked.compareTo(_selectedFromDate!)}');
+        showToast(context, 'Selected data is not valid.', dangerColor);
+        setState(() {
+          _selectedToDate = null;
+          _isToDateSelected = false;
+        });
+        return;
+      }
       setState(() {
-        _selectedToDate = picked;
         _isToDateSelected = true;
-        // _dayDifference = dayDiff;
-        // _totalCharge = totalCharge;
       });
+      // setState(() {
+      //   _selectedToDate = picked;
+      //   _isToDateSelected = true;
+      //   // _dayDifference = dayDiff;
+      //   // _totalCharge = totalCharge;
+      // });
     }
+  }
+
+  Future<TimeOfDay?> _selectTime(BuildContext context) async {
+    return await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
   }
 
   @override
@@ -339,10 +405,11 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               SizedBox(
                                 height: 5,
                               ),
+                              // From Date Selecter
                               Container(
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: _isFormDateSelected
+                                      color: _isFromDateSelected
                                           ? Colors.grey
                                           : Colors.red,
                                       width: 1,
@@ -351,7 +418,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                 child: ListTile(
                                   title: Text(
                                     _selectedFromDate != null
-                                        ? 'From: ${_selectedFromDate!.toLocal()}'
+                                        ? 'From: ${_selectedFromDate!.toLocal().toString().substring(0, 16)}'
                                         : 'From ?',
                                   ),
                                   trailing: Icon(Icons.calendar_today),
@@ -363,6 +430,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               SizedBox(
                                 height: 5,
                               ),
+                              // To Date Selecter
                               Container(
                                 decoration: BoxDecoration(
                                     border: Border.all(
@@ -375,7 +443,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                 child: ListTile(
                                   title: Text(
                                     _selectedToDate != null
-                                        ? 'To: ${_selectedToDate!.toLocal()}'
+                                        ? 'To: ${_selectedToDate!.toLocal().toString().substring(0, 16)}'
                                         : 'To ?',
                                   ),
                                   trailing: Icon(Icons.calendar_today),
@@ -404,41 +472,41 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               //         Text("$_dayDifference days"),
                               //       ],
                               //     )),
-                              // SizedBox(
-                              //   height: 15,
-                              // ),
-                              // TextFormField(
-                              //   controller: _guestController,
-                              //   onChanged: (value) {
-                              //     int totalCharge = 0;
-                              //     try {
-                              //       totalCharge = _dayDifference *
-                              //           price_according_to_roomtype[
-                              //                   type_of_booking_list[
-                              //                       selected_booking_type]]![
-                              //               type_of_room_list[
-                              //                   selected_room_type]]! *
-                              //           int.parse(_guestController.text);
-                              //       print('totl charge : $totalCharge');
-                              //     } catch (e) {
-                              //       totalCharge = 0;
-                              //       print('totl ee charge : $e');
-                              //     }
-                              //     setState(() {
-                              //       _totalCharge = totalCharge;
-                              //     });
-                              //   },
-                              //   decoration: InputDecoration(
-                              //       border: OutlineInputBorder(),
-                              //       labelText: 'Number of Guest',
-                              //       hintText: 'Write number of guest'),
-                              //   validator: (value) {
-                              //     if (value!.isEmpty) {
-                              //       return 'Number of guest required.';
-                              //     }
-                              //     return null;
-                              //   },
-                              // ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              TextFormField(
+                                controller: _guestController,
+                                // onChanged: (value) {
+                                //   int totalCharge = 0;
+                                //   try {
+                                //     totalCharge = _dayDifference *
+                                //         price_according_to_roomtype[
+                                //                 type_of_booking_list[
+                                //                     selected_booking_type]]![
+                                //             type_of_room_list[
+                                //                 selected_room_type]]! *
+                                //         int.parse(_guestController.text);
+                                //     print('totl charge : $totalCharge');
+                                //   } catch (e) {
+                                //     totalCharge = 0;
+                                //     print('totl ee charge : $e');
+                                //   }
+                                //   setState(() {
+                                //     _totalCharge = totalCharge;
+                                //   });
+                                // },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Number of Guest',
+                                    hintText: 'Write number of guest'),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Number of guest required.';
+                                  }
+                                  return null;
+                                },
+                              ),
                               // SizedBox(
                               //   height: 15,
                               // ),
@@ -485,7 +553,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         "Room type is not selected yet.",
                                         dangerColor);
                                     return;
-                                  } else if (!_isFormDateSelected) {
+                                  } else if (!_isFromDateSelected) {
                                     showMessage(
                                         context,
                                         "From date is not selected yet.",
@@ -511,19 +579,19 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     bookingRequest(
                                         context,
                                         Allocation(
-                                            user_id: myUser!.id,
-                                            guest_house_id:
-                                                selected_guest_house,
-                                            boarding_date:
-                                                _selectedFromDate.toString(),
-                                            departure_date:
-                                                _selectedToDate.toString(),
-                                            room_type: type_of_room_list[
-                                                selected_room_type],
-                                            booking_type: type_of_booking_list[
-                                                selected_booking_type],
-                                            guest_count: int.parse(
-                                                _guestController.text)));
+                                          user_id: myUser!.id,
+                                          guest_house_id: selected_guest_house,
+                                          boarding_date:
+                                              _selectedFromDate.toString(),
+                                          departure_date:
+                                              _selectedToDate.toString(),
+                                          room_type: type_of_room_list[
+                                              selected_room_type],
+                                          booking_type: type_of_booking_list[
+                                              selected_booking_type],
+                                          guest_count:
+                                              int.parse(_guestController.text),
+                                        ));
                                     // Navigator.push(
                                     //     context,
                                     //     MaterialPageRoute(
@@ -576,10 +644,14 @@ class _AllocationRequestState extends State<AllocationRequest> {
   }
 
   void bookingRequest(BuildContext context, Allocation booking) {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
     BookingNetwork network =
         BookingNetwork(url: "/api/v1/public/allocation/new");
     Future data = network.sendBookingRequest(booking);
     data.then((value) {
+      pd.close();
       print("data is : $value");
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

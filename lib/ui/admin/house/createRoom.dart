@@ -4,6 +4,7 @@ import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
 import 'package:guest_house_pust/ui/admin/adminHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 class CreateRoom extends StatefulWidget {
   final int? guestHouseId;
@@ -210,22 +211,17 @@ class _CreateRoomState extends State<CreateRoom> {
                                       RoomModel(
                                         number: _numberController.text,
                                         guest_house_id:
-                                            widget.guestHouseId ?? 1,
+                                            '${widget.guestHouseId}',
                                         room_type: type_of_room_list[
                                             selected_room_type],
                                       ));
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                        'Data send success. Wait for server response.'),
-                                    backgroundColor: acceptColor,
-                                  ));
-
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => RegistrationPage()));
+                                  // ScaffoldMessenger.of(context)
+                                  //     .showSnackBar(SnackBar(
+                                  //   content: Text(
+                                  //       'Data send success. Wait for server response.'),
+                                  //   backgroundColor: acceptColor,
+                                  // ));
                                 }
                               },
                               child: Padding(
@@ -259,9 +255,14 @@ class _CreateRoomState extends State<CreateRoom> {
   }
 
   void sendRoomDate(BuildContext context, RoomModel roomModel) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/rooms/create');
     Map<String, dynamic> data =
         await api.createRoom(roomModel, selected_room_id);
+
+    pd.close();
 
     if (data['status'] == 'error') {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

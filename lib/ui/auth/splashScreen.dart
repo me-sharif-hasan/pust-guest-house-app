@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:guest_house_pust/models/admin/GuestHouseModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
@@ -22,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     super.initState();
     print('From init state');
     checkCredintial();
@@ -43,19 +45,24 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.5,
+                width: MediaQuery.of(context).size.width * 0.4,
                 child: Image.asset('images/pust_logo.png'),
               ),
               SizedBox(
                 height: 40,
               ),
-              Text("PUST Guest House"),
+              Text(
+                "PUST Guest House",
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
               SizedBox(
                 height: 10,
               ),
-              Text("Pabna University of Science and Technology"),
+              Text("Pabna University of Science and Technology",
+                  style:
+                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500)),
               SizedBox(
-                height: 20,
+                height: MediaQuery.of(context).size.height * 0.12,
               ),
               CircularProgressIndicator(
                 color: primaryExtraDeep,
@@ -77,14 +84,37 @@ class _SplashScreenState extends State<SplashScreen> {
                       MaterialPageRoute(builder: (context) => const Login()),
                     );
                   },
-                  child: Icon(Icons.login),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Login',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Icon(
+                            Icons.login,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 20,
               ),
-              Text('@Sharif Hassan'),
-              Text('@Bayazid Hossain')
+              Text('©Sharif Hassan',
+                  style: TextStyle(
+                      color: Colors.deepOrange, fontWeight: FontWeight.bold)),
+              Text('©Bayazid Hossain',
+                  style: TextStyle(
+                      color: Colors.deepOrange, fontWeight: FontWeight.bold))
             ],
           ),
         )),
@@ -167,9 +197,17 @@ class _SplashScreenState extends State<SplashScreen> {
     list.then((value) async {
       // print('DAta get -------${value!.houses!.length}');
       for (int i = 0; i < value!.houses!.length; i++) {
-        print('-----id ${value.houses![i].title}');
+        print('-----id ${value.houses![i].id}');
         type_of_guest_house_list[value.houses![i].id ?? 0] =
             '${value.houses![i].title}';
+        guest_house_address[value.houses![i].id ?? 0] =
+            '${value.houses![i].address}';
+        guest_house_lat[value.houses![i].id ?? 0] =
+            double.parse('${value.houses![i].lat}');
+        guest_house_log[value.houses![i].id ?? 0] =
+            double.parse('${value.houses![i].log}');
+
+        print('-----value ${type_of_guest_house_list[value.houses![i].id]}');
       }
     });
   }

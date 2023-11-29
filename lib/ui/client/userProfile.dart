@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/network/client/clientApiHandel.dart';
-import 'package:guest_house_pust/ui/auth/login.dart';
+import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -28,7 +29,7 @@ class _UserProfileState extends State<UserProfile> {
               // height: MediaQuery.of(context).size.height*0.5,
               alignment: Alignment.bottomCenter,
               child: Opacity(
-                opacity: 0.2,
+                opacity: 0.1,
                 child: Image.asset('images/user_page_bg.jpg'),
               ),
             ),
@@ -47,21 +48,34 @@ class _UserProfileState extends State<UserProfile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${myUser!.name}",
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w500),
+                              GestureDetector(
+                                onLongPress: () {
+                                  _showUpdateDialog(context, 'user name',
+                                      'name', '${myUser!.name}');
+                                },
+                                child: Text(
+                                  "${myUser!.name}",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
                               SizedBox(
                                 height: 5,
                               ),
                               Opacity(
                                 opacity: 0.6,
-                                child: Text(
-                                  "${myUser!.title}",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
+                                child: GestureDetector(
+                                  onLongPress: () {
+                                    _showUpdateDialog(context, 'designation',
+                                        'title', '${myUser!.title}');
+                                  },
+                                  child: Text(
+                                    "${myUser!.title}",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
+                                  ),
                                 ),
                               ),
                             ],
@@ -94,7 +108,12 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Phone : ", "${myUser!.phone}"),
+                    GestureDetector(
+                        onLongPress: () {
+                          _showUpdateDialog(context, 'phone number', 'phone',
+                              '${myUser!.phone}');
+                        },
+                        child: rowBuilder("Phone : ", "${myUser!.phone}")),
                     SizedBox(
                       height: 10,
                     ),
@@ -146,15 +165,7 @@ class _UserProfileState extends State<UserProfile> {
                         style:
                             ElevatedButton.styleFrom(backgroundColor: primary),
                         onPressed: () async {
-                          final props = await SharedPreferences.getInstance();
-                          props.remove(tokenText);
-                          // Navigator.pop(context);
-                          Navigator.popUntil(context, (route) => false);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()),
-                          );
+                          logoutConfirmationDialog(context);
                         },
                         child: Row(
                           children: [
@@ -295,5 +306,126 @@ class _UserProfileState extends State<UserProfile> {
     } else {
       return NetworkImage('http://$hostUrl${myUser!.profile_picture}');
     }
+  }
+
+  void _showUpdateDialog(
+      BuildContext context, String key, String serverKey, String value) {
+    final _newValueController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update $key'),
+          content: SingleChildScrollView(
+              child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(2)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Old: ',
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        child: SelectableText(
+                          value,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: _newValueController,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'New $key',
+                    hintText: 'Write your new $key'),
+              )
+            ],
+          )),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigator.of(context).pop();
+                print("new value : ${_newValueController.text}");
+                if (_newValueController.text == "") {
+                  // show a message
+                } else {
+                  ProgressDialog pd = ProgressDialog(context: context);
+                  pd.show(max: 100, msg: 'Wait for server response');
+                  ClientNetwork api = ClientNetwork(url: '/api/v1/user/update');
+                  Future<bool> status =
+                      api.update(serverKey, _newValueController.text);
+                  status.then((value) {
+                    pd.close();
+
+                    if (value) {
+                      // showToast('$key updated Success', acceptColor);
+                      print('Success');
+                      Future.delayed(Duration(seconds: 2), () {
+                        // Code inside this block will be executed after a delay of 2 seconds
+                        print('Delayed function executed after 2 seconds');
+                        // Navigator.pop(context);
+                        Navigator.popUntil(context, (route) => false);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SplashScreen()),
+                        );
+                      });
+                    } else {
+                      showToast('$key update fail.', dangerColor);
+                      print('Fail');
+                    }
+                  });
+                }
+              },
+              child: Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showToast(String text, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+      backgroundColor: color,
+    ));
   }
 }

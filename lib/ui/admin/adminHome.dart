@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/ui/admin/guestHouses.dart';
-import 'package:guest_house_pust/ui/admin/monthlyStat.dart';
 import 'package:guest_house_pust/ui/admin/requestsPage.dart';
 import 'package:guest_house_pust/ui/admin/users.dart';
-import 'package:guest_house_pust/ui/auth/login.dart';
+import 'package:guest_house_pust/ui/auth/splashScreen.dart';
+import 'package:guest_house_pust/ui/client/userProfile.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -20,7 +20,7 @@ class _AdminHomeState extends State<AdminHome> {
   List<Widget> navPages = [
     Requests(),
     Houses(),
-    MonthlyStat(),
+    // MonthlyStat(),
     Users(),
   ];
   @override
@@ -29,38 +29,77 @@ class _AdminHomeState extends State<AdminHome> {
       appBar: AppBar(
         title: appTitle,
         actions: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-            child: ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(primary)),
-              onPressed: () async {
-                final props = await SharedPreferences.getInstance();
-                props.remove(tokenText);
-                // Navigator.pop(context);
-                Navigator.popUntil(context, (route) => false);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Login()),
-                );
-              },
-              child: Row(
-                children: [
-                  Text("Sign Out"),
-                  SizedBox(
-                    width: 6,
-                  ),
-                  Icon(Icons.logout),
-                ],
-              ),
-            ),
-          )
+          // Container(
+          //   margin: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          //   child: ElevatedButton(
+          //     style: ButtonStyle(
+          //         backgroundColor: MaterialStateProperty.all<Color>(primary)),
+          //     onPressed: () async {},
+          //     child: Row(
+          //       children: [
+          //         Text("Sign Out"),
+          //         SizedBox(
+          //           width: 6,
+          //         ),
+          //         Icon(Icons.logout),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              // Define the items in the menu
+              return [
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UserProfile()),
+                    );
+                  },
+                  child: Text('View Profile'),
+                ),
+                PopupMenuItem(
+                  onTap: () {},
+                  child: Text('Help'),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.popUntil(context, (route) => false);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SplashScreen()),
+                    );
+                  },
+                  child: Text('Refresh'),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    logoutConfirmationDialog(context);
+                    // final props = await SharedPreferences.getInstance();
+                    // props.remove(tokenText);
+                    // // Navigator.pop(context);
+                    // Navigator.popUntil(context, (route) => false);
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const Login()),
+                    // );
+                  },
+                  child: Text('Sign Out'),
+                ),
+              ];
+            },
+          ),
         ],
       ),
       body: navPages[pageIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        // type: BottomNavigationBarType.fixed,
         currentIndex: pageIndex,
         selectedItemColor: primary,
+        backgroundColor: primaryExtraLight,
         onTap: (value) {
           setState(() {
             pageIndex = value;
@@ -76,15 +115,19 @@ class _AdminHomeState extends State<AdminHome> {
             label: 'Houses',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Monthly',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'Users',
           ),
         ],
       ),
     );
+  }
+
+  getBackgroundImage(String? profile_picture) {
+    if (profile_picture == null) {
+      return AssetImage('images/man.png');
+    } else {
+      return NetworkImage('$hostImageUrl${myUser!.profile_picture}');
+    }
   }
 }

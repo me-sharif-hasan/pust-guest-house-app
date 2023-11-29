@@ -19,7 +19,8 @@ class _RoomsPageState extends State<RoomsPage> {
     return Scaffold(
       appBar: AppBar(title: appTitle),
       body: Container(
-          child: Center(
+          child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -44,10 +45,14 @@ class _RoomsPageState extends State<RoomsPage> {
                         child: ListTile(
                           tileColor: primaryExtraLight,
                           title: Text('Room Number : ${e.number}'),
-                          subtitle: Text('Room Type : ${e.room_type}'),
+                          subtitle: Text(
+                              'Room Type : ${e.room_type}'),
                         ),
                       ))
                   .toList(),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
             )
           ],
         ),

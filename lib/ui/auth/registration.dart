@@ -6,6 +6,7 @@ import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -56,8 +57,7 @@ class _RegistrationState extends State<Registration> {
         actions: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
-            decoration: BoxDecoration(
-                color: primary, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(primary)),
@@ -73,7 +73,10 @@ class _RegistrationState extends State<Registration> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   "Login",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               )),
             ),
@@ -88,7 +91,7 @@ class _RegistrationState extends State<Registration> {
             alignment: Alignment.bottomCenter,
             // Background
             child: Opacity(
-              opacity: 0.3,
+              opacity: 0.2,
               child: Image.asset('images/home_illustrator.png'),
             ),
             // Lgin UI
@@ -325,12 +328,12 @@ class _RegistrationState extends State<Registration> {
                                             department: _department,
                                             phone: _phoneController.text,
                                             title: _titleController.text));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Registration data send success.'),
-                                      backgroundColor: acceptColor,
-                                    ));
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(SnackBar(
+                                    //   content: Text(
+                                    //       'Registration data send success.'),
+                                    //   backgroundColor: acceptColor,
+                                    // ));
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -348,7 +351,10 @@ class _RegistrationState extends State<Registration> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text('Send Request'),
+                                child: Text('Send Request',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
                               ),
                             ),
                             SizedBox(
@@ -369,9 +375,13 @@ class _RegistrationState extends State<Registration> {
   }
 
   void registerUser(BuildContext context, User user) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
     Network network = Network(url: "/api/v1/registration");
     Future data = network.registerUser(user);
     data.then((value) async {
+      pd.close();
       print("data is : $value");
       if (value['status'] == 'error') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

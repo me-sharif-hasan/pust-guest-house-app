@@ -7,10 +7,10 @@ void main() {
     debugShowCheckedModeBanner: false,
     title: 'PUST GUEST HOUSE',
     theme: ThemeData(
-        primaryColor: primary,
-        appBarTheme: AppBarTheme(color: primaryDeep),
-        
-        // buttonTheme: ButtonThemeData(buttonColor: primaryDeep)
+      primaryColor: primary,
+      appBarTheme: AppBarTheme(color: primaryDeep),
+
+      // buttonTheme: ButtonThemeData(buttonColor: primaryDeep)
     ),
     home: SplashScreen(),
   ));

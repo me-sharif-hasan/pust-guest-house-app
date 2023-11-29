@@ -11,7 +11,7 @@ class BookingNetwork {
 
   Future<AllocationList?> loadAllocations(String param) async {
     print("$url");
-    var urlg = Uri.http(hostUrl, url! + param);
+    var urlg = Uri.https(hostUrl, url! + param);
 
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});
@@ -29,7 +29,7 @@ class BookingNetwork {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
 
     final response = await post(urlg,
         body: json.encode(booking.get()),
@@ -47,7 +47,8 @@ class BookingNetwork {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
-    var urlg = Uri.http(hostUrl, url!);
+    var urlg = Uri.https(hostUrl, url!);
+    print('urlg : ${urlg.toString()}');
 
     final response = await post(urlg,
         body: json.encode({'id': id, key: value}),
@@ -61,22 +62,26 @@ class BookingNetwork {
     }
   }
 
-  // Future loginUser(String email, String password) async{
-  //   print("$url");
-  //   // var ur = Uri.encodeFull(url);
-  //   var urlg = Uri.http(baseUrl, url!);
-  //   Map<String, dynamic> credintial = {
-  //     'email' : email,
-  //     'password' : password
-  //   };
+  Future cancelRequest(int id) async {
+    print("$url");
 
-  //   final response = await post(urlg, body: json.encode(credintial));
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.https(hostUrl, url!);
 
-  //   if (response.statusCode == 200) {
-  //     print(response.body);
-  //     return json.decode(response.body);
-  //   } else {
-  //     print(response.statusCode);
-  //   }
-  // }
+    final response = await post(urlg,
+        body: json.encode({
+          'id': id,
+          'status': 'canceled',
+          'is_admin_seen': 0,
+          'is_user_seen': 0,
+        }),
+        headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      // return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
 }

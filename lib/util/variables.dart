@@ -12,7 +12,10 @@ final Widget appTitle = SingleChildScrollView(
   child: Row(children: [
     Container(
         height: 40, width: 40, child: Image.asset('images/pust_logo.png')),
-    Text('PUST Guest House'),
+    Text(
+      'PUST Guest House',
+      style: TextStyle(color: Colors.white),
+    ),
   ]),
 );
 
@@ -25,9 +28,10 @@ final List<String> userTapPotions = [
   "Expired"
 ];
 
-final String hostUrl = "10.0.2.2:8000";
+// final String hostUrl = "10.0.2.2:8000";
+final String hostUrl = "testproject.iishanto.com";
 // final String hostUrl = '127.0.0.1:8000';
-final String hostImageUrl = "http://10.0.2.2:8000";
+final String hostImageUrl = "https://$hostUrl";
 
 final List<String> departmentList = [
   "Chose a department",
@@ -57,10 +61,33 @@ final List<String> departmentList = [
 
 Map<String, List<Allocation>>? catagory_wise_allocations;
 
-Map<int, String> type_of_guest_house_list ={};
+Map<int, String> type_of_guest_house_list = {};
+Map<int, String> guest_house_address = {};
+Map<int, double> guest_house_lat = {};
+Map<int, double> guest_house_log = {};
 
 final List<String> type_of_booking_list = ["", "Personal Use", "Official Use"];
 final List<String> type_of_room_list = ["", "AC", "Non AC"];
+
+final List<String> conditions = [
+  '১। গেস্ট হাউজে প্রবেশ/অবস্থান করে এন্ট্রি বুক ও বুকিং ফরম পূরন করুন।',
+  '২। গেস্ট হাউজে অবস্থাঙ্কালীন আপনি কোন বেআইনি/রাষ্ট ও বিশ্ববিদ্যালয়ের স্বার্থবিরোধী কোন কাজে লিপ্ত হতে পারবেন না।',
+  '৩। ব্যাক্তিগত কাজে সর্বোচ্চ ৭ দিনের বেশি আপনি গেস্ট হাউজে অবস্থান করতে পারবেন না।',
+  '৪। আপনার পরিবারের সদস্য নয় বা বিশ্ববিদ্যালয়ের সাথে সম্পৃক্ত নয় এমন কেউ গেস্ট হাউজে অবস্থান করতে পারবেন না।',
+  '৫। রাত ১২টা থেকে দিন গণনা শুরু হবে। তবে রাত্রে অবস্থান না করলে কোন চার্জ কাটা হবে না কিন্তু গেস্ট হাউজে দিনের বেলা সাময়িক অবস্থান খাতায় এন্ট্রি ও স্বাক্ষর করতে হবে।',
+  '৬। গেস্ট এর সংখ্যা, রুমের ধরন বা অবস্থানকালীন তারিখ পরিবর্তন হলে গেস্ট হাউজ প্রশাসককে অবহিত করুন।',
+  '৭। কর্তব্যকালীন ছুটি হলে বুকিং ফরমের পেছনে প্রমান্য হিসেবে ফটোকপি সংযুক্ত করুন।',
+  '৮। আপনার সেবায় নিয়োজিত কর্মীদের সাথে সদাচরন করুন।',
+  '৯। খাবার অর্ডার দিয়ে না খেলেও খাবারের বিল পরিশোধ করতে হবে।',
+  '১০। গেস্ট হাউজে কোন ধরনের মাদকদব্য বহন ও সেবন সম্পূর্ণ নিষিদ্ধ।',
+  '১১। পাবিপ্রাবির একাডেমিক কাজের সাথে সম্পৃক্ত নয় এমন বিদেশি ব্যক্তিগত অতিথি গেস্ট হাউজে অবস্থানের ক্ষেত্রে মাননীয় উপচার্য মহদয়ের বিশেষ অনুমতি প্রয়োজন।',
+  '১২। অনুমতি নিয়ে গেস্ট হাউজে অবস্থান করে বুকিং ফরম ও এন্ট্রি বুক পূরণ না করলে বুকিং ফরম ও এন্ট্রি বুক পূরণ করার জন্য আপনাকে "লেটার অফ রিমাইন্ডার" দেওয়া হবে।',
+  '১৩। বিনা অনুমতিতে গেস্ট হাউজে রাত্রি যাপন (রাত ১২টা থেকে ভোর ৬টা) করলে আপনাকে বিশ্ববিদ্যালয় রাজিস্ট্রারের মাধ্যমে "কারণ দর্শানোর নোটিশ" দেওয়া হবে।',
+  '১৪। গেস্ট হাউজ ব্যবহারে পরিচ্ছন্নতা বজায় রাখুন।',
+  '১৫। যে কোনো অসুবিধা বা সমস্যার সমাধানের জন্য প্রশাসকের সাথে যোগাযোগ করুন।',
+  '১৬। আপনার কোন অভিযোগ থাকলে অভিযোগ বইয়ে বিস্তারিত লিখুন।'
+];
+
 // final Map<String, Map<String, int>> price_according_to_roomtype = {
 //   "Personal Use": {
 //     "": 0,

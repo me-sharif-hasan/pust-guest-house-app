@@ -27,6 +27,7 @@ class _UsersState extends State<Users> {
     return Scaffold(
       body: Container(
           child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: FutureBuilder(
           future: user_list,
           builder: (context, AsyncSnapshot<UserList?> snapshot) {
@@ -34,8 +35,11 @@ class _UsersState extends State<Users> {
               // return Container();
               return createUserPage(snapshot.data!.users, context);
             } else {
-              return Container(
-                child: Center(child: CircularProgressIndicator()),
+              return Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
               );
             }
           },
