@@ -136,11 +136,12 @@ class BookingController extends Controller
             $data = $r->json()->all();
             $alloc = AllocationRequest::filter(AllocationRequest::find($data['id']));
             if ($alloc->user->id != Auth::user()->id) throw new SafeException("You can not modify this allocation");
-            if ($alloc->status == "approved") {
+            if ($alloc->status == "approved"&&!(isset($data['status'])&&$data['status']=='cancelled')) {
                 throw new SafeException("Only date extension operation can be performed when your request is approved!");
             }
             unset($data['id']);
             unset($data['user_id']);
+            if(isset($data['rejection_reason'])) throw new SafeException("You can not change rejection reason. This permission is only for admin!");
             $alloc->fill($data);
             $alloc->status = isset($data['status'])&&$data['status']=='cancelled'?"cancelled":"pending";
             $alloc->save();

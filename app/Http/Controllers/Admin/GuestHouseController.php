@@ -121,10 +121,12 @@ class GuestHouseController extends Controller
 
             $boarding_date=Carbon::now();
             $departure_date=Carbon::now();
+            $boarders_type=null;
             if(isset($data['allocation_id'])){
                 $allocation=AllocationRequest::find($data['allocation_id']);
                 $boarding_date=$allocation->boarding_date;
                 $departure_date=$allocation->departure_date;
+                $boarders_type=$allocation->boarder_type;
             }
 
             $allocations=AllocationRequest::where('status', '=', 'approved')
@@ -142,7 +144,11 @@ class GuestHouseController extends Controller
                     });
                 });
 
+
+
 //                var_dump(json_encode($allocations->get()));
+//            echo $boarders_type;
+            $excluded=[];
             $counter=[];
             if($allocations!=null){
                 foreach ($allocations->get() as $allocation){
@@ -151,20 +157,26 @@ class GuestHouseController extends Controller
                     foreach ($assigned_rooms as $room){
                         if($room==null) continue;
                         $counter[$room->id]=isset($counter[$room->id])?$counter[$room->id]+1:1;
+//                        echo $room->number." ".$allocation->id."\n";
                         if($room->room){
+                            if($boarders_type=='female'||$boarders_type=='family'){
+                                $excluded[$room->id]=true;
+                            }
                             $counter[$room->room->id]=isset($counter[$room->room->id])?$counter[$room->room->id]+1:1; //also increase base room count
                         }
                     }
                 }
             }
+            $roomList=[];
             foreach ($rooms as &$room){
                 $room->border_count= $counter[$room->id] ?? 0;
+                if(!isset($excluded[$room->id])) $roomList[]=$room;
             }
             return [
                 'status'=>'success',
                 'message'=>'Room list fetched',
                 'data'=>[
-                    'rooms'=>$rooms
+                    'rooms'=>$roomList
                 ]
             ];
 

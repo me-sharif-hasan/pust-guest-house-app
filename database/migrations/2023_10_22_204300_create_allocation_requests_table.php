@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('room_type');/*AC/NON-AC&*/
             $table->string('booking_type'); /*OFFICIAL/ PERSONAL*/
             $table->string('status')->nullable();
+            $table->string('boarder_type')->nullable();
+            $table->text("behalf_of")->nullable();
+            $table->longText("rejection_reason")->nullable();
+            $table->longText("cancellation_reason")->nullable();
+            $table->string("allocation_purpose")->default("night_stay");
             $table->dateTime("boarding_date");
             $table->dateTime("departure_date");
             $table->dateTime('extension_request_date')->nullable();

@@ -53,7 +53,12 @@ class AllocationRequest extends Model
         'status',
         'is_user_seen',
         'is_admin_seen',
-        'days_count'
+        'days_count',
+        'behalf_of',
+        'boarder_type',
+        'rejection_reason',
+        'cancellation_reason',
+        'allocation_purpose'
     ];
 
     /**

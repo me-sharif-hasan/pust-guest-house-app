@@ -156,11 +156,15 @@ class RoomController extends Controller
                 return throw new \LogicException($v->errors()->first());
             }
             $rooms=GuestHouse::find($data['guest_house_id'])->rooms->where('parent_id','=',null)->sortBy('id');
+            $roomList=[];
+            foreach ($rooms as $room){
+                $roomList[]=$room;
+            }
 
             return [
                 'status'=>'success',
                 'message'=>'Fetch successful',
-                'data'=>$rooms
+                'data'=>$roomList
             ];
         }catch (\LogicException $e){
             return [
