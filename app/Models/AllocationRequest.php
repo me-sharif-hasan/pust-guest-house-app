@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['fee','assigned_rooms','guest_house'];
+    protected $appends=['assigned_rooms'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
