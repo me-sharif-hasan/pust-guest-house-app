@@ -162,7 +162,7 @@ class UserLoginAndRegistrationController extends Controller
             Mail::to($email)->send(new MailCover(
                 [
                     'title'=>'PUST Guest House Email Verification',
-                    'code'=>$vcode
+                    'content'=>"One step more, your verification code is: <b>".$vcode."</b>.<br>Please use this code to complete your registration.<br><u>Do not share this code with anybody else.</u>"
                 ]
             ));
             return true;

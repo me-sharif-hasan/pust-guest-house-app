@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\MailCover;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,11 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['assigned_rooms'];
+    protected $appends=['assigned_rooms','report_link'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
@@ -28,6 +32,29 @@ class AllocationRequest extends Model
             'message'=>'This specific room combination not exists!',
             'code'=>0x901
         ];
+    }
+
+    public function getReportLinkAttribute(){
+        try{
+            if($this->status=='approved'){
+                $etken=AccessToken::where('user_id','=',Auth::id())->get();
+//            if($etken) $etken->delete();
+                $newToken=md5(Hash::make(time().Auth::id().Auth::user()->email));
+                $nt=new AccessToken();
+                $nt->user_id=Auth::id();
+                $nt->token=$newToken;
+                $nt->save();
+                return route('download-report',[$newToken,$this->id]);
+            }else{
+                return null;
+            }
+        }catch (\Throwable $e){
+            return null;
+        }
+    }
+
+    public static function makeReportHash($alloc_id,$user_id,$user_email,$user_pass){
+//        return Hash::make($alloc_id.$user_id.$user_email.$user_pass);
     }
 
     public function getAssignedRoomsAttribute(){
@@ -82,6 +109,41 @@ class AllocationRequest extends Model
             }
         }
         return $allocationRequest;
+    }
+
+
+    public function save(array $options = [])
+    {
+        $changed=$this->isDirty()?$this->getDirty():false;
+        $save=parent::save($options);
+        if($changed){
+            $mailData="";
+            $mailTitle="";
+            foreach ($changed as $key=>$attr){
+                if($key=='status'){
+                    if($attr=='approved'){
+                        $mailTitle="Your Guest House Allocation Request Has been approved.";
+                        $mailData="<b>Congratulations</b>, your Allocation Request in ".$this->guest_house()->get()->first()->title." has been <b style='color: green;text-transform: uppercase'>approved</b>. Please Download and Print your PDF copy from the App";
+                    }else if ($attr=='rejected'){
+                        $mailTitle="Your Guest House Allocation Request is Rejected";
+                        $mailData="We have reviewed your application. Unfortunately we have decided to <b style='text-transform:uppercase;color:red'>Rejected</b> your request ";
+                        if($this->rejection_reason){
+                            $mailData.="for the following reason<br>, \"$this->rejection_reason\".<br>For further query, please contact Guest House Admin";
+                        }
+                        $mailData.='.';
+                    }
+                    if($attr=='approved'||$attr=='rejected'){
+                        Mail::to($this->user()->get()->first()->email)->send(new MailCover(
+                            [
+                                'title'=>$mailTitle,
+                                'content'=>"<p>$mailData</p>"
+                            ]
+                        ));
+                    }
+                }
+            }
+        }
+        return $save;
     }
 
 }

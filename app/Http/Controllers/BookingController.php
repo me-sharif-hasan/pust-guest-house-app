@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\SafeException;
+use App\Models\accessToken;
 use App\Models\AllocationRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -137,16 +140,23 @@ class BookingController extends Controller
             $alloc = AllocationRequest::filter(AllocationRequest::find($data['id']));
             if ($alloc->user->id != Auth::user()->id) throw new SafeException("You can not modify this allocation");
             if ($alloc->status == "approved"&&!(isset($data['status'])&&($data['status']=='cancelled'||$data['status']=='rejected'))) {
-                throw new SafeException("Only date extension operation can be performed when your request is approved!");
+                if(isset($data['is_user_seen'])){
+                    $alloc->is_user_seen=$data['is_user_seen'];
+                    $alloc->save();
+                }else{
+                    throw new SafeException("Only date extension operation can be performed when your request is approved!");
+                }
+            }else{
+                unset($data['id']);
+                unset($data['user_id']);
+                if(isset($data['rejection_reason'])) throw new SafeException("You can not change rejection reason. This permission is only for admin!");
+                $alloc->fill($data);
+                $alloc->status = (isset($data['status'])&&($data['status']=='cancelled'||$data['status']=='rejected'))||$alloc->status=='rejected'?$data['status']??$alloc->status:"pending";
+                $alloc->save();
+                $alloc = AllocationRequest::filter($alloc);
+                $alloc->guest_house;
             }
-            unset($data['id']);
-            unset($data['user_id']);
-            if(isset($data['rejection_reason'])) throw new SafeException("You can not change rejection reason. This permission is only for admin!");
-            $alloc->fill($data);
-            $alloc->status = isset($data['status'])&&($data['status']=='cancelled'||$data['status']=='rejected')?$data['status']:"pending";
-            $alloc->save();
-            $alloc = AllocationRequest::filter($alloc);
-            $alloc->guest_house;
+
             return [
                 'status' => 'success',
                 'message' => $alloc->status=='cancelled'||$alloc->status=='rejected'?'Allocation updated':'Allocation updated and waiting for approval.',
@@ -163,7 +173,7 @@ class BookingController extends Controller
         } catch (\Throwable $e) {
             return [
                 'status' => 'error',
-                'message' => "Something went wrong.",
+                'message' => "Something went wrong.".$e->getMessage(),
                 'code' => 0x408
             ];
         }
@@ -261,6 +271,37 @@ class BookingController extends Controller
                 'status' => 'error',
                 'message' => "Something went wrong.",
                 'code' => 0x414
+            ];
+        }
+    }
+
+    public function download($token,$id,$return_view=false){
+        try{
+            $at=AccessToken::where('token','=',$token)->get();
+            if(count($at)==0) throw new SafeException("The link you are following is not valid");
+            $allocation=AllocationRequest::find($id);
+            if(!$id) throw new SafeException("No allocation with that ID");
+            if($allocation->status!='approved') throw new SafeException("Only approved allocation PDF can be downloaded");
+            $vw=view('report')->with('allocation',$allocation);
+            $html=$vw->render();
+            $pdf=new Dompdf();
+            $pdf->loadHtml($html);
+            $pdf->render();
+            $out=$pdf->output();
+            return response()->streamDownload(function() use ($out){
+               echo $out;
+            },$allocation->guest_house->first()->title." allocation report.pdf");
+        }catch (SafeException $e){
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'code' => 0x415
+            ];
+        }catch (Throwable $e){
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'code' => 0x416
             ];
         }
     }

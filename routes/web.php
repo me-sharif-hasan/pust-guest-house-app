@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('download-report/{token}/{id}/{return_view?}',[\App\Http\Controllers\BookingController::class,'download'])->name('download-report');
