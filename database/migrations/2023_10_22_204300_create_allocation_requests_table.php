@@ -31,6 +31,7 @@ return new class extends Migration
             $table->dateTime('extension_request_date')->nullable();
             $table->boolean('is_admin_seen')->default(false);
             $table->boolean('is_user_seen')->default(false);
+            $table->string('token')->unique()->index()->nullable();
             $table->timestamps();
         });
     }
