@@ -17,13 +17,13 @@ use Illuminate\Support\Facades\Mail;
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['assigned_rooms','report_link','user'];
+    protected $appends=['assigned_rooms','report_link','user_short_info'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
     }
 
-    public function getUserAttribute(){
+    public function getUserShortInfoAttribute(){
         $user=$this->user()->get();
         return [
             'name'=>$user->first()->name,
