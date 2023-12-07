@@ -17,11 +17,24 @@ use Illuminate\Support\Facades\Mail;
 class AllocationRequest extends Model
 {
     use HasFactory;
-    protected $appends=['assigned_rooms','report_link'];
+    protected $appends=['assigned_rooms','report_link','user'];
 
     public function user():BelongsTo{
         return $this->belongsTo(User::class,'user_id','id');
     }
+
+    public function getUserAttribute(){
+        $user=$this->user()->get();
+        return [
+            'name'=>$user->first()->name,
+            'email'=>$user->first()->profile_picture
+        ];
+    }
+
+    public static function getUniqueHash(){
+        return md5(Auth::user()->email.time().uniqid().Auth::id().'##$$');
+    }
+
     public function guest_house():BelongsTo{
         return $this->belongsTo(GuestHouse::class,'guest_house_id','id');
     }
@@ -37,14 +50,11 @@ class AllocationRequest extends Model
     public function getReportLinkAttribute(){
         try{
             if($this->status=='approved'){
-                $etken=AccessToken::where('user_id','=',Auth::id())->get();
-//            if($etken) $etken->delete();
-                $newToken=md5(Hash::make(time().Auth::id().Auth::user()->email));
-                $nt=new AccessToken();
-                $nt->user_id=Auth::id();
-                $nt->token=$newToken;
-                $nt->save();
-                return route('download-report',[$newToken,$this->id]);
+                if($this->token==null){
+                    $this->token=self::getUniqueHash();
+                    $this->save();
+                }
+                return route('download-report',[$this->token]);
             }else{
                 return null;
             }

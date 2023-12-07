@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('download-report/{token}/{id}/{return_view?}',[\App\Http\Controllers\BookingController::class,'download'])->name('download-report');
+Route::get('download-report/{token}/{return_view?}',[\App\Http\Controllers\BookingController::class,'download'])->name('download-report');

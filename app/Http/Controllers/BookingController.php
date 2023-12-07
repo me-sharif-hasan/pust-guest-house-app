@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\SafeException;
-use App\Models\accessToken;
+use App\Models\AccessToken;
 use App\Models\AllocationRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -116,6 +116,7 @@ class BookingController extends Controller
             $allocation->fill($data);
             $allocation->user_id = Auth::user()->id;
             $allocation->status = "pending";
+            $allocation->token=AllocationRequest::getUniqueHash();
             $allocation->save();
             return [
                 'status' => 'success',
@@ -275,10 +276,11 @@ class BookingController extends Controller
         }
     }
 
-    public function download($token,$id,$return_view=false){
+    public function download($token,$return_view=false){
         try{
-            $at=AccessToken::where('token','=',$token)->get();
+            $at=AllocationRequest::where('token','=',$token)->get();
             if(count($at)==0) throw new SafeException("The link you are following is not valid");
+            $id=$at->first()->id;
             $allocation=AllocationRequest::find($id);
             if(!$id) throw new SafeException("No allocation with that ID");
             if($allocation->status!='approved') throw new SafeException("Only approved allocation PDF can be downloaded");
