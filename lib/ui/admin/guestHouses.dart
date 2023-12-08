@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/admin/GuestHouseModel.dart';
+import 'package:guest_house_pust/models/admin/roomModel.dart';
 import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
 import 'package:guest_house_pust/ui/admin/house/createHouse.dart';
 import 'package:guest_house_pust/ui/admin/house/roomsPage.dart';
@@ -103,7 +104,7 @@ class _HousesState extends State<Houses> {
           SizedBox(
             height: 5,
           ),
-          Text('Number of rooms : ${house.roomList!.rooms!.length}')
+          Text('Number of beds : ${_getBedCount(house.roomList!.rooms!)}')
         ]),
         trailing: GestureDetector(
             onTap: () {
@@ -125,5 +126,18 @@ class _HousesState extends State<Houses> {
     if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
       throw Exception('Could not launch $url');
     }
+  }
+
+  int _getBedCount(List<RoomModel> list) {
+    int bedCount = list.length;
+
+    for (RoomModel room in list) {
+      print('${room.id}  parent : ${room.parent_id}');
+      if (room.parent_id == null) {
+        bedCount--;
+      }
+    }
+    print('bed set as $bedCount');
+    return bedCount;
   }
 }

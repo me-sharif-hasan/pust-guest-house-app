@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/admin/roomModel.dart';
+import 'package:guest_house_pust/ui/client/userProfile.dart';
 
 class AllocationListCatagory {
   final AllocationList? allocationList;
@@ -7,9 +10,10 @@ class AllocationListCatagory {
 
   Map<String, List<Allocation>> build() {
     Map<String, List<Allocation>> catagory = {
+      'all': [],
       'pending': [],
       'approved': [],
-      'canceled': [],
+      'cancelled': [],
       'rejected': [],
       'expired': []
     };
@@ -20,6 +24,9 @@ class AllocationListCatagory {
           .add(allocationList!.allocations![i]);
       print(
           "update length is : ${catagory[allocationList!.allocations![i].status]!.length}");
+      if (allocationList!.allocations![i].status != 'expired') {
+        catagory['all']!.add(allocationList!.allocations![i]);
+      }
     }
     // catagory['pending']!.add(Allocation());
 
@@ -36,12 +43,16 @@ class AllocationList {
     allocations = parsedJson
         .map(
           (e) {
+            // print('Allocation created start');
+            // print(e);
             return Allocation.fromJson(e);
           },
         )
         .toList()
         .reversed
         .toList();
+    print('Allocation build success-----');
+    print('size : ${allocations.length}');
     return AllocationList(allocations: allocations);
   }
 }
@@ -63,9 +74,17 @@ class Allocation {
   int? is_user_seen;
   String? created_at;
   String? updated_at;
-  int? room_charge;
+  // int? room_charge;
   int? dayCount;
   RoomList? assigned_room;
+  String? boarder_type;
+  String? allocation_purpose; // night stay or day stay
+  String? behalf_of;
+  String? rejection_reason;
+  String? cancellation_reason;
+  String? report_link; // download pdf link
+  String? user_name;
+  String? user_profile;
 
   Allocation({
     this.id,
@@ -84,20 +103,41 @@ class Allocation {
     this.is_user_seen,
     this.created_at,
     this.updated_at,
-    this.room_charge,
+    // this.room_charge,
     this.dayCount,
     this.assigned_room,
+    this.boarder_type,
+    this.allocation_purpose,
+    this.behalf_of,
+    this.rejection_reason,
+    this.cancellation_reason,
+    this.report_link,
+    this.user_name,
+    this.user_profile,
   });
 
   factory Allocation.fromJson(Map<String, dynamic> response) {
     // print("parse json is : $json");
-    int _charge = 0;
-    if (response['fee']['charge'] != null) {
-      _charge = response['fee']['charge'];
-    }
+    // int _charge = 0;
+    // if (response['fee']['charge'] != null) {
+    //   _charge = response['fee']['charge'];
+    // }
     RoomList? room_list;
     if (response['assigned_rooms'] != null) {
       room_list = RoomList.fromJson(response['assigned_rooms']);
+    }
+    String? behalf = "";
+    if (response['behalf_of'] != null) {
+      behalf = json.decode(response['behalf_of'])[0]['name'];
+    }
+    // print('behalf is : $behalf -------');
+
+    String? user_name;
+    String? user_profile;
+    if (response['user_short_info'] != null) {
+      Map<String, dynamic> user = response['user_short_info'];
+      user_name = user['name'];
+      user_profile = user['email'];
     }
 
     return Allocation(
@@ -117,9 +157,17 @@ class Allocation {
       is_user_seen: int.parse(response['is_user_seen']),
       created_at: response['created_at'],
       updated_at: response['updated_at'],
-      room_charge: _charge,
+      // room_charge: _charge,
       dayCount: int.parse('${response['days_count']}'),
       assigned_room: room_list,
+      boarder_type: response['boarder_type'],
+      allocation_purpose: response['allocation_purpose'],
+      behalf_of: behalf,
+      rejection_reason: response['rejection_reason'],
+      cancellation_reason: response['cancellation_reason'],
+      report_link: response['report_link'],
+      user_name: user_name,
+      user_profile: user_profile,
     );
   }
 
@@ -141,7 +189,12 @@ class Allocation {
       'booking_type': booking_type,
       'guest_count': guest_count,
       'created_at': created_at,
-      'updated_at': updated_at
+      'updated_at': updated_at,
+      'boarder_type': boarder_type,
+      'allocation_purpose': allocation_purpose,
+      'behalf_of': json.encode([
+        {'name': behalf_of}
+      ]),
     };
   }
 }

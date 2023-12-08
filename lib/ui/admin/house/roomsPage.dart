@@ -43,10 +43,34 @@ class _RoomsPageState extends State<RoomsPage> {
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(width: 1, color: primary)),
                         child: ListTile(
+                          onLongPress: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateRoom(
+                                          guestHouseId:
+                                              widget.guestHouseModel!.id,
+                                          title: widget.guestHouseModel!.title,
+                                          room: e,
+                                        )));
+                          },
                           tileColor: primaryExtraLight,
-                          title: Text('Room Number : ${e.number}'),
-                          subtitle: Text(
-                              'Room Type : ${e.room_type}'),
+                          title: Text((e.parent_id == null)
+                              ? 'Room Number' + ' : ${e.number}'
+                              : 'Bed Number' + ' : ${e.number}'),
+                          subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Current Border : ${(e.border_count == null) ? 0 : e.border_count}'),
+                              SizedBox(
+                                width: 25,
+                              ),
+                              Text(
+                                  'Total Beds : ${(e.parent_id == null) ? e.total_seat : 1}'),
+                            ],
+                          ),
+                          trailing: Text('Type : ${e.room_type}'),
                         ),
                       ))
                   .toList(),

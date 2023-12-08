@@ -90,7 +90,7 @@ class GuestHouseApi {
     }
   }
 
-  Future updateToReject(int id) async {
+  Future updateToReject(int id,String reason) async {
     print("$url");
 
     Map<String, dynamic> data = {
@@ -98,6 +98,7 @@ class GuestHouseApi {
       'status': 'rejected',
       'is_admin_seen': 1,
       'is_user_seen': 0,
+      'rejection_reason': reason,
     };
 
     // var ur = Uri.encodeFull(url);
@@ -164,6 +165,52 @@ class GuestHouseApi {
 
     Map<String, dynamic> data = model.get();
     data.putIfAbsent('parent_id', () => parent_id);
+
+    final response = await post(urlg,
+        body: json.encode(data), headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+  Future updateRoom(RoomModel model, int? parent_id) async {
+    print("$url");
+
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.https(hostUrl, url!);
+
+    Map<String, dynamic> data = model.get();
+    data.putIfAbsent('id', () => model.id);
+    data.putIfAbsent('parent_id', () => parent_id);
+
+    final response = await post(urlg,
+        body: json.encode(data), headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body);
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  void updateDeperatureDate(int id, String dayCount) async {
+    print("$url");
+
+    Map<String, dynamic> data = {
+      'id': id,
+      'status': 'approved',
+      'is_admin_seen': 1,
+      'is_user_seen': 0,
+      'departure_date': '${DateTime.now().toLocal()}',
+      'days_count': dayCount,
+    };
+
+    // var ur = Uri.encodeFull(url);
+    var urlg = Uri.https(hostUrl, url!);
 
     final response = await post(urlg,
         body: json.encode(data), headers: {'Authorization': 'Bearer $token'});

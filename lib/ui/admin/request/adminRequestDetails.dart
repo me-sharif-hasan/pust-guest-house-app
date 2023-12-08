@@ -30,11 +30,16 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
   bool is_user_fatch = false;
   bool is_day_count = false;
   final _dayCountController = TextEditingController();
+  final _rejectionReasonController = TextEditingController();
+  bool _rejection_reason_show = false;
+
+  int bed_count = 0;
 
   @override
   void initState() {
     // TODO: implement initState
-    future_user = _getUserDetails(widget.allocation!.user_id);
+    _rejectionReasonController.text = rejection_reason_text;
+    future_user = getUserDetails(widget.allocation!.user_id);
     future_user!.then((value) {
       print("----${value!.id}");
       is_user_fatch = true;
@@ -131,6 +136,11 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                     SizedBox(
                       height: 10,
                     ),
+                    rowBuilder("App. Date : ",
+                        "${widget.allocation!.created_at.toString().substring(0, 10)} At : ${widget.allocation!.created_at.toString().substring(11, 16)}"),
+                    SizedBox(
+                      height: 10,
+                    ),
                     rowBuilder("Booking Type : ",
                         "${widget.allocation!.booking_type}"),
                     SizedBox(
@@ -138,6 +148,17 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                     ),
                     rowBuilder(
                         "Room Type : ", "${widget.allocation!.room_type}"),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    rowBuilder("Booking for : ",
+                        "${widget.allocation!.allocation_purpose}"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    rowBuilder("Border Type : ",
+                        "${widget.allocation!.boarder_type!.substring(0, 1).toUpperCase()}${widget.allocation!.boarder_type!.substring(1)}"),
                     SizedBox(
                       height: 10,
                     ),
@@ -207,6 +228,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                             }
                                           },
                                           controller: _dayCountController,
+                                          keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(),
                                               labelText: 'Day count',
@@ -238,6 +260,11 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                     SizedBox(
                       height: 10,
                     ),
+                    rowBuilder(
+                        "Behalf Of : ", "${widget.allocation!.behalf_of}"),
+                    SizedBox(
+                      height: 10,
+                    ),
                     (widget.allocation!.status == 'approved')
                         ? Container(
                             child: Row(
@@ -247,7 +274,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    'Approved Rooms or Beds : ',
+                                    'Approved Beds : ',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -267,7 +294,9 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                           .map((e) {
                                         return Container(
                                             margin: EdgeInsets.all(5.0),
-                                            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0,
+                                                horizontal: 10.0),
                                             decoration: BoxDecoration(
                                                 color: primaryExtraLight,
                                                 border: Border.all(
@@ -278,8 +307,8 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text('Id: ${e.id}'),
-                                                Text('${e.number}')
+                                                Text('Number : ${e.number}'),
+                                                Text('${e.room_type}'),
                                               ],
                                             ));
                                       }).toList(),
@@ -340,8 +369,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                     child: Text(is_room_list_show
                                         ? 'Hide Room List'
                                         : 'Show Available Rooms')),
-                                rowBuilder('Selected Rooms : ',
-                                    '${selectedRoomId.length}'),
+                                rowBuilder('Selected Beds : ', '$bed_count'),
                                 rowBuilder("Rooms are : ",
                                     '${selectedRoomNumber.toString()}'),
                                 // approved button
@@ -370,13 +398,36 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                   },
                                   child: Text('Approve'),
                                 ),
+
+                                _rejection_reason_show
+                                    ? Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: TextFormField(
+                                          controller:
+                                              _rejectionReasonController,
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              labelText: 'Rejection Reason',
+                                              hintText:
+                                                  'Write Rejection Reason.'),
+                                        ),
+                                      )
+                                    : Container(),
                                 ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all<Color?>(
                                               dangerColor)),
                                   onPressed: () {
-                                    rejectRequest(widget.allocation!.id!);
+                                    if (_rejection_reason_show) {
+                                      rejectRequest(widget.allocation!.id!,
+                                          _rejectionReasonController.text);
+                                    } else {
+                                      setState(() {
+                                        _rejection_reason_show = true;
+                                      });
+                                    }
                                   },
                                   child: Text('Reject'),
                                 ),
@@ -384,27 +435,66 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                             ),
                           )
                         : Container(),
+
+                    (widget.allocation!.status == 'rejected')
+                        ? Container(
+                            child: rowBuilder('Reje. Reason :',
+                                '${widget.allocation!.rejection_reason}'),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 50,
                     ),
                     // pdf download button
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(backgroundColor: primary),
-                        onPressed: () async {},
-                        child: Row(
-                          children: [
-                            Icon(Icons.download),
-                            SizedBox(
-                              width: 6,
+                    (widget.allocation!.status == 'approved')
+                        ? Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            child: Column(
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: primary),
+                                  onPressed: () async {
+                                    print('pdf download');
+                                    _launchInBrowserView(
+                                        widget.allocation!.report_link);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.download),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text("Download as PDF"),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orange),
+                                  onPressed: () async {
+                                    print('update deperature date');
+                                    updateDepetDateConfirm(context);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.upload),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text("Update Deperature Date"),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text("Download as PDF"),
-                          ],
-                        ),
-                      ),
-                    ),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 50,
                     ),
@@ -436,7 +526,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
   Widget rowBuilder(String heading, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 1,
@@ -503,8 +593,22 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(width: 1, color: primary)),
       child: ListTile(
-        onTap: () {
+        onTap: () async {
+          if (e.border_count == e.total_seat) {
+            showToast(context, 'Room is booked', dangerColor);
+            return;
+          }
           if (selectedRoomId.contains(e.id)) {
+            if (e.parent_id == null) {
+              final value = await room_list!;
+              for (RoomModel room in value!.rooms!) {
+                if (room.parent_id == e.id) {
+                  room.is_selected = false;
+                  selectedRoomId.remove(room.id);
+                  selectedRoomNumber.remove(room.number);
+                }
+              }
+            }
             showToast(
                 context,
                 '${e.id} ${e.number} room is rmoved from the selected list.',
@@ -515,17 +619,47 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
               selectedRoomNumber.remove(e.number);
             });
           } else {
+            if (e.parent_id == null) {
+              final value = await room_list!;
+              for (RoomModel room in value!.rooms!) {
+                if (room.parent_id == e.id) {
+                  room.is_selected = true;
+
+                  selectedRoomId.add(room.id ?? 0);
+                  selectedRoomNumber.add('${room.number}');
+                }
+              }
+            }
+
             setState(() {
               e.is_selected = true;
               selectedRoomId.add(e.id ?? 0);
               selectedRoomNumber.add('${e.number}');
             });
           }
+          _getBedCount();
         },
-        tileColor: e.is_selected ? primaryLight : primaryExtraLight,
-        title: Text('Room Number : ${e.number}'),
-        subtitle: Text('Current Border : ${e.border_count}'),
-        trailing: Text('Room Type : ${e.room_type}'),
+        tileColor: e.is_selected
+            ? (e.border_count == e.total_seat)
+                ? Colors.red.shade300
+                : primaryLight
+            : (e.border_count == e.total_seat)
+                ? Colors.red.shade100
+                : primaryExtraLight,
+        title: Text((e.parent_id == null)
+            ? 'Room Number' + ' : ${e.number}'
+            : 'Bed Number' + ' : ${e.number}'),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('Current Border : ${e.border_count}'),
+            SizedBox(
+              width: 25,
+            ),
+            Text('Total Beds : ${e.total_seat}'),
+          ],
+        ),
+        trailing: Text('Type : ${e.room_type}'),
       ),
     );
   }
@@ -537,18 +671,17 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
     api.updateToApproved(id, list, dayCount);
     showToast(context, 'Allocation request Approved success.', acceptColor);
-    pd.close();
-    Navigator.popUntil(context, (route) => false);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AdminHome()),
-    );
+    Future.delayed(const Duration(seconds: 2), () {
+      pd.close();
+      Navigator.popUntil(context, (route) => false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminHome()),
+      );
+    });
   }
 
-  Future<User?> _getUserDetails(int? user_id) {
-    AdminUserApi api = AdminUserApi(url: '/api/v1/admin/users/details');
-    return api.getUserById(user_id!);
-  }
+  
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -558,12 +691,12 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
     await launchUrl(launchUri);
   }
 
-  void rejectRequest(int id) async {
+  void rejectRequest(int id, String reason) async {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Wait for server response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
-    await api.updateToReject(id);
+    await api.updateToReject(id, reason);
     showToast(context, 'Allocation request rejected success.', dangerColor);
     pd.close();
     Navigator.popUntil(context, (route) => false);
@@ -571,5 +704,181 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
       context,
       MaterialPageRoute(builder: (context) => const AdminHome()),
     );
+  }
+
+  void _getBedCount() async {
+    int bedCount = selectedRoomId.length;
+    room_list!.then((value) async {
+      for (RoomModel room in value!.rooms!) {
+        for (int id in selectedRoomId) {
+          print('${room.id} id  $id parent : ${room.parent_id}');
+          if (room.id == id && room.parent_id == null) {
+            bedCount--;
+          }
+        }
+      }
+      print('bed set as $bedCount');
+      setState(() {
+        bed_count = bedCount;
+      });
+    });
+  }
+
+  Future<void> _launchInBrowserView(String? surl) async {
+    if (surl == null) {
+      showToast(
+          context, 'PDF is not availdable for that allocation.', dangerColor);
+      return;
+    }
+    print('Report Url is : $surl');
+    Uri url = Uri.parse('$surl');
+    if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  void updateDepetDateConfirm(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Deperature Date.'),
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Text('Are you sure to update deperature date by current date.'),
+                SizedBox(
+                  height: 20.0,
+                ),
+                rowBuilder(
+                    'Boar. Date : ', '${widget.allocation!.boarding_date}'),
+                SizedBox(
+                  height: 5.0,
+                ),
+                rowBuilder(
+                    'Pre. Date : ', '${widget.allocation!.departure_date}'),
+                SizedBox(
+                  height: 5.0,
+                ),
+                rowBuilder('Cur. Date : ',
+                    '${DateTime.now().toLocal().toString().substring(0, 16)}'),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Column(
+                  children: [
+                    rowBuilder(
+                        'Sugg. diff. : ',
+                        getDayDifference('${widget.allocation!.boarding_date}',
+                            '${DateTime.now().toLocal()}')),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: is_day_count ? Colors.grey : Colors.red,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Day Count :',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          Container(
+                            child: TextFormField(
+                              onChanged: (value) {
+                                if (value != "") {
+                                  setState(() {
+                                    is_day_count = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    is_day_count = false;
+                                  });
+                                }
+                              },
+                              controller: _dayCountController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Day count',
+                                  hintText: 'In number.'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  // ProgressDialog pd = ProgressDialog(context: context);
+                  // pd.show(max: 100, msg: 'Wait for server response');
+
+                  // final props = await SharedPreferences.getInstance();
+                  // props.remove(tokenText);
+                  // pd.close();
+                  // // Navigator.pop(context);
+                  // Navigator.popUntil(context, (route) => false);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => const Login()),
+                  // );
+                  if (_dayCountController.text == "") {
+                    showToast(context, 'Updated day count is not imported.',
+                        dangerColor);
+                    return;
+                  }
+                  updateRequest(
+                      widget.allocation!.id ?? 0, _dayCountController.text);
+                },
+                child: Text('Confirm'))
+          ],
+        );
+      },
+    );
+  }
+
+  void updateRequest(int id, String dayCount) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
+    api.updateDeperatureDate(id, dayCount);
+    showToast(context, 'Allocation request update success.', acceptColor);
+    Future.delayed(const Duration(seconds: 2), () {
+      pd.close();
+      Navigator.popUntil(context, (route) => false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminHome()),
+      );
+    });
   }
 }

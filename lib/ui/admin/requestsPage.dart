@@ -84,24 +84,24 @@ class _RequestsState extends State<Requests> {
         ),
         body: TabBarView(
           children: userTapPotions.map((e) {
-            if (e == 'All') {
-              return Container(
-                child: FutureBuilder(
-                  future: allocationData,
-                  builder: (context, AsyncSnapshot<AllocationList?> snapshot) {
-                    if (snapshot.hasData) {
-                      // return Container();
-                      return createAllocationPage(
-                          snapshot.data!.allocations, context);
-                    } else {
-                      return Container(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                  },
-                ),
-              );
-            }
+            // if (e == 'All') {
+            //   return Container(
+            //     child: FutureBuilder(
+            //       future: allocationData,
+            //       builder: (context, AsyncSnapshot<AllocationList?> snapshot) {
+            //         if (snapshot.hasData) {
+            //           // return Container();
+            //           return createAllocationPage(
+            //               snapshot.data!.allocations, context);
+            //         } else {
+            //           return Container(
+            //             child: Center(child: CircularProgressIndicator()),
+            //           );
+            //         }
+            //       },
+            //     ),
+            //   );
+            // }
 
             return Container(
               child: isDataLoaded
@@ -161,7 +161,7 @@ class _RequestsState extends State<Requests> {
                     AdminRequestDetails(allocation: allocation)),
           );
         },
-        child: getAllocationItem(allocation, true));
+        child: getAllocationItemAdmin(allocation, true));
   }
 
   updateSeenStatus(int id) {

@@ -22,7 +22,9 @@ class RoomModel {
   String? room_type;
   int? border_count;
   bool is_selected = false;
-  UserList? current_borders;
+  // UserList? current_borders;
+  int? parent_id;
+  int? total_seat;
 
   RoomModel({
     this.id,
@@ -30,19 +32,33 @@ class RoomModel {
     this.guest_house_id,
     this.room_type,
     this.border_count,
-    this.current_borders,
+    // this.current_borders,
+    this.parent_id,
+    this.total_seat,
   });
 
   factory RoomModel.fromJson(Map<String, dynamic> response) {
     // print("parse json is : $json");
-    UserList userList = UserList.fromJson(response['current_borders']);
+    // UserList? userList;
+    // if (response['current_borders'] != null) {
+    //   userList = UserList.fromJson(response['current_borders']);
+    // }
+    int? total_seat = response['total_seat'];
+    if (total_seat == 0) {
+      total_seat = 1;
+    }
+
     return RoomModel(
       id: response['id'],
       number: response['number'],
       guest_house_id: response['guest_house_id'],
       border_count: response['border_count'],
       room_type: response['room_type'],
-      current_borders: userList,
+      // current_borders: userList,
+      parent_id: (response['parent_id'] == null)
+          ? null
+          : int.parse('${response['parent_id']}'),
+      total_seat: total_seat,
     );
   }
 

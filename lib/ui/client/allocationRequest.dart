@@ -4,6 +4,7 @@ import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
 import 'package:guest_house_pust/ui/client/userHome.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/components.dart';
+import 'package:guest_house_pust/util/myInt.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
@@ -17,15 +18,18 @@ class AllocationRequest extends StatefulWidget {
 class _AllocationRequestState extends State<AllocationRequest> {
   final _form_key = GlobalKey<FormState>();
   final _guestController = TextEditingController();
+  final _guestNameRelationController = TextEditingController();
 
   bool _isFromDateSelected = false;
   bool _isToDateSelected = false;
 
-  int selected_guest_house = 0;
-  int selected_booking_type =
+  int selected_guest_house =
       0; // Initialize the selected radio to the first option.
-  int selected_room_type =
-      0; // Initialize the selected radio to the first option.
+  MyInt selected_booking_type = MyInt(0);
+  MyInt selected_room_type = MyInt(0);
+  MyInt selected_stay = MyInt(0);
+  MyInt selected_guest_type = MyInt(0);
+  MyInt selected_booking_for = MyInt(0);
 
   DateTime? _selectedFromDate;
   DateTime? _selectedToDate;
@@ -39,43 +43,43 @@ class _AllocationRequestState extends State<AllocationRequest> {
     });
   }
 
-  void handleBookingTypeValueChange(int? value) {
-    // int totalCharge = 0;
-    // try {
-    //   totalCharge = _dayDifference *
-    //       price_according_to_roomtype[type_of_booking_list[value!]]![
-    //           type_of_room_list[selected_room_type]]! *
-    //       int.parse(_guestController.text);
-    //   print('totl charge : $totalCharge');
-    // } catch (e) {
-    //   totalCharge = 0;
-    //   print('totl ee charge : $e');
-    // }
-    setState(() {
-      selected_booking_type = value!;
-      // print("radio : $selected_booking_type");
-      // _totalCharge = totalCharge;
-    });
-  }
+  // void handleBookingTypeValueChange(int? value) {
+  //   // int totalCharge = 0;
+  //   // try {
+  //   //   totalCharge = _dayDifference *
+  //   //       price_according_to_roomtype[type_of_booking_list[value!]]![
+  //   //           type_of_room_list[selected_room_type]]! *
+  //   //       int.parse(_guestController.text);
+  //   //   print('totl charge : $totalCharge');
+  //   // } catch (e) {
+  //   //   totalCharge = 0;
+  //   //   print('totl ee charge : $e');
+  //   // }
+  //   setState(() {
+  //     selected_booking_type = value!;
+  //     // print("radio : $selected_booking_type");
+  //     // _totalCharge = totalCharge;
+  //   });
+  // }
 
-  void handleRoomTypeValueChange(int? value) {
-    // int totalCharge = 0;
-    // try {
-    //   totalCharge = _dayDifference *
-    //       price_according_to_roomtype[type_of_booking_list[
-    //           selected_booking_type]]![type_of_room_list[value!]]! *
-    //       int.parse(_guestController.text);
-    //   print('totl charge : $totalCharge');
-    // } catch (e) {
-    //   totalCharge = 0;
-    //   print('totl ee charge : $e');
-    // }
-    setState(() {
-      selected_room_type = value!;
-      // print("radio : $selected_room_type");
-      // _totalCharge = totalCharge;
-    });
-  }
+  // void handleRoomTypeValueChange(int? value) {
+  //   // int totalCharge = 0;
+  //   // try {
+  //   //   totalCharge = _dayDifference *
+  //   //       price_according_to_roomtype[type_of_booking_list[
+  //   //           selected_booking_type]]![type_of_room_list[value!]]! *
+  //   //       int.parse(_guestController.text);
+  //   //   print('totl charge : $totalCharge');
+  //   // } catch (e) {
+  //   //   totalCharge = 0;
+  //   //   print('totl ee charge : $e');
+  //   // }
+  //   setState(() {
+  //     selected_room_type = value!;
+  //     // print("radio : $selected_room_type");
+  //     // _totalCharge = totalCharge;
+  //   });
+  // }
 
   Future<void> _selectFormDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -267,7 +271,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
               // height: MediaQuery.of(context).size.height*0.5,
               alignment: Alignment.bottomCenter,
               child: Opacity(
-                opacity: 0.2,
+                opacity: 0.1,
                 child: Image.asset('images/home_illustrator.png'),
               ),
             ),
@@ -340,68 +344,85 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                 height: 15,
                               ),
                               headingText("Type of booking"),
-                              Row(
-                                children: [
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: selected_booking_type,
-                                          onChanged:
-                                              handleBookingTypeValueChange,
-                                        ),
-                                        Text('For Personal Use.'),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Radio(
-                                          value: 2,
-                                          groupValue: selected_booking_type,
-                                          onChanged:
-                                              handleBookingTypeValueChange,
-                                        ),
-                                        Text('For Official Use.'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              getRadioRow(selected_booking_type, {
+                                1: 'For Personal Use.',
+                                2: 'For Official Use.'
+                              }),
+                              // Row(
+                              //   children: [
+                              //     SingleChildScrollView(
+                              //       scrollDirection: Axis.horizontal,
+                              //       child: Row(
+                              //         children: [
+                              //           Radio(
+                              //             value: 1,
+                              //             groupValue: selected_booking_type,
+                              //             onChanged:
+                              //                 handleBookingTypeValueChange,
+                              //           ),
+                              //           Text('For Personal Use.'),
+                              //           SizedBox(
+                              //             width: 15,
+                              //           ),
+                              //           Radio(
+                              //             value: 2,
+                              //             groupValue: selected_booking_type,
+                              //             onChanged:
+                              //                 handleBookingTypeValueChange,
+                              //           ),
+                              //           Text('For Official Use.'),
+                              //         ],
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                               SizedBox(
                                 height: 15,
                               ),
                               headingText("Type of Room"),
-                              Row(
-                                children: [
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: selected_room_type,
-                                          onChanged: handleRoomTypeValueChange,
-                                        ),
-                                        Text('AC.'),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        Radio(
-                                          value: 2,
-                                          groupValue: selected_room_type,
-                                          onChanged: handleRoomTypeValueChange,
-                                        ),
-                                        Text('Non AC.'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              getRadioRow(
+                                  selected_room_type, {1: 'AC', 2: 'Non AC'}),
+                              // Row(
+                              //   children: [
+                              //     SingleChildScrollView(
+                              //       scrollDirection: Axis.horizontal,
+                              //       child: Row(
+                              //         children: [
+                              //           Radio(
+                              //             value: 1,
+                              //             groupValue: selected_room_type,
+                              //             onChanged: handleRoomTypeValueChange,
+                              //           ),
+                              //           Text('AC.'),
+                              //           SizedBox(
+                              //             width: 15,
+                              //           ),
+                              //           Radio(
+                              //             value: 2,
+                              //             groupValue: selected_room_type,
+                              //             onChanged: handleRoomTypeValueChange,
+                              //           ),
+                              //           Text('Non AC.'),
+                              //         ],
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                               SizedBox(
                                 height: 15,
                               ),
-                              headingText("Days of Stay"),
+                              headingText("For night stay?"),
+                              getRadioRow(selected_stay, {1: 'Yes', 2: 'No'}),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              headingText("Guest Type"),
+                              getRadioRow(selected_guest_type,
+                                  {1: 'Male', 2: 'Female', 3: 'Family'}),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              headingText("Date and Time of Stay"),
                               SizedBox(
                                 height: 5,
                               ),
@@ -477,6 +498,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               ),
                               TextFormField(
                                 controller: _guestController,
+                                keyboardType: TextInputType.number,
                                 // onChanged: (value) {
                                 //   int totalCharge = 0;
                                 //   try {
@@ -528,7 +550,56 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               //       ],
                               //     )),
                               SizedBox(
-                                height: 30,
+                                height: 15,
+                              ),
+                              headingText('Guests are : '),
+                              getRadioRow(selected_booking_for, {
+                                1: 'My Self',
+                                2: 'Behalf of',
+                              }),
+
+                              (selected_booking_for.value == 2)
+                                  ? Container(
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Please Mention there Name and relation by ","(coma) seperating :',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextFormField(
+                                              controller:
+                                                  _guestNameRelationController,
+                                              maxLines: 3,
+                                              keyboardType:
+                                                  TextInputType.multiline,
+                                              decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText: 'Name & Relation',
+                                                  hintText:
+                                                      'Example: name 1, father\nname 2, mother\nname 3,wife'),
+                                              validator: (value) {
+                                                if (value!.isEmpty &&
+                                                    selected_booking_for
+                                                            .value ==
+                                                        2) {
+                                                  return 'Guest Name & Relation are required.';
+                                                }
+                                                return null;
+                                              },
+                                            )
+                                          ]),
+                                    )
+                                  : Container(),
+                              SizedBox(
+                                height: 50,
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -541,16 +612,28 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         "Guest House is not selected yet.",
                                         dangerColor);
                                     return;
-                                  } else if (selected_booking_type == 0) {
+                                  } else if (selected_booking_type.value == 0) {
                                     showMessage(
                                         context,
                                         "Booking type is not selected yet.",
                                         dangerColor);
                                     return;
-                                  } else if (selected_room_type == 0) {
+                                  } else if (selected_room_type.value == 0) {
                                     showMessage(
                                         context,
                                         "Room type is not selected yet.",
+                                        dangerColor);
+                                    return;
+                                  } else if (selected_stay.value == 0) {
+                                    showMessage(
+                                        context,
+                                        "Night stay or not option is not selected yet.",
+                                        dangerColor);
+                                    return;
+                                  } else if (selected_guest_type.value == 0) {
+                                    showMessage(
+                                        context,
+                                        "Guest type is not selected yet.",
                                         dangerColor);
                                     return;
                                   } else if (!_isFromDateSelected) {
@@ -563,6 +646,12 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                     showMessage(
                                         context,
                                         "To date is not selected yet.",
+                                        dangerColor);
+                                    return;
+                                  } else if (selected_booking_for.value == 0) {
+                                    showMessage(
+                                        context,
+                                        "Mention who are guests is messing.",
                                         dangerColor);
                                     return;
                                   }
@@ -581,16 +670,25 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                         Allocation(
                                           user_id: myUser!.id,
                                           guest_house_id: selected_guest_house,
+                                          booking_type: type_of_booking_list[
+                                              selected_booking_type.value],
+                                          room_type: type_of_room_list[
+                                              selected_room_type.value],
+                                          allocation_purpose: type_of_stays[
+                                              selected_stay.value],
+                                          boarder_type: type_of_guest_gender[
+                                              selected_guest_type.value],
                                           boarding_date:
                                               _selectedFromDate.toString(),
                                           departure_date:
                                               _selectedToDate.toString(),
-                                          room_type: type_of_room_list[
-                                              selected_room_type],
-                                          booking_type: type_of_booking_list[
-                                              selected_booking_type],
                                           guest_count:
                                               int.parse(_guestController.text),
+                                          behalf_of:
+                                              (selected_booking_for.value == 1)
+                                                  ? 'My Self'
+                                                  : _guestNameRelationController
+                                                      .text,
                                         ));
                                     // Navigator.push(
                                     //     context,
@@ -622,7 +720,38 @@ class _AllocationRequestState extends State<AllocationRequest> {
     );
   }
 
-  headingText(String text) {
+  Widget getRadioRow(MyInt option, Map<int, String> options) {
+    return Row(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: options.entries.map((e) {
+              return Row(
+                children: [
+                  Radio(
+                    value: e.key,
+                    groupValue: option.value,
+                    onChanged: (value) {
+                      setState(() {
+                        option.value = value ?? 0;
+                      });
+                    },
+                  ),
+                  Text('${e.value}'),
+                  SizedBox(
+                    width: 15,
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget headingText(String text) {
     return Row(
       children: [
         Text(

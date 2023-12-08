@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/admin/userApi.dart';
+import 'package:guest_house_pust/ui/admin/user/userDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,8 +71,12 @@ class _UsersState extends State<Users> {
           border: Border.all(width: 1.0, color: primary),
           borderRadius: BorderRadius.circular(10)),
       child: ListTile(
+
         onTap: () {
-          print('${e.id} user id');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserDetails(user: e,)));
         },
         leading: CircleAvatar(
           backgroundImage: getBackgroundImage(e.profile_picture),

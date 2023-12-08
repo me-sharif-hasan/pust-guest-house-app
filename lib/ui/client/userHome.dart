@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
+import 'package:guest_house_pust/ui/client/about.dart';
 import 'package:guest_house_pust/ui/client/allocationRequest.dart';
+import 'package:guest_house_pust/ui/client/helpUser.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
 import 'package:guest_house_pust/ui/client/requestDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
@@ -73,7 +75,11 @@ class _UserHomeState extends State<UserHome> {
                   return [
                     PopupMenuItem(
                       onTap: () {
-                        print('Option one');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AboutPage()),
+                        );
                       },
                       child: Text('About'),
                     ),
@@ -99,7 +105,13 @@ class _UserHomeState extends State<UserHome> {
                       child: Text('Refresh'),
                     ),
                     PopupMenuItem(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HelpUser()),
+                        );
+                      },
                       child: Text('Help'),
                     ),
                     PopupMenuItem(
@@ -142,25 +154,25 @@ class _UserHomeState extends State<UserHome> {
           ),
           body: TabBarView(
             children: userTapPotions.map((e) {
-              if (e == 'All') {
-                return Container(
-                  child: FutureBuilder(
-                    future: allocationData,
-                    builder:
-                        (context, AsyncSnapshot<AllocationList?> snapshot) {
-                      if (snapshot.hasData) {
-                        // return Container();
-                        return createAllocationPage(
-                            snapshot.data!.allocations, context);
-                      } else {
-                        return Container(
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      }
-                    },
-                  ),
-                );
-              }
+              // if (e == 'All') {
+              //   return Container(
+              //     child: FutureBuilder(
+              //       future: allocationData,
+              //       builder:
+              //           (context, AsyncSnapshot<AllocationList?> snapshot) {
+              //         if (snapshot.hasData) {
+              //           // return Container();
+              //           return createAllocationPage(
+              //               snapshot.data!.allocations, context);
+              //         } else {
+              //           return Container(
+              //             child: Center(child: CircularProgressIndicator()),
+              //           );
+              //         }
+              //       },
+              //     ),
+              //   );
+              // }
 
               return Container(
                 child: isDataLoaded
@@ -287,7 +299,7 @@ class _UserHomeState extends State<UserHome> {
                 // Navigator.of(context).pop();
                 _scrollController.animateTo(
                   _scrollController.position.maxScrollExtent,
-                  duration: Duration(milliseconds: 5000),
+                  duration: Duration(milliseconds: 2000),
                   curve: Curves.easeInOut,
                 );
               },

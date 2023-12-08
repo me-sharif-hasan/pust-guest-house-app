@@ -9,7 +9,8 @@ import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 class CreateRoom extends StatefulWidget {
   final int? guestHouseId;
   final String? title;
-  const CreateRoom({super.key, this.guestHouseId, this.title});
+  final RoomModel? room;
+  const CreateRoom({super.key, this.guestHouseId, this.title, this.room});
 
   @override
   State<CreateRoom> createState() => _CreateRoomState();
@@ -30,6 +31,15 @@ class _CreateRoomState extends State<CreateRoom> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (widget.room != null) {
+      _numberController.text = '${widget.room!.number}';
+      if (widget.room!.room_type == 'AC') {
+        selected_room_type = 1;
+      } else {
+        selected_room_type = 2;
+      }
+      selected_room_id = widget.room!.parent_id;
+    }
 
     loadAllParentRoom(widget.guestHouseId ?? 0);
   }
@@ -65,7 +75,8 @@ class _CreateRoomState extends State<CreateRoom> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.1,
                 ),
-                topText('Create New Room'),
+                topText(
+                    (widget.room == null) ? 'Create New Room' : 'Update Room'),
                 topText('On'),
                 topText('${widget.title}'),
                 SizedBox(
@@ -206,7 +217,8 @@ class _CreateRoomState extends State<CreateRoom> {
                                 } else if (_form_key.currentState!.validate()) {
                                   // userLogin(context, _emailController.text,
                                   //     _passwordController.text);
-                                  sendRoomDate(
+                                  if(widget.room == null){
+                                    sendRoomDate(
                                       context,
                                       RoomModel(
                                         number: _numberController.text,
@@ -215,6 +227,18 @@ class _CreateRoomState extends State<CreateRoom> {
                                         room_type: type_of_room_list[
                                             selected_room_type],
                                       ));
+                                  }else{
+                                    updateRoomDate(
+                                      context,
+                                      RoomModel(
+                                        id: widget.room!.id,
+                                        number: _numberController.text,
+                                        guest_house_id:
+                                            '${widget.guestHouseId}',
+                                        room_type: type_of_room_list[
+                                            selected_room_type],
+                                      ));
+                                  }
 
                                   // ScaffoldMessenger.of(context)
                                   //     .showSnackBar(SnackBar(
@@ -226,7 +250,7 @@ class _CreateRoomState extends State<CreateRoom> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text('Create'),
+                                child: Text((widget.room==null)?'Create':'Update'),
                               ),
                             ),
                             SizedBox(
@@ -320,9 +344,49 @@ class _CreateRoomState extends State<CreateRoom> {
     );
   }
 
-  void loadAllParentRoom(int id) {
+  void loadAllParentRoom(int id) async {
     GuestHouseApi api =
         GuestHouseApi(url: '/api/v1/admin/guest-houses/base-rooms');
     room_list = api.loadParentRoom(id);
+    if (widget.room != null && widget.room!.parent_id != null) {
+      room_list!.then((value) {
+        for (RoomModel room in value!.rooms!) {
+          if (room.id == widget.room!.parent_id) {
+            setState(() {
+              selected_room_number = room.number;
+            });
+            break;
+          }
+        }
+      });
+    }
+  }
+  
+  void updateRoomDate(BuildContext context, RoomModel roomModel) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
+    GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/rooms/update');
+    Map<String, dynamic> data =
+        await api.updateRoom(roomModel, selected_room_id);
+
+    pd.close();
+
+    if (data['status'] == 'error') {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(data['message']),
+        backgroundColor: dangerColor,
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(data['message']),
+        backgroundColor: acceptColor,
+      ));
+      Navigator.popUntil(context, (route) => false);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AdminHome()),
+      );
+    }
   }
 }

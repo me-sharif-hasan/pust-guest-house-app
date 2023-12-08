@@ -23,7 +23,7 @@ final List<String> userTapPotions = [
   "All",
   "Pending",
   "Approved",
-  "Canceled",
+  "Cancelled",
   "Rejected",
   "Expired"
 ];
@@ -68,6 +68,8 @@ Map<int, double> guest_house_log = {};
 
 final List<String> type_of_booking_list = ["", "Personal Use", "Official Use"];
 final List<String> type_of_room_list = ["", "AC", "Non AC"];
+final List<String> type_of_stays = ["","Night Stay","Day Stay Only"];
+final List<String> type_of_guest_gender = ["","male","female","family"];
 
 final List<String> conditions = [
   '১। গেস্ট হাউজে প্রবেশ/অবস্থান করে এন্ট্রি বুক ও বুকিং ফরম পূরন করুন।',
@@ -88,6 +90,7 @@ final List<String> conditions = [
   '১৬। আপনার কোন অভিযোগ থাকলে অভিযোগ বইয়ে বিস্তারিত লিখুন।'
 ];
 
+String rejection_reason_text = 'Room is not available on that time schedule.';
 // final Map<String, Map<String, int>> price_according_to_roomtype = {
 //   "Personal Use": {
 //     "": 0,

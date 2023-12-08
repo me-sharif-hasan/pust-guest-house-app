@@ -92,6 +92,11 @@ class _UserProfileState extends State<UserProfile> {
                               margin: EdgeInsets.only(top: 15, bottom: 15),
                               height: MediaQuery.of(context).size.width * 0.31,
                               width: MediaQuery.of(context).size.width * 0.31,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 4, color: dangerColor),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
                               child: CircleAvatar(
                                 backgroundImage:
                                     getBackgroundImage(myUser!.profile_picture),
@@ -134,8 +139,8 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Canceled : ",
-                        "${catagory_wise_allocations!['canceled']!.length}"),
+                    rowBuilder("Cancelled : ",
+                        "${catagory_wise_allocations!['cancelled']!.length}"),
                     SizedBox(
                       height: 10,
                     ),
@@ -151,11 +156,14 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     rowBuilder("Expired : ",
                         "${catagory_wise_allocations!['expired']!.length}"),
-                    SizedBox(
-                      height: 10,
+                    Container(
+                      height: 1.2,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      decoration: BoxDecoration(color: primary),
                     ),
-                    rowBuilder("All : ",
-                        "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['canceled']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
+                    rowBuilder("Total : ",
+                        "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['cancelled']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
                     SizedBox(
                       height: 40,
                     ),
@@ -295,9 +303,17 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _sendToServer(String base64Image) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Profile Image is Uploading...');
     // Replace the URL with your server endpoint
     ClientNetwork network = ClientNetwork(url: '/api/v1/user/update');
     await network.updateProfile('profile_picture', base64Image);
+    pd.close();
+    Navigator.popUntil(context, (route) => false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SplashScreen()),
+    );
   }
 
   getBackgroundImage(String? profile_picture) {
@@ -311,7 +327,7 @@ class _UserProfileState extends State<UserProfile> {
   void _showUpdateDialog(
       BuildContext context, String key, String serverKey, String value) {
     final _newValueController = TextEditingController();
-
+    _newValueController.text = value;
     showDialog(
       context: context,
       builder: (BuildContext context) {

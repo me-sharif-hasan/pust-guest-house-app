@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/ui/admin/guestHouses.dart';
+import 'package:guest_house_pust/ui/admin/helpAdmin.dart';
 import 'package:guest_house_pust/ui/admin/requestsPage.dart';
 import 'package:guest_house_pust/ui/admin/users.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
@@ -61,7 +62,13 @@ class _AdminHomeState extends State<AdminHome> {
                   child: Text('View Profile'),
                 ),
                 PopupMenuItem(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HelpAdmin()),
+                    );
+                  },
                   child: Text('Help'),
                 ),
                 PopupMenuItem(

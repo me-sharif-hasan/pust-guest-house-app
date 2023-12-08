@@ -31,6 +31,8 @@ class BookingNetwork {
     // var ur = Uri.encodeFull(url);
     var urlg = Uri.https(hostUrl, url!);
 
+    print('-----------------Sending data are____');
+    print('${json.encode(booking.get())}');
     final response = await post(urlg,
         body: json.encode(booking.get()),
         headers: {'Authorization': 'Bearer $token'});
@@ -62,7 +64,7 @@ class BookingNetwork {
     }
   }
 
-  Future cancelRequest(int id) async {
+  Future<bool> cancelRequest(int id) async {
     print("$url");
 
     // var ur = Uri.encodeFull(url);
@@ -71,17 +73,19 @@ class BookingNetwork {
     final response = await post(urlg,
         body: json.encode({
           'id': id,
-          'status': 'canceled',
+          'status': 'cancelled',
           'is_admin_seen': 0,
-          'is_user_seen': 0,
+          'is_user_seen': 1,
         }),
         headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       print(response.body);
+      return true;
       // return json.decode(response.body);
     } else {
       print(response.statusCode);
+      return false;
     }
   }
 }
