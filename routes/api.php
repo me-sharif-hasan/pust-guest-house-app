@@ -42,6 +42,7 @@ Route::prefix('v1')->group(function (){
             });
 
             Route::prefix('/admin')->middleware('admin')->group(function (){
+                Route::get('sms-balance',[\App\Http\Controllers\BulkSMSBDController::class,'get_balance']);
                 Route::prefix('allocation')->group(function (){
                     /**
                      * Fetching allocations

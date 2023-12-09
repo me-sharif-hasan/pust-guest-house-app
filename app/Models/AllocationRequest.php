@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\BulkSMSBDController;
 use App\Mail\MailCover;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -105,13 +106,14 @@ class AllocationRequest extends Model
     public static function filter($allocationRequest){
         if(is_array($allocationRequest)||$allocationRequest instanceof Collection){
             foreach ($allocationRequest as &$a){
+                if($a?->status!='pending') continue;
                 $expire_date=$a->departure_date;
                 if($expire_date<Carbon::now()){
                     $a->status="expired";
                     $a->save();
                 }
             }
-        }else{
+        }else if($allocationRequest?->status=='pending'){
             $expire_date=$allocationRequest->departure_date;
             if($expire_date<Carbon::now()){
                 $allocationRequest->status="expired";
@@ -133,7 +135,8 @@ class AllocationRequest extends Model
                 if($key=='status'){
                     if($attr=='approved'){
                         $mailTitle="Your Guest House Allocation Request Has been approved.";
-                        $mailData="<b>Congratulations</b>, your Allocation Request in ".$this->guest_house()->get()->first()->title." has been <b style='color: green;text-transform: uppercase'>approved</b>. Please Download and Print your PDF copy from the App";
+                        $mailData="<b>Congratulations</b>, your Allocation Request in ".$this->guest_house()->get()->first()->title." is <b style='color: green;text-transform: uppercase'>approved</b>. Please Download and Print your PDF copy from the App";
+                        BulkSMSBDController::sendSMS("Your request for room in ".$this->guest_house()->get()->first()->title." is approved!",$this->user()->get()->first());
                     }else if ($attr=='rejected'){
                         $mailTitle="Your Guest House Allocation Request is Rejected";
                         $mailData="We have reviewed your application. Unfortunately we have decided to <b style='text-transform:uppercase;color:red'>Rejected</b> your request ";
@@ -141,6 +144,7 @@ class AllocationRequest extends Model
                             $mailData.="for the following reason<br>, \"$this->rejection_reason\".<br>For further query, please contact Guest House Admin";
                         }
                         $mailData.='.';
+                        BulkSMSBDController::sendSMS("Your request for room in ".$this->guest_house()->get()->first()->title." is rejected!",$this->user()->get()->first());
                     }
                     if($attr=='approved'||$attr=='rejected'){
                         Mail::to($this->user()->get()->first()->email)->send(new MailCover(
