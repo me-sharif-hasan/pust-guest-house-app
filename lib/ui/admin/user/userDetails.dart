@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/userModel.dart';
-import 'package:guest_house_pust/network/client/clientApiHandel.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class UserDetails extends StatelessWidget {
   final User? user;

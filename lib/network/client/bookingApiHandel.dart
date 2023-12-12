@@ -26,6 +26,7 @@ class BookingNetwork {
           json.decode(response.body)['data']['allocation']);
     } else {
       print(response.statusCode);
+      return AllocationList();
     }
   }
 

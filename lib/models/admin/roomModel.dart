@@ -1,5 +1,3 @@
-import 'package:guest_house_pust/models/userModel.dart';
-
 class RoomList {
   final List<RoomModel>? rooms;
   RoomList({this.rooms});
