@@ -60,8 +60,8 @@ class _CreateHouseState extends State<CreateHouse> {
                 ),
                 Text(
                   (widget.guestHouseModel == null)
-                      ? 'Create New Guest Housse'
-                      : 'Update Guest Housse Infrmation',
+                      ? 'Create New Guest House'
+                      : 'Update Guest House Infrmation',
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,

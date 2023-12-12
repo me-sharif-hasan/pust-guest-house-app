@@ -9,9 +9,13 @@ class BookingNetwork {
 
   BookingNetwork({this.url});
 
-  Future<AllocationList?> loadAllocations(String param) async {
+  Future<AllocationList?> loadAllocations(String param, String limit, String page) async {
     print("$url");
-    var urlg = Uri.https(hostUrl, url! + param);
+    var urlg = Uri.https(hostUrl, url! + param, {
+      'limit': limit,
+      'page': page,
+    });
+    print('url is : ${urlg.toString()}');
 
     final response =
         await get(urlg, headers: {'Authorization': 'Bearer $token'});

@@ -487,7 +487,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                                       SizedBox(
                                         width: 6,
                                       ),
-                                      Text("Update Deperature Date"),
+                                      Text("Update Departure Date"),
                                     ],
                                   ),
                                 ),

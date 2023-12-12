@@ -51,16 +51,11 @@ class HelpUser extends StatelessWidget {
               _paragraph(
                   'On user profile page, where profile picture is showing. Click on the picture then a dialog showing two option \n    (1)Take a picture\n    (2)Select from gallery\nTo show the updated profile picture you need to refresh the app.'),
               _head('How to Refresh the app?'),
-              _paragraph('On the home page top right corner showing three dots, click on the three dots. A menu will opened. The third option will show the Refresh, click on it.'),
+              _paragraph(
+                  'On the home page top right corner showing three dots, click on the three dots. A menu will opened. The third option will show the Refresh, click on it.'),
               _head('How to Edit Phone number?'),
               _paragraph(
                   'On user profile page, where phone number is showing. Longtime press on to the phone number then a update dialog will open. Change the phone number and click on the update button.'),
-              _head('text'),
-              _paragraph('text'),
-              _head('text'),
-              _paragraph('text'),
-              _head('text'),
-              _paragraph('text'),
             ],
           ),
         ),

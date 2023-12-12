@@ -17,13 +17,15 @@ class Requests extends StatefulWidget {
 class _RequestsState extends State<Requests> {
   Future<AllocationList?>? allocationData;
   bool isDataLoaded = false;
+  String limit = '100';
+  int page = 1;
 
   @override
   void initState() {
     super.initState();
     BookingNetwork bookingNetwork =
         BookingNetwork(url: '/api/v1/admin/allocation');
-    allocationData = bookingNetwork.loadAllocations('/all');
+    allocationData = bookingNetwork.loadAllocations('/all', limit, '1');
     allocationData!.then((value) async {
       print("DATA get success...");
       AllocationListCatagory allocationListCatagory =
@@ -63,46 +65,12 @@ class _RequestsState extends State<Requests> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            ProgressDialog pd = ProgressDialog(context: context);
-            pd.show(max: 100, msg: 'Wait for server response');
-
-            BookingNetwork bookingNetwork =
-                BookingNetwork(url: '/api/v1/admin/allocation');
-            allocationData = bookingNetwork.loadAllocations('/all');
-            allocationData!.then((value) async {
-              print("DATA get success...");
-              AllocationListCatagory allocationListCatagory =
-                  await AllocationListCatagory(allocationList: value);
-              catagory_wise_allocations = await allocationListCatagory.build();
-              pd.close();
-              setState(() {
-                isDataLoaded = true;
-              });
-            });
+            getData(limit, '1');
           },
           child: Icon(Icons.refresh),
         ),
         body: TabBarView(
           children: userTapPotions.map((e) {
-            // if (e == 'All') {
-            //   return Container(
-            //     child: FutureBuilder(
-            //       future: allocationData,
-            //       builder: (context, AsyncSnapshot<AllocationList?> snapshot) {
-            //         if (snapshot.hasData) {
-            //           // return Container();
-            //           return createAllocationPage(
-            //               snapshot.data!.allocations, context);
-            //         } else {
-            //           return Container(
-            //             child: Center(child: CircularProgressIndicator()),
-            //           );
-            //         }
-            //       },
-            //     ),
-            //   );
-            // }
-
             return Container(
               child: isDataLoaded
                   ? createAllocationPage(
@@ -135,11 +103,50 @@ class _RequestsState extends State<Requests> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
-          children: allocations.map(
-        (e) {
-          return allocationItemBuilder(e);
-        },
-      ).toList()),
+        children: [
+          Column(
+              children: allocations.map(
+            (e) {
+              return allocationItemBuilder(e);
+            },
+          ).toList()),
+          Container(
+              margin: EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  (page != 1)
+                      ? ElevatedButton(onPressed: () {
+                        getData(limit, '${page - 1}');
+                        setState(() {
+                          page--;
+                        });
+                      }, child: Text('<-Prev'))
+                      : Container(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '$page',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        getData(limit, '${page + 1}');
+                        setState(() {
+                          page++;
+                        });
+                      },
+                      child: Text('Next->'))
+                ],
+              )),
+        ],
+      ),
     );
   }
 
@@ -168,5 +175,24 @@ class _RequestsState extends State<Requests> {
     BookingNetwork bookingNetwork =
         BookingNetwork(url: '/api/v1/admin/allocation/update');
     bookingNetwork.update(id, 'is_admin_seen', '1');
+  }
+
+  getData(String limit, String page) {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Wait for server response');
+
+    BookingNetwork bookingNetwork =
+        BookingNetwork(url: '/api/v1/admin/allocation');
+    allocationData = bookingNetwork.loadAllocations('/all', limit, page);
+    allocationData!.then((value) async {
+      print("DATA get success...");
+      AllocationListCatagory allocationListCatagory =
+          await AllocationListCatagory(allocationList: value);
+      catagory_wise_allocations = await allocationListCatagory.build();
+      pd.close();
+      setState(() {
+        isDataLoaded = true;
+      });
+    });
   }
 }

@@ -28,7 +28,7 @@ class _UserHomeState extends State<UserHome> {
     super.initState();
     BookingNetwork bookingNetwork =
         BookingNetwork(url: '/api/v1/public/allocation');
-    allocationData = bookingNetwork.loadAllocations('/all');
+    allocationData = bookingNetwork.loadAllocations('/all','100','1');
     allocationData!.then((value) async {
       print("DATA get success...");
       AllocationListCatagory allocationListCatagory =

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/ui/admin/balance.dart';
 import 'package:guest_house_pust/ui/admin/guestHouses.dart';
 import 'package:guest_house_pust/ui/admin/helpAdmin.dart';
 import 'package:guest_house_pust/ui/admin/requestsPage.dart';
@@ -70,6 +71,16 @@ class _AdminHomeState extends State<AdminHome> {
                     );
                   },
                   child: Text('Help'),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BalanceCheckPage()),
+                    );
+                  },
+                  child: Text('Banance Check'),
                 ),
                 PopupMenuItem(
                   onTap: () {

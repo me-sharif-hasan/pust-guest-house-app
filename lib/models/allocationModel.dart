@@ -48,8 +48,6 @@ class AllocationList {
             return Allocation.fromJson(e);
           },
         )
-        .toList()
-        .reversed
         .toList();
     print('Allocation build success-----');
     print('size : ${allocations.length}');
