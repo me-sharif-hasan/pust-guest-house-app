@@ -25,6 +25,7 @@ class User extends Authenticatable
         'title',
         'department',
         'phone',
+        'device_key'
     ];
 
     /**
@@ -48,19 +49,19 @@ class User extends Authenticatable
     ];
 
     public function all_allocation_requests():HasMany{
-        return $this->hasMany(AllocationRequest::class,'user_id','id');
+        return $this->hasMany(AllocationRequest::class,'user_id','id')->orderByDesc('id');
     }
     public function pending_allocation_requests():HasMany{
-        return $this->all_allocation_requests()->where('status','=','pending')->orWhere('status','=',null);
+        return $this->all_allocation_requests()->where('status','=','pending')->orWhere('status','=',null)->orderByDesc('id');
     }
     public function rejected_allocation_requests():HasMany{
-        return $this->all_allocation_requests()->where('status','=','rejected');
+        return $this->all_allocation_requests()->where('status','=','rejected')->orderByDesc('id');
     }
     public function approved_allocation_requests():HasMany{
-        return $this->all_allocation_requests()->where('status','=','approved');
+        return $this->all_allocation_requests()->where('status','=','approved')->orderByDesc('id');
     }
     public function current_allocation():HasMany{
-        return $this->approved_allocation_requests()->where('departure_date','>=',today());
+        return $this->approved_allocation_requests()->where('departure_date','>=',today())->orderByDesc('id');
     }
 
 }

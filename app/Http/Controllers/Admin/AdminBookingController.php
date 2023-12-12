@@ -91,11 +91,21 @@ class AdminBookingController extends Controller
         try {
             $page = \request()->get('page') ? \request()->get('page') : 0;
             $limit = \request()->get('limit') ? \request()->get('limit') : 100000000000;
-            $items = AllocationRequest::simplePaginate($limit, ['*'], 'selected', $page)->items();
+            $stat = \request()->get('status') ??null;
+            $pages = AllocationRequest::where(function ($q) use($stat){
+                if($stat!=null){
+                    return $q->where('status','=',$stat);
+                }else{
+                    return $q;
+                }
+            })->orderByDesc('id')->paginate($limit, ['*'], 'selected', $page);
+            $totalPage=ceil($pages->total()/$limit);
+            $items=$pages->items();
             return [
                 'status' => 'success',
                 'message' => 'Request successful',
                 'data' => [
+                    'num_page'=>$totalPage,
                     'allocation' => AllocationRequest::filter($items)
                 ]
             ];
