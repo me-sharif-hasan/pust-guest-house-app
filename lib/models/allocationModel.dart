@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/admin/roomModel.dart';
-import 'package:guest_house_pust/ui/client/userProfile.dart';
 
 class AllocationListCatagory {
   final AllocationList? allocationList;
@@ -24,9 +22,10 @@ class AllocationListCatagory {
           .add(allocationList!.allocations![i]);
       print(
           "update length is : ${catagory[allocationList!.allocations![i].status]!.length}");
-      if (allocationList!.allocations![i].status != 'expired') {
-        catagory['all']!.add(allocationList!.allocations![i]);
-      }
+      // if (allocationList!.allocations![i].status != 'expired') {
+      //   catagory['all']!.add(allocationList!.allocations![i]);
+      // }
+      catagory['all']!.add(allocationList!.allocations![i]);
     }
     // catagory['pending']!.add(Allocation());
 
@@ -40,15 +39,13 @@ class AllocationList {
 
   factory AllocationList.fromJson(List<dynamic> parsedJson) {
     List<Allocation> allocations = [];
-    allocations = parsedJson
-        .map(
-          (e) {
-            // print('Allocation created start');
-            // print(e);
-            return Allocation.fromJson(e);
-          },
-        )
-        .toList();
+    allocations = parsedJson.map(
+      (e) {
+        // print('Allocation created start');
+        // print(e);
+        return Allocation.fromJson(e);
+      },
+    ).toList();
     print('Allocation build success-----');
     print('size : ${allocations.length}');
     return AllocationList(allocations: allocations);

@@ -58,10 +58,10 @@ class _HelpAdminState extends State<HelpAdmin> {
                         children: [
                           _head("How to Approve Booking?"),
                           _paragraph(
-                              'When a request is in pending or showing yellow color, it can be Approved. First open the request\'s by clicking over it. Then set the day count according to the Boarding and Departure Date. Then select Rooms or beds. By clicking "show Available Rooms" We can see availeable rooms and beds. By clicking over room or bed it will selected after clicking again it will disselected. Selected rooms and beds are shown above the approve Button. After room selected click on approve button. It will show success message.'),
+                              'When a request is in pending or showing yellow color, it can be Approved. First open the request\'s by clicking over it. Then set the day count according to the Boarding and Departure Date. Then select Rooms or beds. By clicking "show Available Rooms" We can see availeable rooms and beds. By clicking over room or bed it will selected after clicking again it will disselected. Selected rooms and beds are shown above the approve Button. After rooms has been selected then click on approve button. It will show success message.'),
                           _head('How to Reject Booking Request?'),
                           _paragraph(
-                              'When a request is in pending or showing yellow color, it can be Rejected. First open the request\'s by clicking over it. Then goto bottom of the page and there will a red \'Reject\' button. Click on the button. It open a input text option for putting rejection reasen. After putting rejection reason click on \'Reject\' Button. It will show a success message.'),
+                              'When a request is in pending or showing yellow color, it can be Rejected. First open the request\'s by clicking over it. Then goto bottom of the page and there will a red \'Reject\' button. Click on the button. It open a input text option for putting rejection reasen. After putting rejection reason click on \'Reject\' Button again. It will show a success message.'),
                           _head('How to Update Deperature Date?'),
                           _paragraph(
                               'When a request is in approved, it can be update departure date. First open the approved request\'s by clicking over it. Then goto bottom of the page and there will a orange \'Update Departure Date\' button. The departure date only can update by present date. Then write updated day count and click on \'Confirm\' Button. It will show a success message.'),
@@ -123,7 +123,7 @@ class _HelpAdminState extends State<HelpAdmin> {
                         children: [
                           _head("How to Create Guesthouse?"),
                           _paragraph(
-                              'From bottom navigation click on \'Houses\' option. There will show all the guest houses. By long time pressing on house item. It will open \'Update Guest House Information\' Page. On the bottom right cornner a \'+\' button given. Click on the plus button. Then \'Create New Guest House\' page will opened. Put the required value and click on create button.'),
+                              'From bottom navigation click on \'Houses\' option. There will show all the guest houses. On the bottom right cornner a \'+\' button given. Click on the plus button. Then \'Create New Guest House\' page will opened. Put the required value and click on create button.'),
                           _head("How to Edit Guesthouse Information?"),
                           _paragraph(
                               'From bottom navigation click on \'Houses\' option. There will show all the guest houses. By long time pressing on house item. It will open \'Update Guest House Information\' Page. Previous information are given there. Change the value as needed. And click on update button. A success message will show.'),
@@ -133,7 +133,7 @@ class _HelpAdminState extends State<HelpAdmin> {
                           _paragraph('Open guesthous where you want to create rooms. Here shows all the rooms. On that page at the bottom right cornner a \'+\' button is showing. Click on plus button then open \'Create New Room\' page. Input required information. If it is a bed then select a room by clicking show rooms option. Then click on Create button.'),
 
                           _head("How to Edit Room?"),
-                          _paragraph('Open guesthous where you want to create rooms. Here shows all the rooms. Click long time on a room which you want to modify, then Update Room page will opened. Input required information. Then click on Update button.'),
+                          _paragraph('Open guesthous where you want to update room information. There will shows all the rooms. Click long time on a room which you want to modify, then Update Room page will opened. Input required information. Then click on Update button.'),
                         ],
                       ),
                     )

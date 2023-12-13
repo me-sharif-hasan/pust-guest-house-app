@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
@@ -110,7 +108,11 @@ _getBackgroundImage(String? profile_picture) {
   if (profile_picture == null) {
     return AssetImage('images/man.png');
   } else {
-    return NetworkImage('$hostImageUrl${profile_picture}');
+    try {
+      return NetworkImage('$hostImageUrl${profile_picture}');
+    } catch (e) {
+      return AssetImage('images/man.png');
+    }
   }
 }
 

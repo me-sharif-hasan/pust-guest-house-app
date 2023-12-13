@@ -639,10 +639,10 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
           _getBedCount();
         },
         tileColor: e.is_selected
-            ? (e.border_count == e.total_seat)
+            ? (e.border_count! >= e.total_seat!)
                 ? Colors.red.shade300
                 : primaryLight
-            : (e.border_count == e.total_seat)
+            : (e.border_count! >= e.total_seat!)
                 ? Colors.red.shade100
                 : primaryExtraLight,
         title: Text((e.parent_id == null)

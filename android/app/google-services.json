@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "470527284822",
+    "project_id": "pustguesthouse",
+    "storage_bucket": "pustguesthouse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470527284822:android:88ff3cecbd4b4e0da14df7",
+        "android_client_info": {
+          "package_name": "com.example.guest_house_pust"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbruSppudazcG1yo4d9t0eRX_e4qklJoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470527284822:android:0df56207f542c167a14df7",
+        "android_client_info": {
+          "package_name": "com.example.notification_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbruSppudazcG1yo4d9t0eRX_e4qklJoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -36,6 +36,10 @@ class ClientNetwork {
         body: json.encode({key: value}),
         headers: {'Authorization': 'Bearer $token'});
 
+    print('(-_-) (-_-) (-_-) (-_-) (-_-) (-_-)');
+    print(response.statusCode);
+    print(response.body);
+
     if (response.statusCode == 200) {
       print(response.body);
       return true;

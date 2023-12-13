@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guest_house_pust/models/admin/GuestHouseModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/admin/guestHouseApi.dart';
+import 'package:guest_house_pust/network/client/clientApiHandel.dart';
 import 'package:guest_house_pust/network/connection.dart';
+import 'package:guest_house_pust/notification.dart';
 import 'package:guest_house_pust/ui/admin/adminHome.dart';
 import 'package:guest_house_pust/ui/auth/emailVerification.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
@@ -20,9 +25,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final NotificationSetUp _noti = NotificationSetUp();
+
   @override
   void initState() {
     // TODO: implement initState
+    _noti.configurePushNotification(context);
+    _noti.eventListenerCallback(context);
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     super.initState();
     print('From init state');
@@ -109,10 +118,14 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(
                 height: 20,
               ),
-              Text('©Sharif Hassan',
+
+              Text('Developed By : ',
+                  style: TextStyle(
+                      color: Colors.deepOrange,)),
+              Text('Sharif Hassan(CSE 11)',
                   style: TextStyle(
                       color: Colors.deepOrange, fontWeight: FontWeight.bold)),
-              Text('©Bayazid Hossain',
+              Text('Bayazid Hossain(CSE 11)',
                   style: TextStyle(
                       color: Colors.deepOrange, fontWeight: FontWeight.bold))
             ],
@@ -164,7 +177,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ));
           } else {
             myUser = User.fromJson(value);
-
+            // Send device key
+            if (Platform.isAndroid) {
+              final String? device_token =
+                  await FirebaseMessaging.instance.getToken();
+              _sendDeviceKey('$device_token');
+              print('device token is : $device_token');
+              print('---------------------------------------------');
+            }
             print(myUser!.name);
             if (value['user_type'] != null && value['user_type'] == 'admin') {
               // Parse to admin Page
@@ -208,6 +228,20 @@ class _SplashScreenState extends State<SplashScreen> {
             double.parse('${value.houses![i].log}');
 
         print('-----value ${type_of_guest_house_list[value.houses![i].id]}');
+      }
+    });
+  }
+
+  _sendDeviceKey(String key) async {
+    ClientNetwork api = ClientNetwork(url: '/api/v1/user/update');
+    Future<bool> status = api.update('device_key', key);
+    status.then((value) {
+      if (value) {
+        // showToast('$key updated Success', acceptColor);
+        print('Success -----------------');
+      } else {
+        print(
+            'Fail device key upload fail (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) (-_-) ');
       }
     });
   }

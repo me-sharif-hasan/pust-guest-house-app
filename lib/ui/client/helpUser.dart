@@ -37,7 +37,7 @@ class HelpUser extends StatelessWidget {
                   'হোম পেজে নিচের ডান পাশে যোগ চিহ্নে ক্লিক করলে শর্তাবলী আসবে। শর্তাবলী স্ক্রল করলে একদম নিচে Accept বাটন পাওয়া যাবে। Accept বাটনে ক্লিক করলে বুকিং ফর্ম আসবে। ফরমের সকল তথ্য পুরন করে Send Request বাটনে ক্লিক করলে আবেদন হয়ে যাবে। আবেদন প্রথম সবস্থায় pending এ থাকবে। এডমিন অনুমোদন দিলে Email এবং SMS এর মাধ্যমে যানানো হবে, অথবা এপে এসেও দেখা যাবে।'),
               _head("কিভাবে বুকিং বাতিল করবো?"),
               _paragraph(
-                  'বুকিং সুধু মাত্র pending অথবা appproved অবস্থায় বাতিল করা যাবে। হোমপেজ থেকে বুকিং এর উপর ক্লিক করলে বিস্তারিত দেখা যাবে। এই পেজের একদম নিচে "Cancel Request" option পাওয়া যাবে। \n বিদ্রঃ '),
+                  'বুকিং সুধু মাত্র pending অথবা appproved অবস্থায় বাতিল করা যাবে। হোমপেজ থেকে বুকিং এর উপর ক্লিক করলে বিস্তারিত দেখা যাবে। এই পেজের একদম নিচে "Cancel Request" option পাওয়া যাবে। \n বিদ্রঃ বুকিং বাতিল করলে প্রস্থান কাল এর কোন পরিবর্তন হবে না।'),
               _head("How to view profile?"),
               _paragraph(
                   'From the home screen on the top right cornner click on the circular image. Profile page will opened.'),

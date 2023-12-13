@@ -51,6 +51,11 @@ dependencies:
   # Profress dialog for server response 
   sn_progress_dialog: ^1.1.3
 
+  #Firebase notifications 
+  firebase_core: ^2.13.1
+  firebase_messaging: ^14.6.2
+  awesome_notifications: ^0.7.4+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -234,7 +234,7 @@ class RequestDetails extends StatelessWidget {
                           margin:
                               EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                           child: Text(
-                            'This cancel is not change your deperature date. To update deperature date you need to talk with admin.',
+                            'Cancel is not change your deperature date. To update deperature date you need to talk with admin.',
                             textAlign: TextAlign.center,
                           ),
                         ),

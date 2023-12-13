@@ -91,6 +91,16 @@ final List<String> conditions = [
 ];
 
 String rejection_reason_text = 'Room is not available on that time schedule.';
+
+int total_page = 2;
+Map<String,int> total_page_with_status = {
+  'all': 2,
+  'pending': 2,
+  'approved': 2,
+  'cancelled': 2,
+  'rejected': 2,
+  'expired' : 2,
+};
 // final Map<String, Map<String, int>> price_according_to_roomtype = {
 //   "Personal Use": {
 //     "": 0,

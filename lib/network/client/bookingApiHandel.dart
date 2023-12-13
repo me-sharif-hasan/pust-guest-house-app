@@ -9,7 +9,8 @@ class BookingNetwork {
 
   BookingNetwork({this.url});
 
-  Future<AllocationList?> loadAllocations(String param, String limit, String page) async {
+  Future<AllocationList?> loadAllocations(
+      String param, String limit, String page) async {
     print("$url");
     var urlg = Uri.https(hostUrl, url! + param, {
       'limit': limit,
@@ -22,6 +23,44 @@ class BookingNetwork {
 
     if (response.statusCode == 200) {
       print(response.body);
+      if (json.decode(response.body)['data']['num_page'] != null) {
+        total_page = json.decode(response.body)['data']['num_page'];
+      }
+      return AllocationList.fromJson(
+          json.decode(response.body)['data']['allocation']);
+    } else {
+      print(response.statusCode);
+      return AllocationList();
+    }
+  }
+
+  Future<AllocationList?> loadAllocationsWithStatus(
+      {String? status, String? limit, String? page}) async {
+    print("$url");
+    var urlg;
+    if (status == 'all') {
+      urlg = Uri.https(hostUrl, url! + '/all', {
+        'limit': limit,
+        'page': page,
+      });
+    } else {
+      urlg = Uri.https(hostUrl, url! + '/all', {
+        'limit': limit,
+        'page': page,
+        'status': status,
+      });
+    }
+    print('url is : ${urlg.toString()}');
+
+    final response =
+        await get(urlg, headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (json.decode(response.body)['data']['num_page'] != null) {
+        total_page_with_status[status!] =
+            json.decode(response.body)['data']['num_page'];
+      }
       return AllocationList.fromJson(
           json.decode(response.body)['data']['allocation']);
     } else {

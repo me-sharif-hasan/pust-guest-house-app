@@ -5,6 +5,7 @@ import 'package:guest_house_pust/ui/admin/helpAdmin.dart';
 import 'package:guest_house_pust/ui/admin/requestsPage.dart';
 import 'package:guest_house_pust/ui/admin/users.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
+import 'package:guest_house_pust/ui/client/about.dart';
 import 'package:guest_house_pust/ui/client/userProfile.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/components.dart';
@@ -52,6 +53,16 @@ class _AdminHomeState extends State<AdminHome> {
             itemBuilder: (BuildContext context) {
               // Define the items in the menu
               return [
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutPage()),
+                    );
+                  },
+                  child: Text('About'),
+                ),
                 PopupMenuItem(
                   onTap: () {
                     Navigator.push(
