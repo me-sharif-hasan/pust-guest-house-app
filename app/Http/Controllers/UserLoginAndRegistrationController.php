@@ -171,4 +171,19 @@ class UserLoginAndRegistrationController extends Controller
             return false;
         }
     }
+    public function logout(){
+        try {
+            Auth::user()->currentAccessToken()->delete();
+            return [
+                'status'=>'success',
+                'message'=>"Logout successful"
+            ];
+        }catch (\Throwable $e){
+            return [
+                'status'=>'error',
+                'message'=>'Failure logging out',
+                'code'=>0x509
+            ];
+        }
+    }
 }

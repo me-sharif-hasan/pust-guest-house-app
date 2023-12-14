@@ -16,9 +16,17 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function (){
     Route::any('/login',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'login'])->name('login');
     Route::any('/registration',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'registration'])->name('registration');
+
+    Route::prefix('forget-password')->group(function (){
+       Route::post('code',[\App\Http\Controllers\PasswordResetCodesController::class,'sendCode']);
+       Route::post('verify',[\App\Http\Controllers\PasswordResetCodesController::class,'verify']);
+       Route::post('reset',[\App\Http\Controllers\PasswordResetCodesController::class,'reset']);
+    });
+
     Route::middleware('auth:sanctum')->prefix('')->group(function (){
         Route::get('resend',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'resend']);
         Route::post('verify',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'verify']);
+        Route::get('logout',[\App\Http\Controllers\UserLoginAndRegistrationController::class,'logout']);
         Route::middleware('is_verified')->group(function (){
             Route::prefix("user")->group(function (){
                 Route::get('details', function (Request $request) { return $request->user();});
