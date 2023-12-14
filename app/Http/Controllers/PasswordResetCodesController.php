@@ -115,6 +115,7 @@ class PasswordResetCodesController extends Controller
             $user->password=$data['password'];
             $user->save();
             $code=PasswordResetCodes::where('email','=',$user->email)?->first()?->delete();
+            $user->tokens()->delete();
             return [
                 'status'=>'success',
                 'message'=>'Password reset successful'
