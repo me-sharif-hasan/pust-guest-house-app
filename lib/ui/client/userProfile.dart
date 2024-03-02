@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/network/client/clientApiHandel.dart';
+import 'package:guest_house_pust/ui/auth/forgetPassword/passwordReset.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/components.dart';
@@ -16,6 +17,22 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (catagory_wise_allocations == null) {
+      catagory_wise_allocations = {
+        'all': [],
+        'pending': [],
+        'approved': [],
+        'cancelled': [],
+        'rejected': [],
+        'expired': []
+      };
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,6 +185,20 @@ class _UserProfileState extends State<UserProfile> {
                       height: 40,
                     ),
                     Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: ElevatedButton(
+                        style:
+                            ElevatedButton.styleFrom(backgroundColor: primary),
+                        onPressed: () async {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ResetPassword()),
+                    );
+                        },
+                        child: Text("Change Password"),
+                      ),
+                    ),
+                    Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: ElevatedButton(
                         style:
@@ -176,6 +207,7 @@ class _UserProfileState extends State<UserProfile> {
                           logoutConfirmationDialog(context);
                         },
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.logout),
                             SizedBox(

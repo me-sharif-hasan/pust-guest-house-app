@@ -56,7 +56,7 @@ class _HelpAdminState extends State<HelpAdmin> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _head("How to Approve Booking?"),
+                          _head("How to Approve Booking Request?"),
                           _paragraph(
                               'When a request is in pending or showing yellow color, it can be Approved. First open the request\'s by clicking over it. Then set the day count according to the Boarding and Departure Date. Then select Rooms or beds. By clicking "show Available Rooms" We can see availeable rooms and beds. By clicking over room or bed it will selected after clicking again it will disselected. Selected rooms and beds are shown above the approve Button. After rooms has been selected then click on approve button. It will show success message.'),
                           _head('How to Reject Booking Request?'),
@@ -174,3 +174,60 @@ class _HelpAdminState extends State<HelpAdmin> {
     );
   }
 }
+
+
+// _head(""),
+//   _paragraph(
+//       ''),
+
+// _head('Rejecting a Booking Request'),
+//   _paragraph(
+//       'When a booking request is pending (indicated by a yellow color), it can be rejected. To reject a request, open it by clicking on it. Scroll to the bottom of the page, where you will find a red "Reject" button. Click on this button, which will prompt an input field to provide a reason for rejection. After entering the reason, click the "Reject" button again. A success message will confirm the rejection.'),
+
+// _head('Updating Departure Date'),
+//   _paragraph(
+//       'Once a booking request is approved, its departure date can be updated. To initiate this process, open the approved request by clicking on it. Scroll to the bottom of the page, where you will find an orange "Update Departure Date" button. Note that the departure date can only be updated to the current date or later. Enter the updated day count and click the "Confirm" button. A success message will confirm the update.'),
+
+// _head("Viewing Profile"),
+//   _paragraph(
+//       'To view your profile, navigate to the home screen and click on the three dots menu option located in the top right corner. Select the "View Profile" option to access your profile page.'),
+
+// _head('Editing User Name'),
+//   _paragraph(
+//       'To edit your user name, go to your profile page and locate the user name field. Long press on your user name to open an update dialog. Enter your new name and click the update button to save the changes.'),
+
+// _head('Editing User Designation'),
+//   _paragraph(
+//       'To edit your user designation, navigate to your profile page and locate the designation field. Long press on your designation to open an update dialog. Enter your new designation and click the update button to save the changes.'),
+
+// _head('Uploading Profile Picture'),
+//   _paragraph(
+//       'To upload a new profile picture, go to your profile page and click on your current profile picture. A dialog will appear with options to either take a new picture or select one from the gallery. After choosing a picture, you will need to refresh the app to see the updated profile picture.'),
+
+// _head('Refreshing the App'),
+//   _paragraph(
+//       'To refresh the app, go to the home page and click on the three dots menu option located in the top right corner. From the menu, select the "Refresh" option to refresh the app.'),
+
+// _head('Editing Phone Number'),
+//   _paragraph(
+//       'To edit your phone number, navigate to your profile page and locate the phone number field. Long press on your phone number to open an update dialog. Enter your new phone number and click the update button to save the changes.'),
+
+// _head('Creating a Guesthouse'),
+//   _paragraph(
+//       'To create a new guesthouse, navigate to the bottom navigation and select the "Houses" option. Tap the "+" button located in the bottom right corner to access the "Create New Guest House" page. Fill in the required details and click the create button to finalize.'),
+
+// _head("Editing Guesthouse Information"),
+//   _paragraph(
+//       'To edit guesthouse information, navigate to the bottom navigation and select the "Houses" option. Long press on the guesthouse item to open the "Update Guest House Information" page. Modify the necessary information and click the update button to save the changes.'),
+
+// _head("Viewing Rooms"),
+//   _paragraph(
+//       'To view rooms within a guesthouse, navigate to the bottom navigation and select the "Houses" option. Choose a guesthouse to view its rooms.'),
+
+// _head("Creating a Room"),
+//   _paragraph(
+//       'To create a new room within a guesthouse, navigate to the guesthouse where you want to add the room. Tap the "+" button located in the bottom right corner to access the "Create New Room" page. Fill in the required details and click the create button to finalize.'),
+
+// _head("Editing a Room"),
+//   _paragraph(
+//       'To edit room information within a guesthouse, navigate to the guesthouse where the room is located. Long press on the room you wish to modify to open the "Update Room" page. Update the necessary information and click the update button to save the changes.'),

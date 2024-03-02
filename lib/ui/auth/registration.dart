@@ -22,7 +22,7 @@ class _RegistrationState extends State<Registration> {
   final _nameController = TextEditingController();
   final _titleController = TextEditingController();
   final _emailController = TextEditingController();
-  String _department = "Chose your department";
+  String _department = "Chose your Department";
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();

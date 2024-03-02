@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
           colors: [Colors.green, Colors.white, primary],
           begin: Alignment.topLeft,
@@ -53,30 +53,34 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+              ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.4,
                 child: Image.asset('images/pust_logo.png'),
               ),
+
               SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height * 0.1,
               ),
-              Text(
-                "PUST Guest House",
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text("Pabna University of Science and Technology",
-                  style:
-                      TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500)),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.12,
-              ),
-              CircularProgressIndicator(
+              // Text(
+              //   "PUST Guest House",
+              //   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // Text("Pabna University of Science and Technology",
+              //     style:
+              //         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500)),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.12,
+              // ),
+              const CircularProgressIndicator(
                 color: primaryExtraDeep,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -95,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.3,
-                    child: Center(
+                    child: const Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -115,19 +119,22 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20,
+              const SizedBox(
+                height: 30,
               ),
 
-              Text('Developed By : ',
+              const Text('Developed By : ',
                   style: TextStyle(
-                      color: Colors.deepOrange,)),
-              Text('Sharif Hassan(CSE 11)',
+                    color: primaryExtraDeep,
+                  )),
+              const Text('Sharif Hassan(CSE 11)',
                   style: TextStyle(
-                      color: Colors.deepOrange, fontWeight: FontWeight.bold)),
-              Text('Bayazid Hossain(CSE 11)',
+                    color: primaryExtraDeep,
+                  )),
+              const Text('Bayazid Hossain(CSE 11)',
                   style: TextStyle(
-                      color: Colors.deepOrange, fontWeight: FontWeight.bold))
+                    color: primaryExtraDeep,
+                  )),
             ],
           ),
         )),
@@ -153,7 +160,7 @@ class _SplashScreenState extends State<SplashScreen> {
       print('saved token is : $_token');
       token = _token;
       await loadConstant();
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 2), () {
         print('one second has passed.');
         // Prints after 1 second.
         Network network = Network(url: '/api/v1/user/details');
@@ -175,6 +182,11 @@ class _SplashScreenState extends State<SplashScreen> {
               content: Text('${value['message']} Varify your email first'),
               backgroundColor: dangerColor,
             ));
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Login()),
+            );
           } else {
             myUser = User.fromJson(value);
             // Send device key

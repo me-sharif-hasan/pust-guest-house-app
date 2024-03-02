@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="guest_house_pust"
+        android:label="Pust Guest House"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

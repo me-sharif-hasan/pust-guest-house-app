@@ -207,8 +207,10 @@ class _UserHomeState extends State<UserHome> {
       );
     }
     return SingleChildScrollView(
+      
       scrollDirection: Axis.vertical,
       child: Column(
+        
           children: allocations.map(
         (e) {
           return allocationItemBuilder(e);

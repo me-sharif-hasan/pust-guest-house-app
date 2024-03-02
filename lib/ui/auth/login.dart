@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:guest_house_pust/network/connection.dart';
 import 'package:guest_house_pust/ui/auth/emailVerification.dart';
+import 'package:guest_house_pust/ui/auth/forgetPassword/passwordReset.dart';
 import 'package:guest_house_pust/ui/auth/registration.dart';
 import 'package:guest_house_pust/ui/auth/splashScreen.dart';
 import 'package:guest_house_pust/util/colors.dart';
@@ -37,10 +38,10 @@ class _LoginState extends State<Login> {
         actions: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0),
-            decoration: BoxDecoration(
-                 borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
             child: ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(primary)),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(primary)),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -53,7 +54,10 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
                   "Sign up",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               )),
             ),
@@ -150,6 +154,12 @@ class _LoginState extends State<Login> {
                                 GestureDetector(
                                   onTap: () {
                                     print('Forget Password clicked.');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ResetPassword()),
+                                    );
                                   },
                                   child: Text(
                                     'Forget Password?',
@@ -187,7 +197,12 @@ class _LoginState extends State<Login> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text('Login', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -211,7 +226,6 @@ class _LoginState extends State<Login> {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Wait for server response');
 
-    
     Network network = Network(url: "/api/v1/login");
     Future data = network.loginUser(email, password);
     data.then((value) async {

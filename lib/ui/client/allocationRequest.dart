@@ -304,7 +304,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              headingText("For?"),
+                              headingText("For"),
                               Column(
                                 children: type_of_guest_house_list.entries
                                     .map((e) => Row(
@@ -411,7 +411,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               SizedBox(
                                 height: 15,
                               ),
-                              headingText("For night stay?"),
+                              headingText("For night stay"),
                               getRadioRow(selected_stay, {1: 'Yes', 2: 'No'}),
                               SizedBox(
                                 height: 15,
@@ -565,7 +565,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Please Mention there Name and relation by ","(coma) seperating :',
+                                              'Please mention their names and relations, separating them by commas(,) :',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,

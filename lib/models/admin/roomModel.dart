@@ -49,7 +49,7 @@ class RoomModel {
     return RoomModel(
       id: response['id'],
       number: response['number'],
-      guest_house_id: response['guest_house_id'],
+      guest_house_id: '${response['guest_house_id']}',
       border_count: response['border_count'],
       room_type: response['room_type'],
       // current_borders: userList,

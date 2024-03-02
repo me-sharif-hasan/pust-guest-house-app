@@ -29,33 +29,34 @@ final List<String> userTapPotions = [
 ];
 
 // final String hostUrl = "10.0.2.2:8000";
-final String hostUrl = "testproject.iishanto.com";
+// final String hostUrl = "testproject.iishanto.com";
+final String hostUrl = "guesthouse.pust.ac.bd";
 // final String hostUrl = '127.0.0.1:8000';
 final String hostImageUrl = "https://$hostUrl";
 
 final List<String> departmentList = [
-  "Chose a department",
-  "01 Computer Science and Engineering(CSE)",
-  "02 Electrical and Electronic Engineering(EEE)",
-  "03 Mathematics(MATH)",
-  "04 Business Administration(BBA)",
-  "05 Electrical, Electronic and Communication Engineering(EECE)",
-  "06 Information and Communication Engineering(ICE)",
-  "07 Physics",
-  "08 Economics",
-  "09 Geography and Environment(GE)",
-  "10 Bangla",
-  "11 Civil Engineering",
-  "12 Architecture",
-  "13 Pharmacy",
-  "14 Chemistry",
-  "15 Social Work(SW)",
-  "16 Statistics(STAT)",
-  "17 Urban and Regional Planning(URP)",
-  "18 English",
-  "19 Public Administration",
-  "20 History(HBS)",
-  "21 Tourism and Hospitality Management(THM)",
+  "Chose a Department",
+  "01 - Computer Science and Engineering(CSE)",
+  "02 - Electrical and Electronic Engineering(EEE)",
+  "03 - Mathematics(MATH)",
+  "04 - Business Administration(DBA)",
+  "05 - Electrical, Electronic and Communication Engineering(EECE)",
+  "06 - Information and Communication Engineering(ICE)",
+  "07 - Physics",
+  "08 - Economics",
+  "09 - Geography and Environment(GE)",
+  "10 - Bangla",
+  "11 - Civil Engineering",
+  "12 - Architecture",
+  "13 - Pharmacy",
+  "14 - Chemistry",
+  "15 - Social Work(SW)",
+  "16 - Statistics(STAT)",
+  "17 - Urban and Regional Planning(URP)",
+  "18 - English",
+  "19 - Public Administration",
+  "20 - History(HBS)",
+  "21 - Tourism and Hospitality Management(THM)",
   "Others"
 ];
 
@@ -76,18 +77,18 @@ final List<String> conditions = [
   '২। গেস্ট হাউজে অবস্থাঙ্কালীন আপনি কোন বেআইনি/রাষ্ট ও বিশ্ববিদ্যালয়ের স্বার্থবিরোধী কোন কাজে লিপ্ত হতে পারবেন না।',
   '৩। ব্যাক্তিগত কাজে সর্বোচ্চ ৭ দিনের বেশি আপনি গেস্ট হাউজে অবস্থান করতে পারবেন না।',
   '৪। আপনার পরিবারের সদস্য নয় বা বিশ্ববিদ্যালয়ের সাথে সম্পৃক্ত নয় এমন কেউ গেস্ট হাউজে অবস্থান করতে পারবেন না।',
-  '৫। রাত ১২টা থেকে দিন গণনা শুরু হবে। তবে রাত্রে অবস্থান না করলে কোন চার্জ কাটা হবে না কিন্তু গেস্ট হাউজে দিনের বেলা সাময়িক অবস্থান খাতায় এন্ট্রি ও স্বাক্ষর করতে হবে।',
-  '৬। গেস্ট এর সংখ্যা, রুমের ধরন বা অবস্থানকালীন তারিখ পরিবর্তন হলে গেস্ট হাউজ প্রশাসককে অবহিত করুন।',
-  '৭। কর্তব্যকালীন ছুটি হলে বুকিং ফরমের পেছনে প্রমান্য হিসেবে ফটোকপি সংযুক্ত করুন।',
-  '৮। আপনার সেবায় নিয়োজিত কর্মীদের সাথে সদাচরন করুন।',
-  '৯। খাবার অর্ডার দিয়ে না খেলেও খাবারের বিল পরিশোধ করতে হবে।',
-  '১০। গেস্ট হাউজে কোন ধরনের মাদকদব্য বহন ও সেবন সম্পূর্ণ নিষিদ্ধ।',
-  '১১। পাবিপ্রাবির একাডেমিক কাজের সাথে সম্পৃক্ত নয় এমন বিদেশি ব্যক্তিগত অতিথি গেস্ট হাউজে অবস্থানের ক্ষেত্রে মাননীয় উপচার্য মহদয়ের বিশেষ অনুমতি প্রয়োজন।',
-  '১২। অনুমতি নিয়ে গেস্ট হাউজে অবস্থান করে বুকিং ফরম ও এন্ট্রি বুক পূরণ না করলে বুকিং ফরম ও এন্ট্রি বুক পূরণ করার জন্য আপনাকে "লেটার অফ রিমাইন্ডার" দেওয়া হবে।',
-  '১৩। বিনা অনুমতিতে গেস্ট হাউজে রাত্রি যাপন (রাত ১২টা থেকে ভোর ৬টা) করলে আপনাকে বিশ্ববিদ্যালয় রাজিস্ট্রারের মাধ্যমে "কারণ দর্শানোর নোটিশ" দেওয়া হবে।',
-  '১৪। গেস্ট হাউজ ব্যবহারে পরিচ্ছন্নতা বজায় রাখুন।',
-  '১৫। যে কোনো অসুবিধা বা সমস্যার সমাধানের জন্য প্রশাসকের সাথে যোগাযোগ করুন।',
-  '১৬। আপনার কোন অভিযোগ থাকলে অভিযোগ বইয়ে বিস্তারিত লিখুন।'
+  '৫। দুপুর ১২টা ১ মিনিট থেকে পরের দিন ১১টা ৫৯ মিনিট পর্যন্ত ১ দিন গণনা করা হবে। তবে রাত্রে অবস্থান না করলে কোন চার্জ কাটা হবে না কিন্তু গেস্ট হাউজে দিনের বেলা সাময়িক অবস্থান খাতায় এন্ট্রি ও স্বাক্ষর করতে হবে।',
+  // '৬। গেস্ট এর সংখ্যা, রুমের ধরন বা অবস্থানকালীন তারিখ পরিবর্তন হলে গেস্ট হাউজ প্রশাসককে অবহিত করুন।',
+  '৬। কর্তব্যকালীন ছুটি হলে বুকিং ফরমের পেছনে প্রমান্য হিসেবে ফটোকপি সংযুক্ত করুন।',
+  '৭। আপনার সেবায় নিয়োজিত কর্মীদের সাথে সদাচরন করুন।',
+  // '৯। খাবার অর্ডার দিয়ে না খেলেও খাবারের বিল পরিশোধ করতে হবে।',
+  '৮। গেস্ট হাউজে কোন ধরনের মাদকদব্য বহন ও সেবন সম্পূর্ণ নিষিদ্ধ।',
+  // '১১। পাবিপ্রাবির একাডেমিক কাজের সাথে সম্পৃক্ত নয় এমন বিদেশি ব্যক্তিগত অতিথি গেস্ট হাউজে অবস্থানের ক্ষেত্রে মাননীয় উপচার্য মহদয়ের বিশেষ অনুমতি প্রয়োজন।',
+  // '১২। অনুমতি নিয়ে গেস্ট হাউজে অবস্থান করে বুকিং ফরম ও এন্ট্রি বুক পূরণ না করলে বুকিং ফরম ও এন্ট্রি বুক পূরণ করার জন্য আপনাকে "লেটার অফ রিমাইন্ডার" দেওয়া হবে।',
+  '৯। বিনা অনুমতিতে গেস্ট হাউজে রাত্রি যাপন (রাত ১২টা থেকে ভোর ৬টা) করলে আপনাকে বিশ্ববিদ্যালয় রাজিস্ট্রারের মাধ্যমে "কারণ দর্শানোর নোটিশ" দেওয়া হবে।',
+  // '১৪। গেস্ট হাউজ ব্যবহারে পরিচ্ছন্নতা বজায় রাখুন।',
+  '১০। যে কোনো অসুবিধা বা সমস্যার সমাধানের জন্য প্রশাসকের সাথে যোগাযোগ করুন।',
+  // '১৬। আপনার কোন অভিযোগ থাকলে অভিযোগ বইয়ে বিস্তারিত লিখুন।'
 ];
 
 String rejection_reason_text = 'Room is not available on that time schedule.';

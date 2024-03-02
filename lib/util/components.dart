@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
 import 'package:guest_house_pust/network/admin/userApi.dart';
+import 'package:guest_house_pust/network/client/clientApiHandel.dart';
 import 'package:guest_house_pust/ui/auth/login.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/variables.dart';
@@ -29,6 +30,8 @@ void logoutConfirmationDialog(BuildContext context) async {
 
                 final props = await SharedPreferences.getInstance();
                 props.remove(tokenText);
+                await ClientNetwork.logout();
+
                 pd.close();
                 // Navigator.pop(context);
                 Navigator.popUntil(context, (route) => false);
