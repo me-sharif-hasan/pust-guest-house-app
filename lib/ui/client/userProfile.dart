@@ -143,44 +143,50 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(
                       height: 50,
                     ),
-                    Text(
-                      "Request statistic",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    rowBuilder("Approved : ",
-                        "${catagory_wise_allocations!['approved']!.length}"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    rowBuilder("Cancelled : ",
-                        "${catagory_wise_allocations!['cancelled']!.length}"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    rowBuilder("Pending : ",
-                        "${catagory_wise_allocations!['pending']!.length}"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    rowBuilder("Rejected : ",
-                        "${catagory_wise_allocations!['rejected']!.length}"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    rowBuilder("Expired : ",
-                        "${catagory_wise_allocations!['expired']!.length}"),
-                    Container(
-                      height: 1.2,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      decoration: BoxDecoration(color: primary),
-                    ),
-                    rowBuilder("Total : ",
-                        "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['cancelled']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}"),
+                    (myUser!.user_type != 'admin')
+                        ? Column(
+                            children: [
+                              Text(
+                                "Statistics",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              rowBuilder("Approved : ",
+                                  "${catagory_wise_allocations!['approved']!.length}"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              rowBuilder("Cancelled : ",
+                                  "${catagory_wise_allocations!['cancelled']!.length}"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              rowBuilder("Pending : ",
+                                  "${catagory_wise_allocations!['pending']!.length}"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              rowBuilder("Rejected : ",
+                                  "${catagory_wise_allocations!['rejected']!.length}"),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              rowBuilder("Expired : ",
+                                  "${catagory_wise_allocations!['expired']!.length}"),
+                              Container(
+                                height: 1.2,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                decoration: BoxDecoration(color: primary),
+                              ),
+                              rowBuilder("Total : ",
+                                  "${catagory_wise_allocations!['approved']!.length + catagory_wise_allocations!['cancelled']!.length + catagory_wise_allocations!['pending']!.length + catagory_wise_allocations!['rejected']!.length + catagory_wise_allocations!['expired']!.length}")
+                            ],
+                          )
+                        : Container(),
                     SizedBox(
                       height: 40,
                     ),
@@ -191,9 +197,10 @@ class _UserProfileState extends State<UserProfile> {
                             ElevatedButton.styleFrom(backgroundColor: primary),
                         onPressed: () async {
                           Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ResetPassword()),
-                    );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ResetPassword()),
+                          );
                         },
                         child: Text("Change Password"),
                       ),
@@ -245,9 +252,9 @@ class _UserProfileState extends State<UserProfile> {
             ),
           ),
         ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.03,
-        ),
+        SizedBox(width: 10
+            // width: MediaQuery.of(context).size.width * 0.03,
+            ),
         Expanded(
           flex: 3,
           child: Container(
@@ -434,7 +441,7 @@ class _UserProfileState extends State<UserProfile> {
                   // show a message
                 } else {
                   ProgressDialog pd = ProgressDialog(context: context);
-                  pd.show(max: 100, msg: 'Wait for server response');
+                  pd.show(max: 100, msg: 'Wait for response');
                   ClientNetwork api = ClientNetwork(url: '/api/v1/user/update');
                   Future<bool> status =
                       api.update(serverKey, _newValueController.text);

@@ -10,6 +10,7 @@ import 'package:guest_house_pust/ui/client/userProfile.dart';
 import 'package:guest_house_pust/util/colors.dart';
 import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -91,7 +92,13 @@ class _AdminHomeState extends State<AdminHome> {
                           builder: (context) => const BalanceCheckPage()),
                     );
                   },
-                  child: Text('Banance Check'),
+                  child: Text('Check Banance'),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    _launchInBrowserView('https://guesthouse.pust.ac.bd/master');
+                  },
+                  child: Text('Super Admin'),
                 ),
                 PopupMenuItem(
                   onTap: () {
@@ -150,6 +157,19 @@ class _AdminHomeState extends State<AdminHome> {
         ],
       ),
     );
+  }
+
+  Future<void> _launchInBrowserView(String? surl) async {
+    if (surl == null) {
+      showToast(
+          context, 'PDF is not availdable for that allocation.', dangerColor);
+      return;
+    }
+    print('Report Url is : $surl');
+    Uri url = Uri.parse('$surl');
+    if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   getBackgroundImage(String? profile_picture) {

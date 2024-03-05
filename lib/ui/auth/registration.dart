@@ -376,7 +376,7 @@ class _RegistrationState extends State<Registration> {
 
   void registerUser(BuildContext context, User user) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     Network network = Network(url: "/api/v1/registration");
     Future data = network.registerUser(user);

@@ -170,7 +170,7 @@ class _VarificationState extends State<Varification> {
 
   void varifyEmail(BuildContext context, String code) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     Network network = Network(url: "/api/v1/verify");
     Future data = network.varifyUser(code);
@@ -194,7 +194,7 @@ class _VarificationState extends State<Varification> {
 
   void resendVarificationCode(BuildContext context) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     Network network = Network(url: "/api/v1/resend");
     Map<String, dynamic> data = await network.resendVarificationCode();

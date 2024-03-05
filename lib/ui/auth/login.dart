@@ -206,7 +206,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.25,
+                              height: MediaQuery.of(context).size.height * 0.40,
                             ),
                           ],
                         ),
@@ -224,7 +224,7 @@ class _LoginState extends State<Login> {
 
   void userLogin(BuildContext context, String email, String password) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     Network network = Network(url: "/api/v1/login");
     Future data = network.loginUser(email, password);

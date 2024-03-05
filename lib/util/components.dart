@@ -26,7 +26,7 @@ void logoutConfirmationDialog(BuildContext context) async {
           ElevatedButton(
               onPressed: () async {
                 ProgressDialog pd = ProgressDialog(context: context);
-                pd.show(max: 100, msg: 'Wait for server response');
+                pd.show(max: 100, msg: 'Wait for response');
 
                 final props = await SharedPreferences.getInstance();
                 props.remove(tokenText);

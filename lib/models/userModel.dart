@@ -26,6 +26,7 @@ class User {
   String? phone;
   String? title;
   String? profile_picture;
+  String? user_type;
 
   User(
       {this.id,
@@ -35,7 +36,8 @@ class User {
       this.department,
       this.phone,
       this.title,
-      this.profile_picture});
+      this.profile_picture, 
+      this.user_type});
 
   factory User.fromJson(Map<String, dynamic> json) {
     // print("parse json is : $json");
@@ -46,7 +48,8 @@ class User {
         department: json['department'],
         phone: json['phone'],
         title: json['title'],
-        profile_picture: json['profile_picture']);
+        profile_picture: json['profile_picture'],
+        user_type: json['user_type']);
   }
 
   Map<String, dynamic> getUser() {

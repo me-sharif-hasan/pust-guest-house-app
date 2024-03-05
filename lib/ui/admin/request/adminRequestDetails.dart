@@ -665,7 +665,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
 
   approvedRequest(int id, List<int> list, String dayCount) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
     api.updateToApproved(id, list, dayCount);
@@ -692,7 +692,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
 
   void rejectRequest(int id, String reason) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
     await api.updateToReject(id, reason);
@@ -866,7 +866,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
 
   void updateRequest(int id, String dayCount) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/allocation/update');
     api.updateDeperatureDate(id, dayCount);

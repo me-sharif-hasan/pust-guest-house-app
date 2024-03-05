@@ -127,7 +127,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     color: primaryExtraDeep,
                   )),
-              const Text('Sharif Hassan(CSE 11)',
+              const Text('Sharif Hasan(CSE 11)',
                   style: TextStyle(
                     color: primaryExtraDeep,
                   )),

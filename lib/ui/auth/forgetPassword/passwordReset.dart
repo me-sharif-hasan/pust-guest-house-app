@@ -127,7 +127,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               ProgressDialog pd =
                                   ProgressDialog(context: context);
                               pd.show(
-                                  max: 100, msg: 'Wait for server response');
+                                  max: 100, msg: 'Wait for response');
 
                               if (await ClientNetwork.resetPasswordMethod(
                                   context,
@@ -174,7 +174,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                       ProgressDialog(context: context);
                                   pd.show(
                                       max: 100,
-                                      msg: 'Wait for server response');
+                                      msg: 'Wait for response');
 
                                   if (await ClientNetwork.resetPasswordMethod(
                                       context,
@@ -235,7 +235,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                       ProgressDialog(context: context);
                                   pd.show(
                                       max: 100,
-                                      msg: 'Wait for server response');
+                                      msg: 'Wait for response');
 
                                   if (await ClientNetwork.resetPasswordMethod(
                                       context,

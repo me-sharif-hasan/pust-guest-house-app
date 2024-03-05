@@ -219,7 +219,7 @@ class _CreateHouseState extends State<CreateHouse> {
   void sendHouseDate(
       BuildContext context, GuestHouseModel guestHouseModel) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/guest-houses/create');
     Map<String, dynamic> data = await api.createHouse(guestHouseModel);
@@ -246,7 +246,7 @@ class _CreateHouseState extends State<CreateHouse> {
   void updateHouseDate(
       BuildContext context, int? id, GuestHouseModel guestHouseModel) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     GuestHouseApi api = GuestHouseApi(url: '/api/v1/admin/guest-houses/update');
     Map<String, dynamic> data = await api.updateHouse(id!, guestHouseModel);

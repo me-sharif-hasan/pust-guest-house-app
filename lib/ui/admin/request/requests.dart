@@ -139,7 +139,7 @@ class _RequestsPageAdminState extends State<RequestsPageAdmin> {
 
   getData(String page) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     BookingNetwork bookingNetwork =
         BookingNetwork(url: '/api/v1/admin/allocation');

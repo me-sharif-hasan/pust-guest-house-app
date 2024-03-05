@@ -774,7 +774,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
 
   void bookingRequest(BuildContext context, Allocation booking) {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Wait for server response');
+    pd.show(max: 100, msg: 'Wait for response');
 
     BookingNetwork network =
         BookingNetwork(url: "/api/v1/public/allocation/new");

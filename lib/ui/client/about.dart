@@ -33,12 +33,14 @@ class AboutPage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.05,
               ),
               Text(
-                'Welcome to PUST Guesthouse Application, the ultimate solution for seamless guesthouse management. \nStreamline your guesthouse operations with our intuitive mobile application designed to simplify request handling, enhance communication, and provide a delightful experience for both guests and guesthouse administrator. \n\n\nThis application is developed by \nSharif Hasan (CSE 11 bath) \nand \nBayazid Hossain (CSE 11 batch) \nunder the supervision of \nDr. Abdur Rahim \nDepartment of Computer Science and Engineering \nPabna University of Science and Technology.',
+                '''Welcome to PUST Guesthouse Application, the ultimate solution for seamless guesthouse management. \nStreamline your guesthouse operations with our intuitive mobile application designed to simplify request handling, enhance communication, and provide a delightful experience for both guests and guesthouse administrator. \n\n\nThis application is developed by \nSharif Hasan (CSE 11 bath) \nand \nBayazid Hossain (CSE 11 batch) \n\nUnder the supervision of \nDr. Abdur Rahim \nDepartment of Computer Science and Engineering \nPabna University of Science and Technology.''',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
                 ),
-              )
+              ),
+              SizedBox(height: 80,),
+              Center(child: Text('Pust Guest House :: V 1.0.0'))
             ],
           ),
         ),
