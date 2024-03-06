@@ -555,7 +555,7 @@ class _AllocationRequestState extends State<AllocationRequest> {
                               headingText('Guests are : '),
                               getRadioRow(selected_booking_for, {
                                 1: 'My Self',
-                                2: 'Behalf of',
+                                2: 'On Behalf of',
                               }),
 
                               (selected_booking_for.value == 2)

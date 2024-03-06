@@ -101,10 +101,13 @@ class RequestDetails extends StatelessWidget {
               ),
               rowBuilder("Departure date : ",
                   "${allocation!.departure_date!.substring(0, 16)}"),
-              (allocation!.status == 'approved') ? Container(
-                margin: EdgeInsets.only(top: 10),
-                child: rowBuilder('Day Count : ', '${allocation!.dayCount}'),
-              ) : Container(),
+              (allocation!.status == 'approved')
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child:
+                          rowBuilder('Day Count : ', '${allocation!.dayCount}'),
+                    )
+                  : Container(),
               SizedBox(
                 height: 10,
               ),
@@ -112,7 +115,7 @@ class RequestDetails extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              rowBuilder("Behalf Of : ", "${allocation!.behalf_of}"),
+              rowBuilder("On Behalf Of : ", "${allocation!.behalf_of}"),
               // Approved beds
               (allocation!.status == 'approved')
                   ? Container(
@@ -188,6 +191,8 @@ class RequestDetails extends StatelessWidget {
                             ElevatedButton.styleFrom(backgroundColor: primary),
                         onPressed: () async {
                           print('pdf download');
+                          // downloadAndSavePdf(context, allocation!.report_link!,
+                          //     allocation!.id!);
                           _launchInBrowserViewPDF(
                               context, allocation!.report_link);
                         },
@@ -217,7 +222,9 @@ class RequestDetails extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: dangerColor),
                             onPressed: () async {
-                              requestCancel(context, allocation!.id ?? 0);
+                              // requestCancel(context, allocation!.id ?? 0);
+                              _showRequestCancleConfirmationDialog(
+                                  context, allocation!.id!);
                             },
                             child: Row(
                               children: [
@@ -234,7 +241,7 @@ class RequestDetails extends StatelessWidget {
                           margin:
                               EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                           child: Text(
-                            'Cancel is not change your deperature date. To update deperature date you need to talk with admin.',
+                            'Cancel will not change your the deperature date. To update deperature date you need to talk with admin.',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -380,5 +387,37 @@ class RequestDetails extends StatelessWidget {
     if (!await launchUrl(url, mode: LaunchMode.inAppBrowserView)) {
       throw Exception('Could not launch $url');
     }
+  }
+
+  void _showRequestCancleConfirmationDialog(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Cancel Confirm'),
+          content: Text('Are you sure to cancel this request.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Navigator.of(context).pop();
+                // _scrollController.animateTo(
+                //   _scrollController.position.maxScrollExtent,
+                //   duration: Duration(milliseconds: 2000),
+                //   curve: Curves.easeInOut,
+                // );
+                requestCancel(context, id);
+              },
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

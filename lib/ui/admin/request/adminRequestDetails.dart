@@ -260,7 +260,7 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                       height: 10,
                     ),
                     rowBuilder(
-                        "Behalf Of : ", "${widget.allocation!.behalf_of}"),
+                        "On Behalf Of : ", "${widget.allocation!.behalf_of}"),
                     SizedBox(
                       height: 10,
                     ),
