@@ -96,7 +96,7 @@ class _HousesState extends State<Houses> {
                         guestHouseModel: house,
                       )));
         },
-        leading: CircleAvatar(child: Text('${house.id}')),
+        // leading: CircleAvatar(child: Text('${house.id}')),
         title: Text('${house.title}'),
         subtitle:
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -156,12 +156,12 @@ class _AdminRequestDetailsState extends State<AdminRequestDetails> {
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Border Type : ",
+                    rowBuilder("Guest Type : ",
                         "${widget.allocation!.boarder_type!.substring(0, 1).toUpperCase()}${widget.allocation!.boarder_type!.substring(1)}"),
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Boarding date : ",
+                    rowBuilder("Arrival date : ",
                         "${widget.allocation!.boarding_date!.substring(0, 16)}"),
                     SizedBox(
                       height: 10,

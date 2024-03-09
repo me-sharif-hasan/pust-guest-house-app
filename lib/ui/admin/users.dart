@@ -71,41 +71,44 @@ class _UsersState extends State<Users> {
           border: Border.all(width: 1.0, color: primary),
           borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-
         onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => UserDetails(user: e,)));
+                  builder: (context) => UserDetailsPage(
+                        user: e,
+                      )));
         },
         leading: CircleAvatar(
-          backgroundImage: getBackgroundImage(e.profile_picture),
+          foregroundImage: getBackgroundImage(e.profile_picture),
+          backgroundImage: AssetImage('images/man.png'),
         ),
         title: Text(
           '${e.name}',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        subtitle:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('${e.phone}'),
-          GestureDetector(
-            onTap: () {
-              print('Calling');
-              _makePhoneCall('+88${e.phone!}');
-            },
-            child: Container(
-                padding: EdgeInsets.all(2.0),
-                decoration: BoxDecoration(
-                    color: primary,
-                    border: Border.all(width: 2.0, color: primary),
-                    borderRadius: BorderRadius.circular(8)),
-                child: Icon(
-                  Icons.call,
-                  color: Colors.white,
-                )),
-          )
-        ]),
-        trailing: Text('${e.id}'),
+        subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${e.phone}'),
+              (e.user_type == null) ? Container() : Text('${e.user_type}')
+            ]),
+        trailing: GestureDetector(
+          onTap: () {
+            print('Calling');
+            _makePhoneCall('+88${e.phone!}');
+          },
+          child: Container(
+              padding: EdgeInsets.all(2.0),
+              decoration: BoxDecoration(
+                  color: primary,
+                  border: Border.all(width: 2.0, color: primary),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Icon(
+                Icons.call,
+                color: Colors.white,
+              )),
+        ),
         tileColor: primaryExtraLight,
       ),
     );

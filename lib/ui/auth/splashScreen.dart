@@ -42,102 +42,112 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(
           colors: [Colors.green, Colors.white, primary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         )),
-        child: Center(
-            child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.4,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                // width: MediaQuery.of(context).size.width * 0.4,
                 child: Image.asset('images/pust_logo.png'),
               ),
+            ),
 
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-              ),
-              // Text(
-              //   "PUST Guest House",
-              //   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              // ),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              // Text("Pabna University of Science and Technology",
-              //     style:
-              //         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500)),
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height * 0.12,
-              // ),
-              const CircularProgressIndicator(
-                color: primaryExtraDeep,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: primaryDeep,
-                    borderRadius: BorderRadius.circular(10)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: const Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Login',
-                            style: TextStyle(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
+            ),
+            // Text(
+            //   "PUST Guest House",
+            //   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // Text("Pabna University of Science and Technology",
+            //     style:
+            //         TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500)),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.12,
+            // ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const CircularProgressIndicator(
+                    color: primaryExtraDeep,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: primaryDeep,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
+                        );
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: const Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Icon(
+                                Icons.login,
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Icon(
-                            Icons.login,
-                            color: Colors.white,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  Text('©PUST')
+                ],
               ),
-              const SizedBox(
-                height: 30,
-              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
 
-              const Text('Developed By : ',
-                  style: TextStyle(
-                    color: primaryExtraDeep,
-                  )),
-              const Text('Sharif Hasan(CSE 11)',
-                  style: TextStyle(
-                    color: primaryExtraDeep,
-                  )),
-              const Text('Bayazid Hossain(CSE 11)',
-                  style: TextStyle(
-                    color: primaryExtraDeep,
-                  )),
-            ],
-          ),
-        )),
+            // const Text('Developed By : ',
+            //     style: TextStyle(
+            //       color: primaryExtraDeep,
+            //     )),
+            // const Text('Sharif Hasan(CSE 11)',
+            //     style: TextStyle(
+            //       color: primaryExtraDeep,
+            //     )),
+            // const Text('Bayazid Hossain(CSE 11)',
+            //     style: TextStyle(
+            //       color: primaryExtraDeep,
+            //     )),
+          ],
+        ),
       ),
     );
   }

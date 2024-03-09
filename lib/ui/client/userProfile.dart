@@ -126,7 +126,34 @@ class _UserProfileState extends State<UserProfile> {
                     SizedBox(
                       height: 40,
                     ),
-                    rowBuilder("Department : ", "${myUser!.department}"),
+                    // rowBuilder("Department : ", "${myUser!.department}"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Department : ',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 10
+                            // width: MediaQuery.of(context).size.width * 0.03,
+                            ),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Text(
+                              '${myUser!.department}',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(
                       height: 10,
                     ),

@@ -69,6 +69,40 @@ class BookingNetwork {
     }
   }
 
+  Future<AllocationList?> loadAllocationsForSpecificUser(
+      {String? limit, String? page, int? userId}) async {
+    print("$url");
+    var urlg;
+    urlg = Uri.https(hostUrl, url! + '/all', {
+      'limit': limit,
+      'page': page,
+    });
+    print('url is : ${urlg.toString()}');
+
+    final response =
+        await get(urlg, headers: {'Authorization': 'Bearer $token'});
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (json.decode(response.body)['data']['num_page'] != null) {
+        total_page = json.decode(response.body)['data']['num_page'];
+      }
+      final allocationList = AllocationList.fromJson(
+          json.decode(response.body)['data']['allocation']);
+
+      AllocationList listForSpecUser = AllocationList(allocations: []);
+      for (int indx = 0; indx < allocationList.allocations!.length; indx++) {
+        if (allocationList.allocations![indx].user_id == userId) {
+          listForSpecUser.allocations!.add(allocationList.allocations![indx]);
+        }
+      }
+      return listForSpecUser;
+    } else {
+      print(response.statusCode);
+      return AllocationList();
+    }
+  }
+
   Future sendBookingRequest(Allocation booking) async {
     print("$url");
 

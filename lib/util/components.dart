@@ -61,7 +61,8 @@ Widget getAllocationItemAdmin(Allocation allocation, bool is_admin) {
     ),
     child: ListTile(
       leading: CircleAvatar(
-        backgroundImage: _getBackgroundImage(allocation.user_profile),
+        foregroundImage: _getBackgroundImage(allocation.user_profile),
+        backgroundImage: AssetImage('images/man.png'),
       ),
       title: Text('${allocation.user_name}'),
       // title: Text(

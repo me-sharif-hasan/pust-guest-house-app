@@ -92,7 +92,7 @@ class _AdminHomeState extends State<AdminHome> {
                           builder: (context) => const BalanceCheckPage()),
                     );
                   },
-                  child: Text('Check Banance'),
+                  child: Text('Check Balance'),
                 ),
                 PopupMenuItem(
                   onTap: () {

@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:guest_house_pust/models/allocationModel.dart';
 import 'package:guest_house_pust/models/userModel.dart';
+import 'package:guest_house_pust/network/client/bookingApiHandel.dart';
+import 'package:guest_house_pust/ui/admin/request/adminRequestDetails.dart';
 import 'package:guest_house_pust/util/colors.dart';
+import 'package:guest_house_pust/util/components.dart';
 import 'package:guest_house_pust/util/variables.dart';
 
-class UserDetails extends StatelessWidget {
+class UserDetailsPage extends StatefulWidget {
   final User? user;
-  const UserDetails({super.key, this.user});
+  const UserDetailsPage({super.key, this.user});
+
+  @override
+  State<UserDetailsPage> createState() => _UserDetailsPageState();
+}
+
+class _UserDetailsPageState extends State<UserDetailsPage> {
+  Future<AllocationList?>? allocationData;
+  bool isDataLoaded = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print('User page details ${widget.user!.id}');
+    super.initState();
+    _getAllocationData(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +60,7 @@ class UserDetails extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${user!.name}",
+                                "${widget.user!.name}",
                                 style: TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.w500),
                               ),
@@ -50,7 +70,7 @@ class UserDetails extends StatelessWidget {
                               Opacity(
                                 opacity: 0.6,
                                 child: Text(
-                                  "${user!.title}",
+                                  "${widget.user!.title}",
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400),
@@ -70,8 +90,8 @@ class UserDetails extends StatelessWidget {
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: CircleAvatar(
-                              backgroundImage:
-                                  getBackgroundImage(user!.profile_picture),
+                              backgroundImage: getBackgroundImage(
+                                  widget.user!.profile_picture),
                             ),
                           ),
                         ),
@@ -80,21 +100,38 @@ class UserDetails extends StatelessWidget {
                     SizedBox(
                       height: 40,
                     ),
-                    rowBuilder("Department : ", "${user!.department}"),
+                    rowBuilder("Department : ", "${widget.user!.department}"),
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Phone : ", "${user!.phone}"),
+                    rowBuilder("Phone : ", "${widget.user!.phone}"),
                     SizedBox(
                       height: 10,
                     ),
-                    rowBuilder("Email : ", "${user!.email}"),
+                    rowBuilder("Email : ", "${widget.user!.email}"),
                     SizedBox(
                       height: 50,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
+                      height: 30,
                     ),
+                    FutureBuilder(
+                      future: allocationData,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: snapshot.data!.allocations!
+                                .map((e) => _allocationItemBuilder(e))
+                                .toList(),
+                          );
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 100,
+                    )
                   ],
                 ),
               ),
@@ -135,11 +172,44 @@ class UserDetails extends StatelessWidget {
     );
   }
 
+  Widget _allocationItemBuilder(Allocation allocation) {
+    return GestureDetector(
+      onTap: () {
+        print('${allocation.id} id clicked.');
+        print('Seen status : ${allocation.is_admin_seen}');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  AdminRequestDetails(allocation: allocation)),
+        );
+      },
+      // child: Text('he'),
+      child: getAllocationItemAdmin(allocation, true),
+    );
+  }
+
   getBackgroundImage(String? profile_picture) {
     if (profile_picture == null) {
       return AssetImage('images/man.png');
     } else {
       return NetworkImage('http://$hostUrl${profile_picture}');
     }
+  }
+
+  void _getAllocationData(BuildContext context) async {
+    print('data try to geting');
+
+    BookingNetwork bookingNetwork =
+        BookingNetwork(url: '/api/v1/admin/allocation');
+    allocationData = bookingNetwork.loadAllocationsForSpecificUser(
+        limit: '100', page: '1', userId: widget.user!.id);
+    allocationData!.then((value) {
+      print('------___----------${value!.allocations!.length}');
+      setState(() {
+        isDataLoaded = true;
+      });
+    });
   }
 }

@@ -85,7 +85,7 @@ class RequestDetails extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              rowBuilder("Border Type : ",
+              rowBuilder("Guest Type : ",
                   "${allocation!.boarder_type!.substring(0, 1).toUpperCase()}${allocation!.boarder_type!.substring(1)}"),
               SizedBox(
                 height: 10,
@@ -94,7 +94,7 @@ class RequestDetails extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              rowBuilder("Boarding date : ",
+              rowBuilder("Arrival date : ",
                   "${allocation!.boarding_date!.substring(0, 16)}"),
               SizedBox(
                 height: 10,
@@ -351,7 +351,7 @@ class RequestDetails extends StatelessWidget {
         onTap: () {
           _launchInBrowserView(guest_house_lat[id]!, guest_house_log[id]!);
         },
-        leading: CircleAvatar(child: Text('${id}')),
+        // leading: CircleAvatar(child: Text('${id}')),
         title: Text('${type_of_guest_house_list[id]}'),
         subtitle:
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
